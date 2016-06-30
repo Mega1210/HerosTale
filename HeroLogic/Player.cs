@@ -19,7 +19,7 @@ namespace HeroLogic
         public int Level { get; set; }
         public int ExperienceToLevel { get; set; }
         public List<InventoryItem> Inventory { get; set; }
-        public List<PlayerQuest> Quests { get; set; }
+        public byte QuestNr;
 
         public Player(int str, int dex, int inte, int chari, int gold, string name, int exp, int level, int expToLvl, 
             int currentHitPoints, int maxHitPoints, CreatureType type, CreatureClass difficulty, Areas location) :base(currentHitPoints,maxHitPoints,type, difficulty, location)
@@ -38,7 +38,7 @@ namespace HeroLogic
             Difficulty = difficulty;
             Location = location;
             Inventory = new List<InventoryItem>();
-            Quests = new List<PlayerQuest>();
+            
 
         }
     }

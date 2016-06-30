@@ -14,13 +14,13 @@ namespace HeroLogic
         
         public enum Areas:byte
         {
-            Everywhere, Desert, Forest, Player
+            Everywhere, Desert, Forest, Player, Hills, Ruins
 
         }
 
         public enum CreatureType : byte
         {
-            Human, Animal, Monster
+            HumanPeaceful, HumanDanger, Animal, Monster
 
         }
 
@@ -29,7 +29,24 @@ namespace HeroLogic
             Normal, Boss, Player
 
         }
-        
+
+        public enum QuestType : byte
+        {
+            Kill, Retrive, SaveKidnap, Caravan
+
+        }
+
+        public enum Who : byte
+        {
+            Sister, Mother, Brother, Father, Uncle, Aunt
+
+        }
+
+        public enum Giver : byte
+        {
+            Lord, NobleWoman, WeathlyMerchant, MerchantGuild
+
+        }
         public const int ITEM_ID_RUSTY_SWORD = 1;
         public const int ITEM_ID_CLUB = 2;
         public const int ITEM_ID_SILVERSWORD = 3;
@@ -90,7 +107,7 @@ namespace HeroLogic
         {
             PopulateItems();
             PopulateMonsters();
-            PopulateQuests();
+            //PopulateQuests();
         
         }
 
@@ -108,11 +125,11 @@ namespace HeroLogic
 
         }
 
-        private static void PopulateQuests()
+        /* private static void PopulateQuests()
         {            
             Quests.Add(new Quest(QUEST_ID_KILLMONSTER,"Kill a monster",
                 "There's a werewolf on the loose in the mountains. 200 Gold for the person that kills it",50,200,1));            
-        }
+        }*/
 
         
 

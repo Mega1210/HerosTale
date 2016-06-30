@@ -24,13 +24,13 @@ namespace HerosTale
             pMain.Enabled = false;
             pNameInput.Visible = false;
             pNameInput.Enabled = false;
-            player = new Player(10, 10, 10, 10, 100, "", 1, 1, 100, 100, 100,CreatureType.Human, CreatureClass.Player, Areas.Player);
+            pnlLevelUp.Enabled = false;
+            pnlLevelUp.Visible = false;
+            player = new Player(10, 10, 10, 10, 100, "", 1, 1, 100, 100, 100,CreatureType.HumanPeaceful, CreatureClass.Player, Areas.Player);
 
             
         }
-
-
-        
+                
         private void bNewGane_Click(object sender, EventArgs e)
         {
             pNameInput.Visible = true;
@@ -78,9 +78,10 @@ namespace HerosTale
             }
         }
 
-        
-        
+        private void lChrNr_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 
 

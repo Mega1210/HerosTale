@@ -33,6 +33,10 @@
             this.bNewGane = new System.Windows.Forms.Button();
             this.pStart = new System.Windows.Forms.Panel();
             this.pMain = new System.Windows.Forms.Panel();
+            this.lExpTxt = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lLevelNr = new System.Windows.Forms.Label();
+            this.lLevelTxt = new System.Windows.Forms.Label();
             this.lGold = new System.Windows.Forms.Label();
             this.lGoldtxt = new System.Windows.Forms.Label();
             this.bExit = new System.Windows.Forms.Button();
@@ -57,13 +61,22 @@
             this.lNameInut = new System.Windows.Forms.Label();
             this.pNameInput = new System.Windows.Forms.Panel();
             this.bOk = new System.Windows.Forms.Button();
-            this.lLevelNr = new System.Windows.Forms.Label();
-            this.lLevelTxt = new System.Windows.Forms.Label();
-            this.lExpTxt = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.btPlusStr = new System.Windows.Forms.Button();
+            this.btLessStr = new System.Windows.Forms.Button();
+            this.btLessInt = new System.Windows.Forms.Button();
+            this.btPlusInt = new System.Windows.Forms.Button();
+            this.btLessDex = new System.Windows.Forms.Button();
+            this.btPlusDex = new System.Windows.Forms.Button();
+            this.btLessChar = new System.Windows.Forms.Button();
+            this.btPlusChar = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblLvlPoints = new System.Windows.Forms.Label();
+            this.btLvlUpOk = new System.Windows.Forms.Button();
+            this.pnlLevelUp = new System.Windows.Forms.Panel();
             this.pStart.SuspendLayout();
             this.pMain.SuspendLayout();
             this.pNameInput.SuspendLayout();
+            this.pnlLevelUp.SuspendLayout();
             this.SuspendLayout();
             // 
             // bLoadGame
@@ -116,6 +129,7 @@
             // 
             // pMain
             // 
+            this.pMain.Controls.Add(this.pnlLevelUp);
             this.pMain.Controls.Add(this.lExpTxt);
             this.pMain.Controls.Add(this.label4);
             this.pMain.Controls.Add(this.lLevelNr);
@@ -141,16 +155,58 @@
             this.pMain.Controls.Add(this.lHealthTxt);
             this.pMain.Controls.Add(this.lHeroName);
             this.pMain.Controls.Add(this.txtMainWindow);
-            this.pMain.Location = new System.Drawing.Point(228, 48);
+            this.pMain.Location = new System.Drawing.Point(239, 13);
             this.pMain.Margin = new System.Windows.Forms.Padding(4);
             this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(816, 540);
+            this.pMain.Size = new System.Drawing.Size(816, 603);
             this.pMain.TabIndex = 16;
+            // 
+            // lExpTxt
+            // 
+            this.lExpTxt.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lExpTxt.Location = new System.Drawing.Point(652, 374);
+            this.lExpTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lExpTxt.Name = "lExpTxt";
+            this.lExpTxt.Size = new System.Drawing.Size(100, 20);
+            this.lExpTxt.TabIndex = 42;
+            this.lExpTxt.Text = "0";
+            this.lExpTxt.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(550, 376);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(88, 18);
+            this.label4.TabIndex = 41;
+            this.label4.Text = "Experience";
+            // 
+            // lLevelNr
+            // 
+            this.lLevelNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lLevelNr.Location = new System.Drawing.Point(652, 346);
+            this.lLevelNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lLevelNr.Name = "lLevelNr";
+            this.lLevelNr.Size = new System.Drawing.Size(100, 20);
+            this.lLevelNr.TabIndex = 40;
+            this.lLevelNr.Text = "0";
+            this.lLevelNr.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // lLevelTxt
+            // 
+            this.lLevelTxt.AutoSize = true;
+            this.lLevelTxt.Location = new System.Drawing.Point(550, 348);
+            this.lLevelTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lLevelTxt.Name = "lLevelTxt";
+            this.lLevelTxt.Size = new System.Drawing.Size(48, 18);
+            this.lLevelTxt.TabIndex = 39;
+            this.lLevelTxt.Text = "Level";
             // 
             // lGold
             // 
             this.lGold.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lGold.Location = new System.Drawing.Point(652, 292);
+            this.lGold.Location = new System.Drawing.Point(652, 316);
             this.lGold.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lGold.Name = "lGold";
             this.lGold.Size = new System.Drawing.Size(100, 20);
@@ -161,7 +217,7 @@
             // lGoldtxt
             // 
             this.lGoldtxt.AutoSize = true;
-            this.lGoldtxt.Location = new System.Drawing.Point(544, 294);
+            this.lGoldtxt.Location = new System.Drawing.Point(550, 318);
             this.lGoldtxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lGoldtxt.Name = "lGoldtxt";
             this.lGoldtxt.Size = new System.Drawing.Size(40, 18);
@@ -208,7 +264,7 @@
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(340, 278);
+            this.button1.Location = new System.Drawing.Point(108, 267);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(4);
@@ -220,7 +276,7 @@
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(340, 336);
+            this.button2.Location = new System.Drawing.Point(108, 325);
             this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Padding = new System.Windows.Forms.Padding(4);
@@ -232,7 +288,7 @@
             // button3
             // 
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Location = new System.Drawing.Point(340, 396);
+            this.button3.Location = new System.Drawing.Point(108, 385);
             this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
             this.button3.Padding = new System.Windows.Forms.Padding(4);
@@ -244,7 +300,7 @@
             // button4
             // 
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Location = new System.Drawing.Point(340, 456);
+            this.button4.Location = new System.Drawing.Point(108, 445);
             this.button4.Margin = new System.Windows.Forms.Padding(4);
             this.button4.Name = "button4";
             this.button4.Padding = new System.Windows.Forms.Padding(4);
@@ -256,18 +312,19 @@
             // lChrNr
             // 
             this.lChrNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lChrNr.Location = new System.Drawing.Point(652, 504);
+            this.lChrNr.Location = new System.Drawing.Point(652, 535);
             this.lChrNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lChrNr.Name = "lChrNr";
             this.lChrNr.Size = new System.Drawing.Size(100, 20);
             this.lChrNr.TabIndex = 28;
             this.lChrNr.Text = "0";
             this.lChrNr.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.lChrNr.Click += new System.EventHandler(this.lChrNr_Click);
             // 
             // lChrTxt
             // 
             this.lChrTxt.AutoSize = true;
-            this.lChrTxt.Location = new System.Drawing.Point(544, 506);
+            this.lChrTxt.Location = new System.Drawing.Point(550, 537);
             this.lChrTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lChrTxt.Name = "lChrTxt";
             this.lChrTxt.Size = new System.Drawing.Size(72, 18);
@@ -277,7 +334,7 @@
             // lDexNr
             // 
             this.lDexNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lDexNr.Location = new System.Drawing.Point(652, 470);
+            this.lDexNr.Location = new System.Drawing.Point(652, 503);
             this.lDexNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lDexNr.Name = "lDexNr";
             this.lDexNr.Size = new System.Drawing.Size(100, 20);
@@ -288,7 +345,7 @@
             // lDexTxt
             // 
             this.lDexTxt.AutoSize = true;
-            this.lDexTxt.Location = new System.Drawing.Point(544, 471);
+            this.lDexTxt.Location = new System.Drawing.Point(550, 504);
             this.lDexTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lDexTxt.Name = "lDexTxt";
             this.lDexTxt.Size = new System.Drawing.Size(80, 18);
@@ -298,7 +355,7 @@
             // lIntNr
             // 
             this.lIntNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lIntNr.Location = new System.Drawing.Point(652, 440);
+            this.lIntNr.Location = new System.Drawing.Point(652, 469);
             this.lIntNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lIntNr.Name = "lIntNr";
             this.lIntNr.Size = new System.Drawing.Size(100, 20);
@@ -309,7 +366,7 @@
             // lIntTxt
             // 
             this.lIntTxt.AutoSize = true;
-            this.lIntTxt.Location = new System.Drawing.Point(544, 442);
+            this.lIntTxt.Location = new System.Drawing.Point(550, 471);
             this.lIntTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lIntTxt.Name = "lIntTxt";
             this.lIntTxt.Size = new System.Drawing.Size(104, 18);
@@ -319,7 +376,7 @@
             // lStrNr
             // 
             this.lStrNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lStrNr.Location = new System.Drawing.Point(652, 408);
+            this.lStrNr.Location = new System.Drawing.Point(652, 436);
             this.lStrNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lStrNr.Name = "lStrNr";
             this.lStrNr.Size = new System.Drawing.Size(100, 20);
@@ -330,7 +387,7 @@
             // lStrTxt
             // 
             this.lStrTxt.AutoSize = true;
-            this.lStrTxt.Location = new System.Drawing.Point(544, 410);
+            this.lStrTxt.Location = new System.Drawing.Point(550, 437);
             this.lStrTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lStrTxt.Name = "lStrTxt";
             this.lStrTxt.Size = new System.Drawing.Size(72, 18);
@@ -340,7 +397,7 @@
             // lHealthNr
             // 
             this.lHealthNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lHealthNr.Location = new System.Drawing.Point(652, 380);
+            this.lHealthNr.Location = new System.Drawing.Point(652, 404);
             this.lHealthNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lHealthNr.Name = "lHealthNr";
             this.lHealthNr.Size = new System.Drawing.Size(100, 20);
@@ -351,7 +408,7 @@
             // lHealthTxt
             // 
             this.lHealthTxt.AutoSize = true;
-            this.lHealthTxt.Location = new System.Drawing.Point(544, 382);
+            this.lHealthTxt.Location = new System.Drawing.Point(550, 406);
             this.lHealthTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lHealthTxt.Name = "lHealthTxt";
             this.lHealthTxt.Size = new System.Drawing.Size(56, 18);
@@ -361,10 +418,11 @@
             // lHeroName
             // 
             this.lHeroName.AutoSize = true;
-            this.lHeroName.Location = new System.Drawing.Point(649, 256);
+            this.lHeroName.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lHeroName.Location = new System.Drawing.Point(632, 280);
             this.lHeroName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lHeroName.Name = "lHeroName";
-            this.lHeroName.Size = new System.Drawing.Size(40, 18);
+            this.lHeroName.Size = new System.Drawing.Size(50, 22);
             this.lHeroName.TabIndex = 18;
             this.lHeroName.Text = "Name";
             // 
@@ -415,47 +473,157 @@
             this.bOk.UseVisualStyleBackColor = true;
             this.bOk.Click += new System.EventHandler(this.bOk_Click);
             // 
-            // lLevelNr
+            // btPlusStr
             // 
-            this.lLevelNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lLevelNr.Location = new System.Drawing.Point(652, 322);
-            this.lLevelNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lLevelNr.Name = "lLevelNr";
-            this.lLevelNr.Size = new System.Drawing.Size(100, 20);
-            this.lLevelNr.TabIndex = 40;
-            this.lLevelNr.Text = "0";
-            this.lLevelNr.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.btPlusStr.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btPlusStr.AutoSize = true;
+            this.btPlusStr.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btPlusStr.Location = new System.Drawing.Point(103, 18);
+            this.btPlusStr.Margin = new System.Windows.Forms.Padding(0);
+            this.btPlusStr.Name = "btPlusStr";
+            this.btPlusStr.Size = new System.Drawing.Size(28, 30);
+            this.btPlusStr.TabIndex = 43;
+            this.btPlusStr.Text = "+";
+            this.btPlusStr.UseVisualStyleBackColor = true;
             // 
-            // lLevelTxt
+            // btLessStr
             // 
-            this.lLevelTxt.AutoSize = true;
-            this.lLevelTxt.Location = new System.Drawing.Point(544, 324);
-            this.lLevelTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lLevelTxt.Name = "lLevelTxt";
-            this.lLevelTxt.Size = new System.Drawing.Size(48, 18);
-            this.lLevelTxt.TabIndex = 39;
-            this.lLevelTxt.Text = "Level";
+            this.btLessStr.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btLessStr.AutoSize = true;
+            this.btLessStr.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btLessStr.Location = new System.Drawing.Point(131, 18);
+            this.btLessStr.Margin = new System.Windows.Forms.Padding(0);
+            this.btLessStr.Name = "btLessStr";
+            this.btLessStr.Size = new System.Drawing.Size(28, 30);
+            this.btLessStr.TabIndex = 44;
+            this.btLessStr.Text = "-";
+            this.btLessStr.UseVisualStyleBackColor = true;
             // 
-            // lExpTxt
+            // btLessInt
             // 
-            this.lExpTxt.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lExpTxt.Location = new System.Drawing.Point(652, 350);
-            this.lExpTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lExpTxt.Name = "lExpTxt";
-            this.lExpTxt.Size = new System.Drawing.Size(100, 20);
-            this.lExpTxt.TabIndex = 42;
-            this.lExpTxt.Text = "0";
-            this.lExpTxt.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.btLessInt.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btLessInt.AutoSize = true;
+            this.btLessInt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btLessInt.Location = new System.Drawing.Point(131, 52);
+            this.btLessInt.Margin = new System.Windows.Forms.Padding(0);
+            this.btLessInt.Name = "btLessInt";
+            this.btLessInt.Size = new System.Drawing.Size(28, 30);
+            this.btLessInt.TabIndex = 46;
+            this.btLessInt.Text = "-";
+            this.btLessInt.UseVisualStyleBackColor = true;
             // 
-            // label4
+            // btPlusInt
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(544, 352);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(88, 18);
-            this.label4.TabIndex = 41;
-            this.label4.Text = "Experience";
+            this.btPlusInt.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btPlusInt.AutoSize = true;
+            this.btPlusInt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btPlusInt.Location = new System.Drawing.Point(103, 52);
+            this.btPlusInt.Margin = new System.Windows.Forms.Padding(0);
+            this.btPlusInt.Name = "btPlusInt";
+            this.btPlusInt.Size = new System.Drawing.Size(28, 30);
+            this.btPlusInt.TabIndex = 45;
+            this.btPlusInt.Text = "+";
+            this.btPlusInt.UseVisualStyleBackColor = true;
+            // 
+            // btLessDex
+            // 
+            this.btLessDex.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btLessDex.AutoSize = true;
+            this.btLessDex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btLessDex.Location = new System.Drawing.Point(131, 85);
+            this.btLessDex.Margin = new System.Windows.Forms.Padding(0);
+            this.btLessDex.Name = "btLessDex";
+            this.btLessDex.Size = new System.Drawing.Size(28, 30);
+            this.btLessDex.TabIndex = 48;
+            this.btLessDex.Text = "-";
+            this.btLessDex.UseVisualStyleBackColor = true;
+            // 
+            // btPlusDex
+            // 
+            this.btPlusDex.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btPlusDex.AutoSize = true;
+            this.btPlusDex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btPlusDex.Location = new System.Drawing.Point(103, 85);
+            this.btPlusDex.Margin = new System.Windows.Forms.Padding(0);
+            this.btPlusDex.Name = "btPlusDex";
+            this.btPlusDex.Size = new System.Drawing.Size(28, 30);
+            this.btPlusDex.TabIndex = 47;
+            this.btPlusDex.Text = "+";
+            this.btPlusDex.UseVisualStyleBackColor = true;
+            // 
+            // btLessChar
+            // 
+            this.btLessChar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btLessChar.AutoSize = true;
+            this.btLessChar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btLessChar.Location = new System.Drawing.Point(131, 118);
+            this.btLessChar.Margin = new System.Windows.Forms.Padding(0);
+            this.btLessChar.Name = "btLessChar";
+            this.btLessChar.Size = new System.Drawing.Size(28, 30);
+            this.btLessChar.TabIndex = 50;
+            this.btLessChar.Text = "-";
+            this.btLessChar.UseVisualStyleBackColor = true;
+            // 
+            // btPlusChar
+            // 
+            this.btPlusChar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btPlusChar.AutoSize = true;
+            this.btPlusChar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btPlusChar.Location = new System.Drawing.Point(103, 118);
+            this.btPlusChar.Margin = new System.Windows.Forms.Padding(0);
+            this.btPlusChar.Name = "btPlusChar";
+            this.btPlusChar.Size = new System.Drawing.Size(28, 30);
+            this.btPlusChar.TabIndex = 49;
+            this.btPlusChar.Text = "+";
+            this.btPlusChar.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(19, 52);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 18);
+            this.label1.TabIndex = 51;
+            this.label1.Text = "Points";
+            // 
+            // lblLvlPoints
+            // 
+            this.lblLvlPoints.Location = new System.Drawing.Point(43, 77);
+            this.lblLvlPoints.Name = "lblLvlPoints";
+            this.lblLvlPoints.Size = new System.Drawing.Size(32, 22);
+            this.lblLvlPoints.TabIndex = 52;
+            this.lblLvlPoints.Text = "0";
+            this.lblLvlPoints.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btLvlUpOk
+            // 
+            this.btLvlUpOk.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btLvlUpOk.Location = new System.Drawing.Point(30, 114);
+            this.btLvlUpOk.Margin = new System.Windows.Forms.Padding(4);
+            this.btLvlUpOk.Name = "btLvlUpOk";
+            this.btLvlUpOk.Padding = new System.Windows.Forms.Padding(4);
+            this.btLvlUpOk.Size = new System.Drawing.Size(45, 34);
+            this.btLvlUpOk.TabIndex = 53;
+            this.btLvlUpOk.Text = "OK";
+            this.btLvlUpOk.UseVisualStyleBackColor = true;
+            // 
+            // pnlLevelUp
+            // 
+            this.pnlLevelUp.Controls.Add(this.btLvlUpOk);
+            this.pnlLevelUp.Controls.Add(this.lblLvlPoints);
+            this.pnlLevelUp.Controls.Add(this.label1);
+            this.pnlLevelUp.Controls.Add(this.btLessChar);
+            this.pnlLevelUp.Controls.Add(this.btPlusChar);
+            this.pnlLevelUp.Controls.Add(this.btLessDex);
+            this.pnlLevelUp.Controls.Add(this.btPlusDex);
+            this.pnlLevelUp.Controls.Add(this.btLessInt);
+            this.pnlLevelUp.Controls.Add(this.btPlusInt);
+            this.pnlLevelUp.Controls.Add(this.btLessStr);
+            this.pnlLevelUp.Controls.Add(this.btPlusStr);
+            this.pnlLevelUp.Location = new System.Drawing.Point(373, 413);
+            this.pnlLevelUp.Name = "pnlLevelUp";
+            this.pnlLevelUp.Size = new System.Drawing.Size(171, 173);
+            this.pnlLevelUp.TabIndex = 54;
             // 
             // frmBase
             // 
@@ -481,6 +649,8 @@
             this.pMain.PerformLayout();
             this.pNameInput.ResumeLayout(false);
             this.pNameInput.PerformLayout();
+            this.pnlLevelUp.ResumeLayout(false);
+            this.pnlLevelUp.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -519,6 +689,18 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lLevelNr;
         private System.Windows.Forms.Label lLevelTxt;
+        private System.Windows.Forms.Button btLessChar;
+        private System.Windows.Forms.Button btPlusChar;
+        private System.Windows.Forms.Button btLessDex;
+        private System.Windows.Forms.Button btPlusDex;
+        private System.Windows.Forms.Button btLessInt;
+        private System.Windows.Forms.Button btPlusInt;
+        private System.Windows.Forms.Button btLessStr;
+        private System.Windows.Forms.Button btPlusStr;
+        private System.Windows.Forms.Panel pnlLevelUp;
+        private System.Windows.Forms.Button btLvlUpOk;
+        private System.Windows.Forms.Label lblLvlPoints;
+        private System.Windows.Forms.Label label1;
     }
 }
 
