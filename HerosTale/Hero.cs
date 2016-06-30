@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static HeroLogic.World;
 
 using HeroLogic;
 
@@ -23,7 +24,7 @@ namespace HerosTale
             pMain.Enabled = false;
             pNameInput.Visible = false;
             pNameInput.Enabled = false;
-            player = new Player(10, 10, 10, 10, 100, "", 1, 1, 100, 100, 100);
+            player = new Player(10, 10, 10, 10, 100, "", 1, 1, 100, 100, 100,CreatureType.Human, CreatureClass.Player, Areas.Player);
 
             
         }
@@ -34,6 +35,7 @@ namespace HerosTale
         {
             pNameInput.Visible = true;
             pNameInput.Enabled = true;
+            tInputName.Focus();
         }
 
         private void bOk_Click(object sender, EventArgs e)
@@ -81,14 +83,7 @@ namespace HerosTale
 
     }
 
-    public class MainProgram
-    {
-        private string HeroName;
-        private short Health, Str, Intg, Dex, Chari;
 
-        public string Name { get; set; }
-
-    }
 
 
 }

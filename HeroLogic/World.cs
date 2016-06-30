@@ -12,22 +12,48 @@ namespace HeroLogic
         public static readonly List<Monster> Monsters = new List<Monster>();
         public static readonly List<Quest> Quests = new List<Quest>();
         
+        public enum Areas:byte
+        {
+            Everywhere, Desert, Forest, Player
 
-        public const int ITEM_ID_RUSTY_SWORD = 1;        
+        }
+
+        public enum CreatureType : byte
+        {
+            Human, Animal, Monster
+
+        }
+
+        public enum CreatureClass : byte
+        {
+            Normal, Boss, Player
+
+        }
+        
+        public const int ITEM_ID_RUSTY_SWORD = 1;
         public const int ITEM_ID_CLUB = 2;
-        public const int ITEM_ID_HEALING_POTION = 3;
-        public const int ITEM_ID_SILVERSWORD = 4;
-        public const int ITEM_ID_SWORD = 5;
-        public const int ITEM_ID_AXE = 6;
-        public const int ITEM_ID_AMULET = 8;
-        public const int ITEM_ID_WATCH = 9;
-        public const int ITEM_ID_NECKLACE = 10;
-        public const int ITEM_ID_RING = 11;
-
-
+        public const int ITEM_ID_SILVERSWORD = 3;
+        public const int ITEM_ID_SWORD = 4;
+        public const int ITEM_ID_AXE = 5;
+        public const int ITEM_ID_RUBY_AMULET = 20;
+        public const int ITEM_ID_EMERALD_AMULET = 21;
+        public const int ITEM_ID_SAPPHIRE_AMULET = 22;
+        public const int ITEM_ID_GOLDEN_WATCH = 23;
+        public const int ITEM_ID_SILVER_WATCH = 24;
+        public const int ITEM_ID_GOLDEN_NECKLACE = 25;
+        public const int ITEM_ID_SILVER_NECKLACE = 26;
+        public const int ITEM_ID_RING = 27;
+        public const int ITEM_SANCTIFIED_CROSS = 28;
+        public const int ITEM_SACRED_BOOK = 29;
+        public const int ITEM_HOLY_TORCH = 30;
+        public const int ITEM_ID_SMALL_HEALING_POTION = 100;
+        public const int ITEM_ID_NORMAL_HEALING_POTION = 101;
+        public const int ITEM_ID_LARGE_HEALING_POTION = 102;
+        public const int ITEM_ID_SUPER_HEALING_POTION = 103;
+        
         public const int MONSTER_ID_RAT = 1;
         public const int MONSTER_ID_SNAKE = 2;
-        public const int MONSTER_ID_RABIDDOG = 3;
+        public const int MONSTER_ID_RABIDDOG = 3;        
         public const int MONSTER_ID_WOLF = 4;
         public const int MONSTER_ID_BEAR = 5;
         public const int MONSTER_ID_GIANT_SCORPION = 6;
@@ -35,17 +61,16 @@ namespace HeroLogic
         public const int MONSTER_ID_PYTHON = 8;
         public const int MONSTER_ID_LION = 9;
         public const int MONSTER_ID_VULTURE = 10;
-        public const int MONSTER_ID_GIANT_SPIDER = 10;
+        public const int MONSTER_ID_GIANT_SPIDER = 11;
+        public const int MONSTER_ID_GIANT_BEETLE = 12;
+        public const int MONSTER_ID_LYNX = 13;
         public const int MONSTER_ID_BANDIT = 30;
         public const int MONSTER_ID_THIEF = 31;
         public const int MONSTER_ID_BEGGAR = 32;
         public const int MONSTER_ID_PEASANT = 33;
-        public const int MONSTER_ID_BANDITLEADER = 34;
-        public const int MONSTER_ID_RAIDERS = 35;
-        public const int MONSTER_ID_RAIDERSLEADER = 36;
-        public const int MONSTER_ID_MADALCHEMYST = 37;
-        public const int MONSTER_ID_SCOUNDREL = 38;
-        public const int MONSTER_ID_THIEFLEADER = 39;
+        public const int MONSTER_ID_NOMAD = 34;
+        public const int MONSTER_ID_RAIDERS = 35;        
+        public const int MONSTER_ID_SCOUNDREL = 38;        
         public const int MONSTER_ID_HARPY = 100;
         public const int MONSTER_ID_WEREWOLF = 101;
         public const int MONSTER_ID_VAMPIRE = 102;
@@ -59,10 +84,7 @@ namespace HeroLogic
         public const int QUEST_ID_KILLMONSTER = 1;
         public const int QUEST_ID_KILLHUMAN = 2;
         public const int QUEST_ID_RECOVERITEM = 3;
-        public const int QUEST_ID_WORKLORD = 4;
         public const int QUEST_ID_CARAVAN = 4;
-
-
 
         static World()
         {
@@ -75,14 +97,13 @@ namespace HeroLogic
         private static void PopulateItems()
         {
             Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Rusty sword", "Rusty swords", 0, 5));
-        
         }
 
         private static void PopulateMonsters()
         {
-            Monsters.Add(new Monster(MONSTER_ID_RAT, "Rat", 5, 3, 10, 3, 3));
-            Monsters.Add(new Monster(MONSTER_ID_SNAKE, "Snake", 5, 3, 10, 3, 3));
-            Monsters.Add(new Monster(MONSTER_ID_GIANT_SPIDER, "Giant spider", 0, 5, 40, 10, 10));
+            Monsters.Add(new Monster(MONSTER_ID_RAT, "Rat", 5, 3, 10, 3, 3, CreatureType.Animal,CreatureClass.Normal, Areas.Everywhere));
+            Monsters.Add(new Monster(MONSTER_ID_SNAKE, "Snake", 5, 3, 10, 3, 3, CreatureType.Animal, CreatureClass.Normal, Areas.Everywhere));
+            Monsters.Add(new Monster(MONSTER_ID_GIANT_SPIDER, "Giant spider", 0, 5, 40, 10, 10, CreatureType.Animal, CreatureClass.Normal, Areas.Everywhere));
             
 
         }

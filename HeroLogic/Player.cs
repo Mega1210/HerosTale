@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HeroLogic.World;
 
 namespace HeroLogic
 {
@@ -21,7 +22,7 @@ namespace HeroLogic
         public List<PlayerQuest> Quests { get; set; }
 
         public Player(int str, int dex, int inte, int chari, int gold, string name, int exp, int level, int expToLvl, 
-            int currentHitPoints, int maxHitPoints) :base(currentHitPoints,maxHitPoints)
+            int currentHitPoints, int maxHitPoints, CreatureType type, CreatureClass difficulty, Areas location) :base(currentHitPoints,maxHitPoints,type, difficulty, location)
         {
             Strength = str;
             Dexerity = dex;
@@ -33,6 +34,9 @@ namespace HeroLogic
             ExperienceToLevel = expToLvl;
             CurrentHitPoints = currentHitPoints;
             MaximumHitPoints = maxHitPoints;
+            Type = type;
+            Difficulty = difficulty;
+            Location = location;
             Inventory = new List<InventoryItem>();
             Quests = new List<PlayerQuest>();
 
