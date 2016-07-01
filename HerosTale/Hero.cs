@@ -16,6 +16,7 @@ namespace HerosTale
     public partial class frmBase : Form
     {
         private Player player;
+        private int tmpStr, tmpDex, tmpInt, tmpChar;
 
         public frmBase()
         {
@@ -26,8 +27,8 @@ namespace HerosTale
             pNameInput.Enabled = false;
             pnlLevelUp.Enabled = false;
             pnlLevelUp.Visible = false;
-            player = new Player(10, 10, 10, 10, 100, "", 1, 1, 100, 100, 100,CreatureType.HumanPeaceful, CreatureClass.Player, Areas.Player);
-
+            player = new Player(1, 1, 1, 1, 100, "", 1, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
+            
             
         }
                 
@@ -36,6 +37,20 @@ namespace HerosTale
             pNameInput.Visible = true;
             pNameInput.Enabled = true;
             tInputName.Focus();
+        }
+
+        private void LevelUp(int points)
+        {
+            tmpStr = player.Strength;
+            tmpDex = player.Dexerity;
+            tmpInt = player.Intelligence;
+            tmpChar = player.Charisma;
+
+            pnlLevelUp.Enabled = true;
+            pnlLevelUp.Visible = true;
+            lblLvlPoints.Text = Convert.ToString(points);
+
+
         }
 
         private void bOk_Click(object sender, EventArgs e)
@@ -47,7 +62,13 @@ namespace HerosTale
             pMain.Enabled = true;
             pMain.Visible = true;
             player.Name = tInputName.Text;
-            txtMainWindow.Text = $"This is the moment to become a hero {player.Name}";
+            txtMainWindow.Text = $"This is the moment to become a hero {player.Name} \r\n";
+            txtMainWindow.Text += "You start as a puny \"wanna be hero\" barely able to wield a sword and kill a rat \r\n";
+            txtMainWindow.Text += "By accomplishing the missions you can pick up at the local tavern you will slowly become the hero of this God forgotten land!\r\n";
+            txtMainWindow.Text += "... or die trying!\r\n";
+            txtMainWindow.Text += "\r\n";
+            txtMainWindow.Text += "First thing first. Lady Luck has given you 5 attribute points to assign to your stats. Do so and your adventure can begin! \r\n";
+            txtMainWindow.Text += "\r\n";
             lHeroName.Text = player.Name;
             lHealthNr.Text = $"{player.CurrentHitPoints}/{player.MaximumHitPoints}";
             lStrNr.Text = Convert.ToString(player.Strength);
@@ -56,13 +77,65 @@ namespace HerosTale
             lChrNr.Text = Convert.ToString(player.Charisma);
             lGold.Text = Convert.ToString(player.Gold);
             lLevelNr.Text = Convert.ToString(player.Level);
-            lExpTxt.Text = $"{player.ExperiecePoints}/{player.ExperienceToLevel}";
+            lExpTxt.Text = $"{player.ExperiecePoints}";
 
+            LevelUp(5);
+            
+        }
+
+        private void AddAttribute(int tmp, int points, Label lblAttribute, Label lblPoints )
+        {            
+            if (++tmp > 20)
+            {
+                tmp = 20;
+            }
+            else
+            {
+                if (--points < 0)
+                {
+                    ++points;
+                    --tmp;
+
+                }
+            }
+
+            lblAttribute.Text = Convert.ToString(tmp);
+            lblPoints.Text = Convert.ToString(points);
 
 
         }
 
-        
+        private void SubAttribute(int tmp, int points, int minPoints, Label lblAttribute, Label lblPoints)
+        {            
+            if (--tmp < minPoints)
+            {
+                tmp = minPoints;
+            }
+            else
+            {
+                ++points;
+
+            }
+
+
+            lblAttribute.Text = Convert.ToString(tmp);
+            lblPoints.Text = Convert.ToString(points);
+        }
+
+        private void btPlusStr_Click(object sender, EventArgs e)
+        {
+
+            AddAttribute(tmpStr, Convert.ToInt32(lblLvlPoints.Text), lStrNr, lblLvlPoints);
+            tmpStr = Convert.ToInt32(lStrNr.Text);
+         
+
+        }
+
+        private void btLessStr_Click(object sender, EventArgs e)
+        {
+            SubAttribute(tmpStr, Convert.ToInt32(lblLvlPoints.Text),player.Strength, lStrNr, lblLvlPoints);
+            tmpStr = Convert.ToInt32(lStrNr.Text);
+        }
 
         private void bExit_Click(object sender, EventArgs e)
         {
@@ -78,8 +151,25 @@ namespace HerosTale
             }
         }
 
-        private void lChrNr_Click(object sender, EventArgs e)
+        private void btLvlUpOk_Click(object sender, EventArgs e)
         {
+            if (lblLvlPoints.Text=="0")
+            {
+                pnlLevelUp.Enabled = false;
+                pnlLevelUp.Visible = false;
+
+                player.Strength = tmpStr;
+                player.Dexerity = tmpDex;
+                player.Intelligence = tmpInt;
+                player.Charisma = tmpChar;
+                txtMainWindow.Text += $"Strenght is now {player.Strength} \r\n";
+            }
+            else
+            {
+                txtMainWindow.Text += "You have points to assign! \r\n";
+            }
+
+
 
         }
     }
