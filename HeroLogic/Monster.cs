@@ -16,7 +16,7 @@ namespace HeroLogic
         public int RewardGold { get; set; }
 
         public Monster(int id, string name, int maxDamage, int rewardExp, int reward, int currentHitPoints, 
-            int maxHitPoints, CreatureType type, CreatureClass difficulty, Areas location) : base (currentHitPoints,maxHitPoints, type, difficulty, location)
+            int maxHitPoints, CreatureType type, CreatureClass difficulty) : base (currentHitPoints,maxHitPoints, type, difficulty)
         {
             ID = id;
             Name = name;
@@ -26,8 +26,7 @@ namespace HeroLogic
             CurrentHitPoints = currentHitPoints;
             MaximumHitPoints = maxHitPoints;
             Type = type;
-            Difficulty = difficulty;
-            Location = location;
+            Difficulty = difficulty;            
         }
     }
 }

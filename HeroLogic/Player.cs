@@ -22,7 +22,7 @@ namespace HeroLogic
         public byte QuestNr;
 
         public Player(int str, int dex, int inte, int chari, int gold, string name, int exp, int level, int expToLvl, 
-            int currentHitPoints, int maxHitPoints, CreatureType type, CreatureClass difficulty, Areas location) :base(currentHitPoints,maxHitPoints,type, difficulty, location)
+            int currentHitPoints, int maxHitPoints, CreatureType type, CreatureClass difficulty) :base(currentHitPoints,maxHitPoints,type, difficulty)
         {
             Strength = str;
             Dexerity = dex;
@@ -35,8 +35,7 @@ namespace HeroLogic
             CurrentHitPoints = currentHitPoints;
             MaximumHitPoints = maxHitPoints;
             Type = type;
-            Difficulty = difficulty;
-            Location = location;
+            Difficulty = difficulty;            
             Inventory = new List<InventoryItem>();
             
 

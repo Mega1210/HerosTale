@@ -11,10 +11,12 @@ namespace HeroLogic
         public static readonly List<Item> Items = new List<Item>();
         public static readonly List<Monster> Monsters = new List<Monster>();
         public static readonly List<Quest> Quests = new List<Quest>();
-        
-        public enum Areas:byte
+        public static readonly List<CreatureLocations> CreatureLocations = new List<CreatureLocations>();
+
+
+        public enum Areas : byte
         {
-            Everywhere, Desert, Forest, Player, Hills, Ruins
+            Forest, Hills, Mountains, Desert, CastleRuins, TempleRuins
 
         }
 
@@ -33,20 +35,18 @@ namespace HeroLogic
         public enum QuestType : byte
         {
             Kill, Retrive, SaveKidnap, Caravan
-
         }
 
         public enum Who : byte
         {
             Sister, Mother, Brother, Father, Uncle, Aunt
-
         }
 
         public enum Giver : byte
         {
             Lord, NobleWoman, WeathlyMerchant, MerchantGuild
-
         }
+
         public const int ITEM_ID_RUSTY_SWORD = 1;
         public const int ITEM_ID_CLUB = 2;
         public const int ITEM_ID_SILVERSWORD = 3;
@@ -107,8 +107,13 @@ namespace HeroLogic
         {
             PopulateItems();
             PopulateMonsters();
-            //PopulateQuests();
-        
+            PopulateCreatureLocations();
+            //PopulateQuests();        
+        }
+
+        private static void PopulateCreatureLocations()
+        {
+            CreatureLocations.Add(new CreatureLocations(1,Areas.Forest,1));
         }
 
         private static void PopulateItems()
@@ -118,9 +123,9 @@ namespace HeroLogic
 
         private static void PopulateMonsters()
         {
-            Monsters.Add(new Monster(MONSTER_ID_RAT, "Rat", 5, 3, 10, 3, 3, CreatureType.Animal,CreatureClass.Normal, Areas.Everywhere));
-            Monsters.Add(new Monster(MONSTER_ID_SNAKE, "Snake", 5, 3, 10, 3, 3, CreatureType.Animal, CreatureClass.Normal, Areas.Everywhere));
-            Monsters.Add(new Monster(MONSTER_ID_GIANT_SPIDER, "Giant spider", 0, 5, 40, 10, 10, CreatureType.Animal, CreatureClass.Normal, Areas.Everywhere));
+            Monsters.Add(new Monster(MONSTER_ID_RAT, "Rat", 5, 3, 10, 3, 3, CreatureType.Animal,CreatureClass.Normal));
+            //Monsters.Add(new Monster(MONSTER_ID_SNAKE, "Snake", 5, 3, 10, 3, 3, CreatureType.Animal, CreatureClass.Normal, Areas.Everywhere));
+            //Monsters.Add(new Monster(MONSTER_ID_GIANT_SPIDER, "Giant spider", 0, 5, 40, 10, 10, CreatureType.Animal, CreatureClass.Normal, Areas.Everywhere));
             
 
         }
