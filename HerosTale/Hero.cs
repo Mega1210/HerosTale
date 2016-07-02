@@ -69,9 +69,6 @@ namespace HerosTale
 
         }
 
-
-
-
         private void CheckLvlUp(int exp, int lvl)
         {
             if (lvl<20 && exp>=70000)
@@ -210,8 +207,6 @@ namespace HerosTale
             return 0;
         }
 
-
-
         private int AvoidHit(int dex)
         {
             switch (dex)
@@ -241,6 +236,110 @@ namespace HerosTale
             return 0;
         }
 
+        private int PriceReduction(int chari)
+        {
+            switch (chari)
+            {
+                case 1: return 0;
+                case 2: return 0;
+                case 3: return 0;
+                case 4: return 0;
+                case 5: return 5;
+                case 6: return 5;
+                case 7: return 5;
+                case 8: return 5;
+                case 9: return 5;
+                case 10: return 5;
+                case 11: return 8;
+                case 12: return 8;
+                case 13: return 8;
+                case 14: return 8;
+                case 15: return 8;
+                case 16: return 10;
+                case 17: return 10;
+                case 18: return 10;
+                case 19: return 10;
+                case 20: return 10;
+            }
+
+            return 0;
+        }
+
+        private int BonusQuest(int chari)
+        {
+            switch (chari)
+            {
+                case 1: return 0;
+                case 2: return 0;
+                case 3: return 0;
+                case 4: return 0;
+                case 5: return 5;
+                case 6: return 5;
+                case 7: return 5;
+                case 8: return 10;
+                case 9: return 10;
+                case 10: return 10;
+                case 11: return 10;
+                case 12: return 15;
+                case 13: return 15;
+                case 14: return 15;
+                case 15: return 20;
+                case 16: return 20;
+                case 17: return 20;
+                case 18: return 20;
+                case 19: return 25;
+                case 20: return 25;
+            }
+
+            return 0;
+        }
+
+        private int SpecialAction(int inte)
+        {
+            switch (inte)
+            {
+                case 1: return 10;
+                case 2: return 10;
+                case 3: return 10;
+                case 4: return 10;
+                case 5: return 15;
+                case 6: return 15;
+                case 7: return 15;
+                case 8: return 15;
+                case 9: return 15;
+                case 10: return 20;
+                case 11: return 20;
+                case 12: return 20;
+                case 13: return 25;
+                case 14: return 25;
+                case 15: return 25;
+                case 16: return 25;
+                case 17: return 25;
+                case 18: return 30;
+                case 19: return 30;
+                case 20: return 30;
+            }
+
+            return 0;
+        }
+
+        private int Damage(int str, int lvl, int minDmg, int maxDmg)
+        {
+            double factor1 = Math.Pow((str * (1 + lvl / 100)), 2);
+            Random rnd = new Random();
+            return Convert.ToInt32(rnd.Next(minDmg, maxDmg + 1) * (1 + factor1 / 100));
+
+        }
+
+        private void Tavern()
+        {
+            txtMainWindow.Text = "These missions are available: \r\n";
+            txtMainWindow.Text += "1- \r\n";
+            txtMainWindow.Text += "2- \r\n";
+            txtMainWindow.Text += "3- \r\n";
+            txtMainWindow.Text += "4- \r\n";
+        }
+
         private async void bOk_Click(object sender, EventArgs e)
         {
             pNameInput.Enabled = false;
@@ -252,14 +351,6 @@ namespace HerosTale
 
             player.Name = tInputName.Text;
             lHeroName.Text = player.Name;
-            /*lHealthNr.Text = $"{player.CurrentHitPoints}/{player.MaximumHitPoints}";
-            lStrNr.Text = Convert.ToString(player.Strength);
-            lIntNr.Text = Convert.ToString(player.Intelligence);
-            lDexNr.Text = Convert.ToString(player.Dexterity);
-            lChrNr.Text = Convert.ToString(player.Charisma);
-            lGold.Text = Convert.ToString(player.Gold);
-            lLevelNr.Text = Convert.ToString(player.Level);
-            lExpTxt.Text = $"{player.ExperiecePoints}";*/
 
             txtMainWindow.Text = $"This is the moment to become a hero {player.Name} \r\n";
             txtMainWindow.Text += "\r\n";
@@ -274,15 +365,20 @@ namespace HerosTale
             ScrollDownText(txtMainWindow);
             await Task.Delay(3000);
             
-            //LevelUp(5);
-
+            LevelUp(5);
+            
+            txtMainWindow.Text += "\r\n";
+            txtMainWindow.Text += "You head to the local tavern to pick up some contracts \r\n";            
             ScrollDownText(txtMainWindow);
+            await Task.Delay(6000);
+            Tavern();
+            /*ScrollDownText(txtMainWindow);
             int testexp = 11000;
             txtMainWindow.Text += $"Adding {testexp} to experience\r\n";
             ScrollDownText(txtMainWindow);
             await Task.Delay(3000);
             player.ExperiecePoints += testexp;
-            CheckLvlUp(player.ExperiecePoints, player.Level);
+            CheckLvlUp(player.ExperiecePoints, player.Level);*/
 
 
         }
@@ -381,8 +477,6 @@ namespace HerosTale
         {
             this.Close();
         }
-
-
 
         private void tInputName_KeyPress(object sender, KeyPressEventArgs e)
         {
