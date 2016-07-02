@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.bLoadGame = new System.Windows.Forms.Button();
             this.txtMainWindow = new System.Windows.Forms.TextBox();
             this.bNewGane = new System.Windows.Forms.Button();
             this.pStart = new System.Windows.Forms.Panel();
             this.pMain = new System.Windows.Forms.Panel();
             this.pnlLevelUp = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.btLvlUpOk = new System.Windows.Forms.Button();
             this.lblLvlPoints = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -73,7 +75,7 @@
             this.lNameInut = new System.Windows.Forms.Label();
             this.pNameInput = new System.Windows.Forms.Panel();
             this.bOk = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pStart.SuspendLayout();
             this.pMain.SuspendLayout();
             this.pnlLevelUp.SuspendLayout();
@@ -175,13 +177,22 @@
             this.pnlLevelUp.Controls.Add(this.btLessDex);
             this.pnlLevelUp.Controls.Add(this.btPlusDex);
             this.pnlLevelUp.Controls.Add(this.btLessInt);
-            this.pnlLevelUp.Controls.Add(this.btPlusInt);
             this.pnlLevelUp.Controls.Add(this.btLessStr);
             this.pnlLevelUp.Controls.Add(this.btPlusStr);
+            this.pnlLevelUp.Controls.Add(this.btPlusInt);
             this.pnlLevelUp.Location = new System.Drawing.Point(373, 385);
             this.pnlLevelUp.Name = "pnlLevelUp";
             this.pnlLevelUp.Size = new System.Drawing.Size(171, 201);
             this.pnlLevelUp.TabIndex = 54;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 11);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(160, 18);
+            this.label2.TabIndex = 54;
+            this.label2.Text = "Assign Stats Points";
             // 
             // btLvlUpOk
             // 
@@ -248,7 +259,7 @@
             this.btLessDex.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btLessDex.AutoSize = true;
             this.btLessDex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btLessDex.Location = new System.Drawing.Point(136, 112);
+            this.btLessDex.Location = new System.Drawing.Point(136, 81);
             this.btLessDex.Margin = new System.Windows.Forms.Padding(0);
             this.btLessDex.Name = "btLessDex";
             this.btLessDex.Size = new System.Drawing.Size(28, 30);
@@ -262,7 +273,7 @@
             this.btPlusDex.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btPlusDex.AutoSize = true;
             this.btPlusDex.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btPlusDex.Location = new System.Drawing.Point(108, 112);
+            this.btPlusDex.Location = new System.Drawing.Point(108, 81);
             this.btPlusDex.Margin = new System.Windows.Forms.Padding(0);
             this.btPlusDex.Name = "btPlusDex";
             this.btPlusDex.Size = new System.Drawing.Size(28, 30);
@@ -276,7 +287,7 @@
             this.btLessInt.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btLessInt.AutoSize = true;
             this.btLessInt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btLessInt.Location = new System.Drawing.Point(136, 79);
+            this.btLessInt.Location = new System.Drawing.Point(136, 112);
             this.btLessInt.Margin = new System.Windows.Forms.Padding(0);
             this.btLessInt.Name = "btLessInt";
             this.btLessInt.Size = new System.Drawing.Size(28, 30);
@@ -290,7 +301,7 @@
             this.btPlusInt.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btPlusInt.AutoSize = true;
             this.btPlusInt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btPlusInt.Location = new System.Drawing.Point(108, 79);
+            this.btPlusInt.Location = new System.Drawing.Point(108, 112);
             this.btPlusInt.Margin = new System.Windows.Forms.Padding(0);
             this.btPlusInt.Name = "btPlusInt";
             this.btPlusInt.Size = new System.Drawing.Size(28, 30);
@@ -638,15 +649,6 @@
             this.bOk.UseVisualStyleBackColor = true;
             this.bOk.Click += new System.EventHandler(this.bOk_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 11);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(160, 18);
-            this.label2.TabIndex = 54;
-            this.label2.Text = "Assign Stats Points";
-            // 
             // frmBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -724,6 +726,7 @@
         private System.Windows.Forms.Label lblLvlPoints;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

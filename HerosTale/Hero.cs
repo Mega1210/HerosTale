@@ -17,6 +17,8 @@ namespace HerosTale
     {
         private Player player;
         private int tmpStr, tmpDex, tmpInt, tmpChar;
+        private const int HEALTH_LEVEL = 500;
+        private const int POINTS_LEVEL = 3;
 
         public frmBase()
         {
@@ -53,25 +55,9 @@ namespace HerosTale
 
         }
 
-        private void bOk_Click(object sender, EventArgs e)
+        private void UpdateStats()
         {
-            pNameInput.Enabled = false;
-            pNameInput.Visible = false;
-            pStart.Enabled = false;
-            pStart.Visible = false;
-            pMain.Enabled = true;
-            pMain.Visible = true;
-            player.Name = tInputName.Text;
-            txtMainWindow.Text = $"This is the moment to become a hero {player.Name} \r\n";
-            txtMainWindow.Text += "You start as a puny \"wanna be hero\" barely able to wield a sword and kill a rat \r\n";
-            txtMainWindow.Text += "By accomplishing the missions you can pick up at the local tavern you will slowly become the hero of this God forgotten land!\r\n";
-            txtMainWindow.Text += "... or die trying!\r\n";
-            txtMainWindow.Text += "\r\n";
-            txtMainWindow.Text += "First thing first. Lady Luck has given you 5 attribute points to assign to your stats. Do so and your adventure can begin! \r\n";
-            txtMainWindow.Text += "\r\n";
-            ScrollDownText(txtMainWindow);
 
-            lHeroName.Text = player.Name;
             lHealthNr.Text = $"{player.CurrentHitPoints}/{player.MaximumHitPoints}";
             lStrNr.Text = Convert.ToString(player.Strength);
             lIntNr.Text = Convert.ToString(player.Intelligence);
@@ -81,8 +67,224 @@ namespace HerosTale
             lLevelNr.Text = Convert.ToString(player.Level);
             lExpTxt.Text = $"{player.ExperiecePoints}";
 
-            LevelUp(5);
+        }
+
+
+
+
+        private void CheckLvlUp(int exp, int lvl)
+        {
+            if (lvl<20 && exp>=70000)
+            {
+                player.Level = 20;
+                
+            }
+            else if (lvl < 19 && exp >= 62000)
+            {
+                player.Level = 19;
+                
+            }
+            else if (lvl < 18 && exp >= 55000)
+            {
+                player.Level = 18;
+                
+            }
+            else if (lvl < 17 && exp >= 48000)
+            {
+                player.Level = 17;
+                
+            }
+            else if (lvl < 16 && exp >= 43000)
+            {
+                player.Level = 16;
+                
+            }
+            else if (lvl < 15 && exp >= 38000)
+            {
+                player.Level = 15;
+                
+            }
+            else if (lvl < 14 && exp >= 33000)
+            {
+                player.Level = 14;
+                
+            }
+            else if (lvl < 13 && exp >= 28000)
+            {
+                player.Level = 13;
+                
+            }
+            else if (lvl < 12 && exp >= 23000)
+            {
+                player.Level = 12;
+                
+            }
+            else if (lvl < 11 && exp >= 18000)
+            {
+                player.Level = 11;
+                
+            }
+            else if (lvl < 10 && exp >= 13000)
+            {
+                player.Level = 10;
+                
+            }
+            else if (lvl < 9 && exp >= 11000)
+            {
+                player.Level = 9;
+                
+            }
+            else if (lvl < 8 && exp >= 9000)
+            {
+                player.Level = 8;
+                
+            }
+            else if (lvl < 7 && exp >= 7000)
+            {
+                player.Level = 7;
+                
+            }
+            else if (lvl < 6 && exp >= 5000)
+            {
+                player.Level = 6;
+                
+            }
+            else if (lvl < 5 && exp >= 3000)
+            {
+                player.Level = 5;
+                
+            }
+            else if (lvl < 4 && exp >= 2000)
+            {
+                player.Level = 4;
+                
+            }
+            else if (lvl < 3 && exp >= 1000)
+            {
+                player.Level = 3;
+                
+            }
+            else if (lvl < 2 && exp >= 500)
+            {
+                player.Level = 2;
+                
+            }
+
+            txtMainWindow.Text += $"Congratrulations you are now level {player.Level}!! \r\n";
+            ScrollDownText(txtMainWindow);
+            player.MaximumHitPoints += (player.Level - lvl) * HEALTH_LEVEL;
+            player.CurrentHitPoints = player.MaximumHitPoints;
+            txtMainWindow.Text += $"You have gained {(player.Level - lvl) * POINTS_LEVEL} stats point to assign and {(player.Level - lvl) *HEALTH_LEVEL} health. \r\n";
+            ScrollDownText(txtMainWindow);
+            LevelUp((player.Level - lvl) * POINTS_LEVEL);
+            UpdateStats();
+
+        }
+
+        private int HitTarget(int dex)
+        {
+            switch (dex)
+            {
+                case 1: return 50;
+                case 2: return 54;
+                case 3: return 56;
+                case 4: return 58;
+                case 5: return 60;
+                case 6: return 62;
+                case 7: return 64;
+                case 8: return 66;
+                case 9: return 68;
+                case 10: return 70;
+                case 11: return 72;
+                case 12: return 74;
+                case 13: return 76;
+                case 14: return 78;
+                case 15: return 80;
+                case 16: return 82;
+                case 17: return 84;
+                case 18: return 86;
+                case 19: return 88;
+                case 20: return 90;                
+            }
+
+            return 0;
+        }
+
+
+
+        private int AvoidHit(int dex)
+        {
+            switch (dex)
+            {
+                case 1: return 10;
+                case 2: return 11;
+                case 3: return 12;
+                case 4: return 13;
+                case 5: return 14;
+                case 6: return 15;
+                case 7: return 16;
+                case 8: return 17;
+                case 9: return 18;
+                case 10: return 19;
+                case 11: return 20;
+                case 12: return 21;
+                case 13: return 22;
+                case 14: return 23;
+                case 15: return 24;
+                case 16: return 25;
+                case 17: return 26;
+                case 18: return 27;
+                case 19: return 28;
+                case 20: return 30;
+            }
+
+            return 0;
+        }
+
+        private async void bOk_Click(object sender, EventArgs e)
+        {
+            pNameInput.Enabled = false;
+            pNameInput.Visible = false;
+            pStart.Enabled = false;
+            pStart.Visible = false;
+            pMain.Enabled = true;
+            pMain.Visible = true;
+
+            player.Name = tInputName.Text;
+            lHeroName.Text = player.Name;
+            /*lHealthNr.Text = $"{player.CurrentHitPoints}/{player.MaximumHitPoints}";
+            lStrNr.Text = Convert.ToString(player.Strength);
+            lIntNr.Text = Convert.ToString(player.Intelligence);
+            lDexNr.Text = Convert.ToString(player.Dexterity);
+            lChrNr.Text = Convert.ToString(player.Charisma);
+            lGold.Text = Convert.ToString(player.Gold);
+            lLevelNr.Text = Convert.ToString(player.Level);
+            lExpTxt.Text = $"{player.ExperiecePoints}";*/
+
+            txtMainWindow.Text = $"This is the moment to become a hero {player.Name} \r\n";
+            txtMainWindow.Text += "\r\n";
+            await Task.Delay(2000);
+            txtMainWindow.Text += "You start as a puny \"wanna be hero\" barely able to wield a sword and kill a rat \r\n";
+            await Task.Delay(3000);
+            txtMainWindow.Text += "By accomplishing the missions you can pick up at the local tavern you will slowly become the hero of this God forgotten land... or die trying!\r\n";
+            await Task.Delay(5000);
+            txtMainWindow.Text += "\r\n";
+            txtMainWindow.Text += "First thing first. Lady Luck has given you 5 attribute points to assign to your stats. Do so and your adventure can begin! \r\n";
+            txtMainWindow.Text += "\r\n";
+            ScrollDownText(txtMainWindow);
+            await Task.Delay(3000);
             
+            //LevelUp(5);
+
+            ScrollDownText(txtMainWindow);
+            int testexp = 11000;
+            txtMainWindow.Text += $"Adding {testexp} to experience\r\n";
+            ScrollDownText(txtMainWindow);
+            await Task.Delay(3000);
+            player.ExperiecePoints += testexp;
+            CheckLvlUp(player.ExperiecePoints, player.Level);
+
+
         }
 
         private void AddAttribute(int tmp, int points, Label lblAttribute, Label lblPoints )
