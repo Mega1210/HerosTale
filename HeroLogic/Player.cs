@@ -10,7 +10,7 @@ namespace HeroLogic
     public class Player:LivingCreature
     {        
         public int Strength { get; set; }
-        public int Dexerity { get; set; }
+        public int Dexterity { get; set; }
         public int Intelligence { get; set; }
         public int Charisma { get; set; }
         public int Gold { get; set; }
@@ -38,7 +38,7 @@ namespace HeroLogic
             int currentHitPoints, int maxHitPoints, CreatureType type, CreatureClass difficulty) :base(currentHitPoints,maxHitPoints,type, difficulty)
         {
             Strength = str;
-            Dexerity = dex;
+            Dexterity = dex;
             Intelligence = inte;
             Charisma = chari;
             Gold = gold;

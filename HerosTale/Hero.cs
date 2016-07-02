@@ -42,7 +42,7 @@ namespace HerosTale
         private void LevelUp(int points)
         {
             tmpStr = player.Strength;
-            tmpDex = player.Dexerity;
+            tmpDex = player.Dexterity;
             tmpInt = player.Intelligence;
             tmpChar = player.Charisma;
 
@@ -69,11 +69,13 @@ namespace HerosTale
             txtMainWindow.Text += "\r\n";
             txtMainWindow.Text += "First thing first. Lady Luck has given you 5 attribute points to assign to your stats. Do so and your adventure can begin! \r\n";
             txtMainWindow.Text += "\r\n";
+            ScrollDownText(txtMainWindow);
+
             lHeroName.Text = player.Name;
             lHealthNr.Text = $"{player.CurrentHitPoints}/{player.MaximumHitPoints}";
             lStrNr.Text = Convert.ToString(player.Strength);
             lIntNr.Text = Convert.ToString(player.Intelligence);
-            lDexNr.Text = Convert.ToString(player.Dexerity);
+            lDexNr.Text = Convert.ToString(player.Dexterity);
             lChrNr.Text = Convert.ToString(player.Charisma);
             lGold.Text = Convert.ToString(player.Gold);
             lLevelNr.Text = Convert.ToString(player.Level);
@@ -137,10 +139,48 @@ namespace HerosTale
             tmpStr = Convert.ToInt32(lStrNr.Text);
         }
 
+        private void btPlusInt_Click(object sender, EventArgs e)
+        {
+            AddAttribute(tmpInt, Convert.ToInt32(lblLvlPoints.Text), lIntNr, lblLvlPoints);
+            tmpInt = Convert.ToInt32(lIntNr.Text);
+        }
+
+        private void btLessInt_Click(object sender, EventArgs e)
+        {
+            SubAttribute(tmpInt, Convert.ToInt32(lblLvlPoints.Text), player.Intelligence, lIntNr, lblLvlPoints);
+            tmpInt = Convert.ToInt32(lIntNr.Text);
+        }
+
+        private void btPlusDex_Click(object sender, EventArgs e)
+        {
+            AddAttribute(tmpDex, Convert.ToInt32(lblLvlPoints.Text), lDexNr, lblLvlPoints);
+            tmpDex = Convert.ToInt32(lDexNr.Text);
+        }
+
+        private void btLessDex_Click(object sender, EventArgs e)
+        {
+            SubAttribute(tmpDex, Convert.ToInt32(lblLvlPoints.Text), player.Dexterity, lDexNr, lblLvlPoints);
+            tmpDex = Convert.ToInt32(lDexNr.Text);
+        }
+
+        private void btPlusChar_Click(object sender, EventArgs e)
+        {
+            AddAttribute(tmpChar, Convert.ToInt32(lblLvlPoints.Text),lChrNr, lblLvlPoints);
+            tmpChar = Convert.ToInt32(lChrNr.Text);
+        }
+
+        private void btLessChar_Click(object sender, EventArgs e)
+        {
+            SubAttribute(tmpChar, Convert.ToInt32(lblLvlPoints.Text), player.Charisma, lChrNr, lblLvlPoints);
+            tmpChar = Convert.ToInt32(lChrNr.Text);
+        }
+
         private void bExit_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
+
 
         private void tInputName_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -151,6 +191,12 @@ namespace HerosTale
             }
         }
 
+        private void ScrollDownText(TextBox txtb)
+        {
+            txtb.SelectionStart = txtb.Text.Length;
+            txtb.ScrollToCaret();
+        }
+
         private void btLvlUpOk_Click(object sender, EventArgs e)
         {
             if (lblLvlPoints.Text=="0")
@@ -159,14 +205,22 @@ namespace HerosTale
                 pnlLevelUp.Visible = false;
 
                 player.Strength = tmpStr;
-                player.Dexerity = tmpDex;
+                player.Dexterity = tmpDex;
                 player.Intelligence = tmpInt;
                 player.Charisma = tmpChar;
+
                 txtMainWindow.Text += $"Strenght is now {player.Strength} \r\n";
+                txtMainWindow.Text += $"Dexterity is now {player.Dexterity} \r\n";
+                txtMainWindow.Text += $"Intelligence is now {player.Intelligence} \r\n";
+                txtMainWindow.Text += $"Charisma is now {player.Charisma} \r\n";
+
+                ScrollDownText(txtMainWindow);
+
             }
             else
             {
                 txtMainWindow.Text += "You have points to assign! \r\n";
+                ScrollDownText(txtMainWindow);
             }
 
 
