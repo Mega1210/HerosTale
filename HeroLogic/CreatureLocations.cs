@@ -11,12 +11,14 @@ namespace HeroLogic
     {
         public int EntryID { get; set; }
         public Areas LocationName { get; set; }
+        public string AreaName { get; set; }
         public int CreatureID { get; set; } 
         
-        public CreatureLocations(int entryID, Areas locationName, int creatureID)
+        public CreatureLocations(int entryID, Areas locationName, string areaName, int creatureID)
         {
             EntryID = entryID;
             LocationName = locationName;
+            AreaName = areaName;
             CreatureID = creatureID;
         }
     }
