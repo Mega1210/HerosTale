@@ -189,7 +189,7 @@ namespace HerosTale
 
        private int RandomElementEnum(IEnumerable<int> listOfElements)
         {
-            //Random rnd = new Random();
+            
             int rndnumber;
 
             do
@@ -204,7 +204,7 @@ namespace HerosTale
        
         private int RandomElement(int maxNr)
         {
-            //Random rnd = new Random();
+           
             int rndnumber;
 
             do
