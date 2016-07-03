@@ -13,15 +13,17 @@ namespace HeroLogic
         public static readonly List<Quest> Quests = new List<Quest>();
         public static readonly List<CreatureLocations> CreatureLocations = new List<CreatureLocations>();
         public static readonly List<QuestGiver> QuestGivers = new List<QuestGiver>();
-        
+        public static readonly List<QuestWho> QuestWhois = new List<QuestWho>();
+        public static readonly List<WorldLocation> WorldLocations = new List<WorldLocation>();
+        private static Random rnd = new Random();
 
 
 
-        public enum Areas : byte
+        /*public enum Areas : byte
         {
             Forest, Hills, Mountains, Desert, CastleRuins, TempleRuins
 
-        }
+        }*/
 
         public enum CreatureType : byte
         {
@@ -40,31 +42,26 @@ namespace HeroLogic
             Kill, Retrive, SaveKidnap, Caravan
         }
 
-        public enum Who : byte
-        {
-            Sister, Mother, Brother, Father, Uncle, Aunt
-        }
-
-        public enum Giver : byte
-        {
-            Lord, NobleWoman, WeathlyMerchant, MerchantGuild
-        }
-
-        public static Who GenerateWho()
-        {
-            int rnd = new Random().Next(0, 7);
-            switch (rnd)
-            {
-                case 0:return Who.Sister;                    
-                case 1:return Who.Mother;
-                case 2:return Who.Brother;
-                case 3:return Who.Father;
-                case 4:return Who.Uncle;
-                case 5:return Who.Aunt;
-            }
-            return 0;
-        }
+        public const int LOC_FOREST = 1;
+        public const int LOC_HILLS = 2;
+        public const int LOC_MOUNTAINS = 3;
+        public const int LOC_DESERT = 4;
+        public const int LOC_CASTLERUINS=5;
+        public const int LOC_TEMPLERUINS = 6;
         
+            
+        public const int GIVER_LORD = 1;
+        public const int GIVER_NOBLEWOMAN = 2;
+        public const int GIVER_WEALTHYMAERCHANT = 3;
+        public const int GIVER_MERCHANTGUILD = 4;
+
+
+        public const int WHO_SISTER= 1;
+        public const int WHO_MOTHER= 2;
+        public const int WHO_BROTHER = 3;
+        public const int WHO_FATHER = 4;
+        public const int WHO_UNCLE = 5;
+        public const int WHO_AUNT= 6;
 
 
         public const int ITEM_ID_RUSTY_SWORD = 1;
@@ -131,89 +128,92 @@ namespace HeroLogic
             PopulateItems();
             PopulateMonsters();
             PopulateCreatureLocations();
-            //PopulateQuests();        
+            PopulateLocations();
+            PopulateQGivers();
+            PopulateWho();
         }
 
         private static void PopulateCreatureLocations()
         {
-            CreatureLocations.Add(new CreatureLocations(1, Areas.Forest, "Forest", MONSTER_ID_RAT));
-            CreatureLocations.Add(new CreatureLocations(2, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_RAT));
-            CreatureLocations.Add(new CreatureLocations(3, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_RAT));
-            CreatureLocations.Add(new CreatureLocations(4, Areas.Forest, "Forest", MONSTER_ID_SNAKE));
-            CreatureLocations.Add(new CreatureLocations(5, Areas.Hills, "Hills", MONSTER_ID_SNAKE));
-            CreatureLocations.Add(new CreatureLocations(6, Areas.Mountains, "Mountains", MONSTER_ID_SNAKE));
-            CreatureLocations.Add(new CreatureLocations(7, Areas.Desert, "Desert", MONSTER_ID_SNAKE));
-            CreatureLocations.Add(new CreatureLocations(8, Areas.Forest, "Forest", MONSTER_ID_RABIDDOG));
-            CreatureLocations.Add(new CreatureLocations(9, Areas.Hills, "Hills", MONSTER_ID_RABIDDOG));
-            CreatureLocations.Add(new CreatureLocations(10, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_RABIDDOG));
-            CreatureLocations.Add(new CreatureLocations(11, Areas.Forest, "Forest", MONSTER_ID_WOLF));
-            CreatureLocations.Add(new CreatureLocations(12, Areas.Hills, "Hills", MONSTER_ID_WOLF));
-            CreatureLocations.Add(new CreatureLocations(13, Areas.Mountains, "Mountains", MONSTER_ID_WOLF));
-            CreatureLocations.Add(new CreatureLocations(14, Areas.Forest, "Forest", MONSTER_ID_BEAR));
-            CreatureLocations.Add(new CreatureLocations(15, Areas.Hills, "Hills", MONSTER_ID_BEAR));
-            CreatureLocations.Add(new CreatureLocations(16, Areas.Mountains, "Mountains", MONSTER_ID_BEAR));
-            CreatureLocations.Add(new CreatureLocations(17, Areas.Forest, "Forest", MONSTER_ID_GIANT_SCORPION));
-            CreatureLocations.Add(new CreatureLocations(18, Areas.Desert, "Desert", MONSTER_ID_GIANT_SCORPION));
-            CreatureLocations.Add(new CreatureLocations(19, Areas.Forest, "Forest", MONSTER_ID_CROW));
-            CreatureLocations.Add(new CreatureLocations(20, Areas.Hills, "Hills", MONSTER_ID_CROW));
-            CreatureLocations.Add(new CreatureLocations(21, Areas.Mountains, "Mountains", MONSTER_ID_CROW));
-            CreatureLocations.Add(new CreatureLocations(22, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_CROW));
-            CreatureLocations.Add(new CreatureLocations(23, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_CROW));
-            CreatureLocations.Add(new CreatureLocations(24, Areas.Forest, "Forest", MONSTER_ID_PYTHON));
-            CreatureLocations.Add(new CreatureLocations(25, Areas.Hills, "Hills", MONSTER_ID_LION));
-            CreatureLocations.Add(new CreatureLocations(26, Areas.Desert, "Desert", MONSTER_ID_LION));
-            CreatureLocations.Add(new CreatureLocations(27, Areas.Desert, "Desert", MONSTER_ID_VULTURE));
-            CreatureLocations.Add(new CreatureLocations(28, Areas.Forest, "Forest", MONSTER_ID_GIANT_SPIDER));
-            CreatureLocations.Add(new CreatureLocations(29, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_GIANT_SPIDER));
-            CreatureLocations.Add(new CreatureLocations(30, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_GIANT_SPIDER));
-            CreatureLocations.Add(new CreatureLocations(31, Areas.Hills, "Hills", MONSTER_ID_GIANT_BEETLE));
-            CreatureLocations.Add(new CreatureLocations(32, Areas.Desert, "Desert", MONSTER_ID_GIANT_BEETLE));
-            CreatureLocations.Add(new CreatureLocations(33, Areas.Forest, "Forest", MONSTER_ID_LYNX));
-            CreatureLocations.Add(new CreatureLocations(34, Areas.Hills, "Hills", MONSTER_ID_LYNX));
-            CreatureLocations.Add(new CreatureLocations(35, Areas.Desert, "Desert", MONSTER_ID_LYNX));
-            CreatureLocations.Add(new CreatureLocations(36, Areas.Forest, "Forest", MONSTER_ID_BANDIT));
-            CreatureLocations.Add(new CreatureLocations(37, Areas.Hills, "Hills", MONSTER_ID_BANDIT));
-            CreatureLocations.Add(new CreatureLocations(38, Areas.Mountains, "Mountains", MONSTER_ID_BANDIT));
-            CreatureLocations.Add(new CreatureLocations(39, Areas.Desert, "Desert", MONSTER_ID_BANDIT));
-            CreatureLocations.Add(new CreatureLocations(40, Areas.Forest, "Forest", MONSTER_ID_THIEF));
-            CreatureLocations.Add(new CreatureLocations(41, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_THIEF));
-            CreatureLocations.Add(new CreatureLocations(42, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_THIEF));
-            CreatureLocations.Add(new CreatureLocations(43, Areas.Hills, "Hills", MONSTER_ID_BEGGAR));
-            CreatureLocations.Add(new CreatureLocations(44, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_BEGGAR));
-            CreatureLocations.Add(new CreatureLocations(45, Areas.Forest, "Forest", MONSTER_ID_PEASANT));
-            CreatureLocations.Add(new CreatureLocations(46, Areas.Hills, "Hills", MONSTER_ID_PEASANT));
-            CreatureLocations.Add(new CreatureLocations(47, Areas.Forest, "Forest", MONSTER_ID_TRAVELLER));
-            CreatureLocations.Add(new CreatureLocations(48, Areas.Hills, "Hills", MONSTER_ID_TRAVELLER));
-            CreatureLocations.Add(new CreatureLocations(49, Areas.Mountains, "Mountains", MONSTER_ID_TRAVELLER));
-            CreatureLocations.Add(new CreatureLocations(50, Areas.Desert, "Desert", MONSTER_ID_TRAVELLER));
-            CreatureLocations.Add(new CreatureLocations(51, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_TRAVELLER));
-            CreatureLocations.Add(new CreatureLocations(52, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_TRAVELLER));
-            CreatureLocations.Add(new CreatureLocations(53, Areas.Hills, "Hills", MONSTER_ID_NOMAD));
-            CreatureLocations.Add(new CreatureLocations(54, Areas.Desert, "Desert", MONSTER_ID_NOMAD));
-            CreatureLocations.Add(new CreatureLocations(55, Areas.Desert, "Desert", MONSTER_ID_RAIDERS));
-            CreatureLocations.Add(new CreatureLocations(56, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_RAIDERS));
-            CreatureLocations.Add(new CreatureLocations(57, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_RAIDERS));
-            CreatureLocations.Add(new CreatureLocations(58, Areas.Hills, "Hills", MONSTER_ID_SCOUNDREL));
-            CreatureLocations.Add(new CreatureLocations(59, Areas.Desert, "Desert", MONSTER_ID_SCOUNDREL));
-            CreatureLocations.Add(new CreatureLocations(60, Areas.Mountains, "Mountains", MONSTER_ID_HARPY));
-            CreatureLocations.Add(new CreatureLocations(61, Areas.Desert, "Desert", MONSTER_ID_HARPY));
-            CreatureLocations.Add(new CreatureLocations(62, Areas.Forest, "Forest", MONSTER_ID_WEREWOLF));
-            CreatureLocations.Add(new CreatureLocations(63, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_WEREWOLF));
-            CreatureLocations.Add(new CreatureLocations(64, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_WEREWOLF));
-            CreatureLocations.Add(new CreatureLocations(65, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_VAMPIRE));
-            CreatureLocations.Add(new CreatureLocations(66, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_VAMPIRE));
-            CreatureLocations.Add(new CreatureLocations(67, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_LICH));
-            CreatureLocations.Add(new CreatureLocations(68, Areas.Forest, "Forest", MONSTER_ID_WYRM));
-            CreatureLocations.Add(new CreatureLocations(69, Areas.Mountains, "Mountains", MONSTER_ID_WYRM));
-            CreatureLocations.Add(new CreatureLocations(70, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_WYRM));
-            CreatureLocations.Add(new CreatureLocations(71, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_WYRM));
-            CreatureLocations.Add(new CreatureLocations(72, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_ZOMBIE));
-            CreatureLocations.Add(new CreatureLocations(73, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_SPECTRE));
-            CreatureLocations.Add(new CreatureLocations(74, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_SPECTRE));
-            CreatureLocations.Add(new CreatureLocations(75, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_SORCERER));
-            CreatureLocations.Add(new CreatureLocations(76, Areas.TempleRuins, "Temple Ruins", MONSTER_ID_SORCERER));
-            CreatureLocations.Add(new CreatureLocations(77, Areas.Forest, "Forest", MONSTER_ID_WITCH));
-            CreatureLocations.Add(new CreatureLocations(78, Areas.CastleRuins, "Castle Ruins", MONSTER_ID_WITCH));
+            CreatureLocations.Add(new CreatureLocations(1, LOC_FOREST, MONSTER_ID_RAT));
+            CreatureLocations.Add(new CreatureLocations(2, LOC_CASTLERUINS, MONSTER_ID_RAT));
+            CreatureLocations.Add(new CreatureLocations(3, LOC_TEMPLERUINS, MONSTER_ID_RAT));
+            CreatureLocations.Add(new CreatureLocations(4, LOC_FOREST, MONSTER_ID_SNAKE));
+            CreatureLocations.Add(new CreatureLocations(5, LOC_HILLS, MONSTER_ID_SNAKE));
+            CreatureLocations.Add(new CreatureLocations(6, LOC_MOUNTAINS, MONSTER_ID_SNAKE));
+            CreatureLocations.Add(new CreatureLocations(7, LOC_DESERT, MONSTER_ID_SNAKE));
+            CreatureLocations.Add(new CreatureLocations(8, LOC_FOREST, MONSTER_ID_RABIDDOG));
+            CreatureLocations.Add(new CreatureLocations(9, LOC_HILLS, MONSTER_ID_RABIDDOG));
+            CreatureLocations.Add(new CreatureLocations(10, LOC_CASTLERUINS, MONSTER_ID_RABIDDOG));
+            CreatureLocations.Add(new CreatureLocations(11, LOC_FOREST, MONSTER_ID_WOLF));
+            CreatureLocations.Add(new CreatureLocations(12, LOC_HILLS, MONSTER_ID_WOLF));
+            CreatureLocations.Add(new CreatureLocations(13, LOC_MOUNTAINS, MONSTER_ID_WOLF));
+            CreatureLocations.Add(new CreatureLocations(14, LOC_FOREST, MONSTER_ID_BEAR));
+            CreatureLocations.Add(new CreatureLocations(15, LOC_HILLS, MONSTER_ID_BEAR));
+            CreatureLocations.Add(new CreatureLocations(16, LOC_MOUNTAINS, MONSTER_ID_BEAR));
+            CreatureLocations.Add(new CreatureLocations(17, LOC_FOREST, MONSTER_ID_GIANT_SCORPION));
+            CreatureLocations.Add(new CreatureLocations(18, LOC_DESERT, MONSTER_ID_GIANT_SCORPION));
+            CreatureLocations.Add(new CreatureLocations(19, LOC_FOREST, MONSTER_ID_CROW));
+            CreatureLocations.Add(new CreatureLocations(20, LOC_HILLS, MONSTER_ID_CROW));
+            CreatureLocations.Add(new CreatureLocations(21, LOC_MOUNTAINS, MONSTER_ID_CROW));
+            CreatureLocations.Add(new CreatureLocations(22, LOC_CASTLERUINS, MONSTER_ID_CROW));
+            CreatureLocations.Add(new CreatureLocations(23, LOC_TEMPLERUINS, MONSTER_ID_CROW));
+            CreatureLocations.Add(new CreatureLocations(24, LOC_FOREST, MONSTER_ID_PYTHON));
+            CreatureLocations.Add(new CreatureLocations(25, LOC_HILLS, MONSTER_ID_LION));
+            CreatureLocations.Add(new CreatureLocations(26, LOC_DESERT, MONSTER_ID_LION));
+            CreatureLocations.Add(new CreatureLocations(27, LOC_DESERT, MONSTER_ID_VULTURE));
+            CreatureLocations.Add(new CreatureLocations(28, LOC_FOREST, MONSTER_ID_GIANT_SPIDER));
+            CreatureLocations.Add(new CreatureLocations(29, LOC_CASTLERUINS, MONSTER_ID_GIANT_SPIDER));
+            CreatureLocations.Add(new CreatureLocations(30, LOC_TEMPLERUINS, MONSTER_ID_GIANT_SPIDER));
+            CreatureLocations.Add(new CreatureLocations(31, LOC_HILLS, MONSTER_ID_GIANT_BEETLE));
+            CreatureLocations.Add(new CreatureLocations(32, LOC_DESERT, MONSTER_ID_GIANT_BEETLE));
+            CreatureLocations.Add(new CreatureLocations(33, LOC_FOREST, MONSTER_ID_LYNX));
+            CreatureLocations.Add(new CreatureLocations(34, LOC_HILLS, MONSTER_ID_LYNX));
+            CreatureLocations.Add(new CreatureLocations(35, LOC_DESERT, MONSTER_ID_LYNX));
+            CreatureLocations.Add(new CreatureLocations(36, LOC_FOREST, MONSTER_ID_BANDIT));
+            CreatureLocations.Add(new CreatureLocations(37, LOC_HILLS, MONSTER_ID_BANDIT));
+            CreatureLocations.Add(new CreatureLocations(38, LOC_MOUNTAINS, MONSTER_ID_BANDIT));
+            CreatureLocations.Add(new CreatureLocations(39, LOC_DESERT, MONSTER_ID_BANDIT));
+            CreatureLocations.Add(new CreatureLocations(40, LOC_FOREST, MONSTER_ID_THIEF));
+            CreatureLocations.Add(new CreatureLocations(41, LOC_CASTLERUINS, MONSTER_ID_THIEF));
+            CreatureLocations.Add(new CreatureLocations(42, LOC_TEMPLERUINS, MONSTER_ID_THIEF));
+            CreatureLocations.Add(new CreatureLocations(43, LOC_HILLS, MONSTER_ID_BEGGAR));
+            CreatureLocations.Add(new CreatureLocations(44, LOC_CASTLERUINS, MONSTER_ID_BEGGAR));
+            CreatureLocations.Add(new CreatureLocations(45, LOC_FOREST, MONSTER_ID_PEASANT));
+            CreatureLocations.Add(new CreatureLocations(46, LOC_HILLS, MONSTER_ID_PEASANT));
+            CreatureLocations.Add(new CreatureLocations(47, LOC_FOREST, MONSTER_ID_TRAVELLER));
+            CreatureLocations.Add(new CreatureLocations(48, LOC_HILLS, MONSTER_ID_TRAVELLER));
+            CreatureLocations.Add(new CreatureLocations(49, LOC_MOUNTAINS, MONSTER_ID_TRAVELLER));
+            CreatureLocations.Add(new CreatureLocations(50, LOC_DESERT, MONSTER_ID_TRAVELLER));
+            CreatureLocations.Add(new CreatureLocations(51, LOC_CASTLERUINS, MONSTER_ID_TRAVELLER));
+            CreatureLocations.Add(new CreatureLocations(52, LOC_TEMPLERUINS, MONSTER_ID_TRAVELLER));
+            CreatureLocations.Add(new CreatureLocations(53, LOC_HILLS, MONSTER_ID_NOMAD));
+            CreatureLocations.Add(new CreatureLocations(54, LOC_DESERT, MONSTER_ID_NOMAD));
+            CreatureLocations.Add(new CreatureLocations(55, LOC_DESERT, MONSTER_ID_RAIDERS));
+            CreatureLocations.Add(new CreatureLocations(56, LOC_CASTLERUINS, MONSTER_ID_RAIDERS));
+            CreatureLocations.Add(new CreatureLocations(57, LOC_TEMPLERUINS, MONSTER_ID_RAIDERS));
+            CreatureLocations.Add(new CreatureLocations(58, LOC_HILLS, MONSTER_ID_SCOUNDREL));
+            CreatureLocations.Add(new CreatureLocations(59, LOC_DESERT, MONSTER_ID_SCOUNDREL));
+            CreatureLocations.Add(new CreatureLocations(60, LOC_MOUNTAINS, MONSTER_ID_HARPY));
+            CreatureLocations.Add(new CreatureLocations(61, LOC_DESERT, MONSTER_ID_HARPY));
+            CreatureLocations.Add(new CreatureLocations(62, LOC_FOREST, MONSTER_ID_WEREWOLF));
+            CreatureLocations.Add(new CreatureLocations(63, LOC_CASTLERUINS, MONSTER_ID_WEREWOLF));
+            CreatureLocations.Add(new CreatureLocations(64, LOC_TEMPLERUINS, MONSTER_ID_WEREWOLF));
+            CreatureLocations.Add(new CreatureLocations(65, LOC_CASTLERUINS, MONSTER_ID_VAMPIRE));
+            CreatureLocations.Add(new CreatureLocations(66, LOC_TEMPLERUINS, MONSTER_ID_VAMPIRE));
+            CreatureLocations.Add(new CreatureLocations(67, LOC_TEMPLERUINS, MONSTER_ID_LICH));
+            CreatureLocations.Add(new CreatureLocations(68, LOC_FOREST, MONSTER_ID_WYRM));
+            CreatureLocations.Add(new CreatureLocations(69, LOC_MOUNTAINS, MONSTER_ID_WYRM));
+            CreatureLocations.Add(new CreatureLocations(70, LOC_CASTLERUINS, MONSTER_ID_WYRM));
+            CreatureLocations.Add(new CreatureLocations(71, LOC_TEMPLERUINS, MONSTER_ID_WYRM));
+            CreatureLocations.Add(new CreatureLocations(72, LOC_TEMPLERUINS, MONSTER_ID_ZOMBIE));
+            CreatureLocations.Add(new CreatureLocations(73, LOC_CASTLERUINS, MONSTER_ID_SPECTRE));
+            CreatureLocations.Add(new CreatureLocations(74, LOC_TEMPLERUINS, MONSTER_ID_SPECTRE));
+            CreatureLocations.Add(new CreatureLocations(75, LOC_CASTLERUINS, MONSTER_ID_SORCERER));
+            CreatureLocations.Add(new CreatureLocations(76, LOC_TEMPLERUINS, MONSTER_ID_SORCERER));
+            CreatureLocations.Add(new CreatureLocations(77, LOC_FOREST, MONSTER_ID_WITCH));
+            CreatureLocations.Add(new CreatureLocations(78, LOC_CASTLERUINS, MONSTER_ID_WITCH));
+
         }
 
         private static void PopulateItems()
@@ -278,17 +278,35 @@ namespace HeroLogic
             Monsters.Add(new Monster(MONSTER_ID_WITCH, "Witch", "Witches", 110, 550, 830, 1400, 1400, CreatureType.Monster, CreatureClass.Normal));
         }
 
+        private static void PopulateLocations()
+        {
+            WorldLocations.Add(new WorldLocation(LOC_CASTLERUINS, "Castle Ruins"));
+            WorldLocations.Add(new WorldLocation(LOC_DESERT, "Desert"));
+            WorldLocations.Add(new WorldLocation(LOC_FOREST, "Forest"));
+            WorldLocations.Add(new WorldLocation(LOC_HILLS, "Hills"));
+            WorldLocations.Add(new WorldLocation(LOC_MOUNTAINS, "Mountains"));
+            WorldLocations.Add(new WorldLocation(LOC_TEMPLERUINS, "Temple Ruins"));
+        }
+
+        private static void PopulateWho()
+        {
+            QuestWhois.Add(new QuestWho(WHO_AUNT, "Aunt"));
+            QuestWhois.Add(new QuestWho(WHO_BROTHER, "Brother"));
+            QuestWhois.Add(new QuestWho(WHO_FATHER, "Father"));
+            QuestWhois.Add(new QuestWho(WHO_MOTHER, "Mother"));
+            QuestWhois.Add(new QuestWho(WHO_SISTER, "Sister"));
+            QuestWhois.Add(new QuestWho(WHO_UNCLE, "Uncle"));
+        }
+
         private static void PopulateQGivers()
         {
-            QuestGivers.Add(new QuestGiver(1, Giver.Lord, "Lord"));
-            QuestGivers.Add(new QuestGiver(2, Giver.NobleWoman, "Noble Woman"));
-            QuestGivers.Add(new QuestGiver(3, Giver.WeathlyMerchant, "Wealthy Merchant"));
-            QuestGivers.Add(new QuestGiver(4, Giver.MerchantGuild, "Merchant Guild"));
+            QuestGivers.Add(new QuestGiver(GIVER_LORD, "Lord"));
+            QuestGivers.Add(new QuestGiver(GIVER_NOBLEWOMAN, "Noble Woman"));
+            QuestGivers.Add(new QuestGiver(GIVER_WEALTHYMAERCHANT, "Wealthy Merchant"));
+            QuestGivers.Add(new QuestGiver(GIVER_MERCHANTGUILD, "Merchant Guild"));
             
         }
-   
-
-           
+              
         public static IEnumerable<int> MonstersList()
         {
             IEnumerable<int> monstersList =
@@ -297,7 +315,16 @@ namespace HeroLogic
                 select selectedMonster.ID;
             return monstersList;
         }
+        
 
+        public static IEnumerable<int> LocationListMonster(int monsterID)
+        {
+            IEnumerable<int> locList =
+                from monsterLoc in CreatureLocations
+                where monsterLoc.CreatureID == monsterID
+                select monsterLoc.Location;
+            return locList;
+        }
         public static int HitTarget(int dex)
         {
             switch (dex)
@@ -453,8 +480,8 @@ namespace HeroLogic
 
         public static int CreateGold()
         {
-            Random rnd = new Random();
-            int gold = rnd.Next(0, 5 + 1)*1000+ rnd.Next(0, 2) * 500;
+            //Random rnd = new Random();
+            int gold = rnd.Next(1, 5 + 1)*1000+ rnd.Next(0, 2) * 500;
             return gold;
         }
 
@@ -484,11 +511,37 @@ namespace HeroLogic
             return null;
         }
 
-        public static CreatureLocations LocationByMonsterID(int id)
+        public static QuestGiver GiverByID(int id)
         {
-            foreach (CreatureLocations location in CreatureLocations)
+            foreach (QuestGiver qgiver in QuestGivers)
             {
-                if (location.CreatureID == id)
+                if (qgiver.ID == id)
+                {
+                    return qgiver;
+                }
+            }
+
+            return null;
+        }
+
+        public static QuestWho WhoByID(int id)
+        {
+            foreach (QuestWho qwho in QuestWhois)
+            {
+                if (qwho.ID == id)
+                {
+                    return qwho;
+                }
+            }
+
+            return null;
+        }
+
+        public static WorldLocation LocationByID(int id)
+        {
+            foreach (WorldLocation location in WorldLocations)
+            {
+                if (location.ID == id)
                 {
                     return location;
                 }
@@ -496,19 +549,6 @@ namespace HeroLogic
 
             return null;
         }
-
-        /*  public static Quest QuestByID(int id)
-          {
-              foreach (Quest quest in Quests)
-              {
-                  if (quest.ID == id)
-                  {
-                      return quest;
-                  }
-              }
-
-              return null;
-          }*/
 
 
     }

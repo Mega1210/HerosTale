@@ -16,9 +16,10 @@ namespace HerosTale
     public partial class frmBase : Form
     {
         private Player player;
-        private Monster Q1Monster;        
-        private CreatureLocations Q1Location;
+        
         private Quest1Class Quest1;
+        private Quest2Class Quest2;
+        private Random rnd = new Random();
         private int tmpStr, tmpDex, tmpInt, tmpChar;
         private const int HEALTH_LEVEL = 500;
         private const int POINTS_LEVEL = 3;
@@ -186,53 +187,106 @@ namespace HerosTale
 
         }
 
+       private int RandomElementEnum(IEnumerable<int> listOfElements)
+        {
+            //Random rnd = new Random();
+            int rndnumber;
+
+            do
+            {
+
+                rndnumber = rnd.Next(0, listOfElements.Count() + 1);
+            }
+            while (rndnumber > listOfElements.Count());
+
+            return rndnumber;
+        }
        
-       
+        private int RandomElement(int maxNr)
+        {
+            //Random rnd = new Random();
+            int rndnumber;
+
+            do
+            {
+                rndnumber = rnd.Next(1, maxNr + 1);
+            }
+            while (rndnumber > maxNr);
+
+            return rndnumber;
+        }
 
         private void  generateQuest1()
         {
-
+            Monster QMonster;
+            WorldLocation QLocation;
+            bool error = false;
             IEnumerable<int> ExtractList = MonstersList();
-            Q1Monster = MonsterByID(ExtractList.ElementAt(new Random().Next(0, ExtractList.Count() + 1)));
-            Q1Location = LocationByMonsterID(Q1Monster.ID);                        
-            Quest1 = new Quest1Class(1, QuestType.Kill, Q1Location.LocationName,CreateGold(), CreatureType.Monster,Q1Monster.ID);
+            do
+            {
+                try
+                {
+                    QMonster = MonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+
+                    error = false;
+                    ExtractList = LocationListMonster(QMonster.ID);
+                    bool error1 = false;
+                    do
+                    {
+                        try
+                        {
+
+                            QLocation = LocationByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+                            Quest1 = new Quest1Class(1, QuestType.Kill, QLocation.ID, QLocation.LocationName, CreateGold(), CreatureType.Monster, QMonster.ID, QMonster.Name);
+                            error1 = false;
+                        }
+                        catch (ArgumentOutOfRangeException outOfRange)
+                        {
+                            error1 = true;
+                        }
+                    }
+                    while (error1);
+
+                }
+                catch (ArgumentOutOfRangeException outOfRange)
+                {
+                    error = true;
+                }
+            }
+            while (error);
+
             
+        }
+
+        private void generateQuest2()
+        {
+            QuestGiver QGiver;
+            QuestWho QWho;
+            WorldLocation QLocation;
+            do
+            {
+                QLocation = LocationByID(RandomElement(WorldLocations.Count));
+            }
+            while (QLocation.ID == LOC_DESERT);
+
+            QGiver = GiverByID(RandomElement(QuestGivers.Count()));
+            QWho = WhoByID(RandomElement(QuestWhois.Count()));
+
+            Quest2 = new Quest2Class(1, QuestType.SaveKidnap, QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
         }
 
         private void Tavern()
         {
             generateQuest1();
-
+            generateQuest2();
 
 
             txtMainWindow.Text = "These missions are available: \r\n";
-            txtMainWindow.Text += $"1- There is a dangerous {Q1Monster.Name} lurking in the nearby {Q1Location.AreaName}. {Quest1.RewardGold} gold is offered to whoever kills it. \r\n";
-            txtMainWindow.Text += $"2- \r\n";
-            txtMainWindow.Text += $"3- \r\n";
-            txtMainWindow.Text += "4- A caravan is leaving for Marrakesh the most prosperous and wealthy city of this land \r\n";
-            int rnd = new Random().Next(0, 7);
-            switch (rnd)
-            {
-                case 0:
-                    txtMainWindow.Text += $"{Who.Sister}";
-                    break;
-                case 1:
-                    txtMainWindow.Text += $"{Who.Mother}";
-                    break;
-                case 2:
-                    txtMainWindow.Text += $"{Who.Brother}";
-                    break;
-                case 3:
-                    txtMainWindow.Text += $"{Who.Father}";
-                    break;
-                case 4:
-                    txtMainWindow.Text += $"{Who.Uncle}";
-                    break;
-                case 5:
-                    txtMainWindow.Text += $"{Who.Aunt}";
-                    break;
+            txtMainWindow.Text += $"1- There is a dangerous {Quest1.MonsterName} lurking in the nearby {Quest1.LocationName}. {Quest1.RewardGold} gold is offered to whoever kills it. \r\n";
+            txtMainWindow.Text += $"2- The {Quest2.WhoQuestName} of a {Quest2.GiverQuestName} has been kidnapped by a bandit. It's rumored he is hiding in the {Quest2.LocationName} nearby. {Quest2.RewardGold} gold is offered to whoever is going to free the kidnapped and kill the criminal. \r\n";
+            txtMainWindow.Text += "3- A caravan is leaving for Marrakesh, the most prosperous and wealthy city of this land. There might still be a place available if not you can join as a guard. \r\n";
+            txtMainWindow.Text += "4- ... the jobs avaiable are boring. Maybe you would like to visit the local General Store?\r\n";
 
-            }
 
 
         }
@@ -254,14 +308,14 @@ namespace HerosTale
             txtMainWindow.Text += "\r\n";
             await Task.Delay(2000);
             txtMainWindow.Text += "You start as a puny \"wanna be hero\" barely able to wield a sword and kill a rat \r\n";
-            await Task.Delay(2000);
+            await Task.Delay(1000);
             txtMainWindow.Text += "By accomplishing the missions you can pick up at the local tavern you will slowly become the hero of this God forgotten land... or die trying!\r\n";
             await Task.Delay(3000);
             txtMainWindow.Text += "\r\n";
-            txtMainWindow.Text += "First thing first. Lady Luck has given you 5 attribute points to assign to your stats. Do so and your adventure can begin! \r\n";
+            txtMainWindow.Text += "First thing first. The Goddes of Mercy has given you 5 attribute points to assign to your stats. Do so and your adventure can begin! \r\n";
             txtMainWindow.Text += "\r\n";
             ScrollDownText(txtMainWindow);
-            await Task.Delay(2000);
+            await Task.Delay(1500);
 
             LevelUp(5);
 
@@ -389,21 +443,21 @@ namespace HerosTale
                 player.Dexterity = tmpDex;
                 player.Intelligence = tmpInt;
                 player.Charisma = tmpChar;
-
+                /*
                 txtMainWindow.Text += $"Strenght is now {player.Strength} \r\n";
                 txtMainWindow.Text += $"Dexterity is now {player.Dexterity} \r\n";
                 txtMainWindow.Text += $"Intelligence is now {player.Intelligence} \r\n";
                 txtMainWindow.Text += $"Charisma is now {player.Charisma} \r\n";
-
+                */
                 ScrollDownText(txtMainWindow);
                 await Task.Delay(1000);
-
+                
                 if (firstTime)
                 {
                     txtMainWindow.Text += "\r\n";
                     txtMainWindow.Text += "You head to the local tavern to pick up some contracts \r\n";
                     ScrollDownText(txtMainWindow);
-                    await Task.Delay(3000);
+                    await Task.Delay(1500);
                     firstTime = false;
                     Tavern();
 

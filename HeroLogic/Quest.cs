@@ -11,17 +11,19 @@ namespace HeroLogic
     {
         public int ID { get; set; }      
         public QuestType Qtype { get; set; }
-        public Areas AreaQuest { get; set; }
+        public int LocationID { get; set; }
+        public string LocationName { get; set; }
         public int RewardExperiencePoints { get; set; }
         public int RewardGold { get; set; }
         
         
 
-        public Quest(int id, QuestType qtype, Areas areaQuest, int rewardGold)
+        public Quest(int id, QuestType qtype, int locationID, string locationName, int rewardGold)
         {
             ID = id;
             Qtype = qtype;
-            AreaQuest = areaQuest;            
+            LocationID = locationID;
+            LocationName = locationName;
             RewardGold = rewardGold;
 
 

@@ -53,8 +53,10 @@
     <Compile Include="Quest1Class.cs" />
     <Compile Include="Quest2Class.cs" />
     <Compile Include="QuestGiver.cs" />
+    <Compile Include="QuestWho.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="World.cs" />
+    <Compile Include="WorldLocations.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

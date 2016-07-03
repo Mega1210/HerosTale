@@ -9,14 +9,12 @@ namespace HeroLogic
 {
     public class QuestGiver
     {
-        public int ID { get; set; }
-        public Giver QGiver { get; set; }
+        public int ID { get; set; }        
         public string NameGiver { get; set; }
 
-        public QuestGiver (int id, Giver qGiver, string nameGiver)
+        public QuestGiver (int id, string nameGiver)
         {
-            ID = id;
-            QGiver = qGiver;
+            ID = id;           
             NameGiver = nameGiver;
         }
     }
