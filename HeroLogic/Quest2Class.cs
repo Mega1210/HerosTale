@@ -19,7 +19,7 @@ namespace HeroLogic
         /// <param name="rewardGold">GOld</param>
         /// <param name="whoQuest">Who you need to save ID</param>
         /// <param name="giverQuest">Who gives the quest ID</param>
-        public Quest2Class(int id, QuestType qtype, int locationID,string locationName, int rewardGold, string  whoQuestName, string giverQuestName) : base(id, qtype, locationID,locationName, rewardGold)
+        public Quest2Class(QuestOption id, QuestType qtype, int locationID,string locationName, int rewardGold, string  whoQuestName, string giverQuestName) : base(id, qtype, locationID,locationName, rewardGold)
         {
             ID = id;
             Qtype = qtype;

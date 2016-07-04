@@ -12,7 +12,7 @@ namespace HeroLogic
         public int ItemID { get; set; }
         public string ItemName { get; set; }
 
-        public Quest3Class(int id, QuestType qtype, int locationID, string locationName, int rewardGold, 
+        public Quest3Class(QuestOption id, QuestType qtype, int locationID, string locationName, int rewardGold, 
             string giverQuestName, int itemID, string itemName) : base(id, qtype, locationID,locationName, rewardGold)
         {
             ID = id;

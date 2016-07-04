@@ -13,7 +13,7 @@ namespace HeroLogic
         public int MonsterID { get; set; }
         public string MonsterName { get; set; }
 
-        public Quest1Class(int id, QuestType qtype, int locationID, string locationName, int rewardGold,
+        public Quest1Class(QuestOption id, QuestType qtype, int locationID, string locationName, int rewardGold,
             CreatureType creatType, int monsterID, string monsterName) : base(id, qtype, locationID, locationName, rewardGold)
         {
             ID = id;

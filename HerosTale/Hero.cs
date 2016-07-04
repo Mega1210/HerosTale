@@ -16,16 +16,18 @@ namespace HerosTale
     public partial class frmBase : Form
     {
         private Player player;
-        
+        private PlayerQuest playerQuest;
+
         private Quest1Class Quest1;
         private Quest2Class Quest2;
         private Quest3Class Quest3;
-        private Random rnd = new Random();
+       
         private int tmpStr, tmpDex, tmpInt, tmpChar;
         private const int HEALTH_LEVEL = 500;
         private const int POINTS_LEVEL = 3;
         private bool firstTime = true;
-        
+        private bool DoQ2 = true;
+        private GamePhase CurrentPhase;
         
 
         public frmBase()
@@ -227,7 +229,7 @@ namespace HerosTale
             ExtractList = LocationListMonster(QMonster.ID);
             QLocation = LocationByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
 
-            Quest1 = new Quest1Class(1, QuestType.Kill, QLocation.ID, QLocation.LocationName, CreateGold(), CreatureType.Monster, QMonster.ID, QMonster.Name);
+            Quest1 = new Quest1Class(QuestOption.Quest1, QuestType.Kill, QLocation.ID, QLocation.LocationName, CreateGold(), CreatureType.Monster, QMonster.ID, QMonster.Name);
         }
 
         private void generateQuest2()
@@ -244,7 +246,7 @@ namespace HerosTale
             QGiver = GiverByID(RandomElement(QuestGivers.Count()));
             QWho = WhoByID(RandomElement(QuestWhois.Count()));
 
-            Quest2 = new Quest2Class(1, QuestType.SaveKidnap, QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
+            Quest2 = new Quest2Class(QuestOption.Quest2, QuestType.SaveKidnap, QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
         }
 
         private void generateQuest3()
@@ -263,22 +265,66 @@ namespace HerosTale
             IEnumerable<int> ExtractList = StolenItems();
             QItem = ItemByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
 
-            Quest3 = new Quest3Class(1, QuestType.Retrive, QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
+            Quest3 = new Quest3Class(QuestOption.Quest3, QuestType.Retrive, QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
+
+        }
+
+        private void Journey()
+        {
+
+        }
+
+        private void UpdateBtn()
+        {
+            switch (CurrentPhase)
+            {
+                case GamePhase.Tavern:
+
+                    button1.Text = "Contract 1";
+                    button2.Text = "Contract 2";
+                    button3.Text = "Caravan";
+                    button4.Text = "Shop";
+                    break;
+                case GamePhase.Combat:
+                    break;
+                case GamePhase.Caravan:
+                    break;
+                case GamePhase.CaravanIntro:
+                    break;
+                case GamePhase.Marrakesh:
+                    break;
+            }
+            
 
         }
 
         private void Tavern()
         {
+            
             generateQuest1();
             generateQuest2();
             generateQuest3();
 
+            CurrentPhase = GamePhase.Tavern;
             txtMainWindow.Text = "These missions are available: \r\n";
             txtMainWindow.Text += $"1- There is a dangerous {Quest1.MonsterName} lurking in the nearby {Quest1.LocationName}. {Quest1.RewardGold} gold is offered to whoever kills it. \r\n";
-            txtMainWindow.Text += $"2- The {Quest2.WhoQuestName} of a {Quest2.GiverQuestName} has been kidnapped by a bandit. It's rumored he is hiding with his gang in the {Quest2.LocationName} nearby. {Quest2.RewardGold} gold is offered to whoever is going to free the kidnapped and kill the criminal and his followers. \r\n";
-            txtMainWindow.Text += $"2- A thief has stolen a precious {Quest3.ItemName} from the house of a {Quest3.GiverQuestName}. He was last seen heading towards the {Quest3.LocationName}. {Quest2.RewardGold} gold is offered to whoever will retrive the precious heirloom. \r\n";
-            txtMainWindow.Text += "3- A caravan is leaving for Marrakesh, the most prosperous and wealthy city of this land. There might still be a place available if not you can join as a guard. \r\n";
+
+            if (RandomElement(10) <= 5)
+            {
+                txtMainWindow.Text += $"2- The {Quest2.WhoQuestName} of a {Quest2.GiverQuestName} has been kidnapped by a bandit. It's rumored that he is hiding with his gang in the {Quest2.LocationName} nearby. {Quest2.RewardGold} gold is offered to whoever is going to free the kidnapped and kill the criminal and his followers. \r\n";
+            }
+
+            else
+            {
+                txtMainWindow.Text += $"2- A thief has stolen a precious {Quest3.ItemName} from the house of a {Quest3.GiverQuestName}. He was last seen heading towards the {Quest3.LocationName}. {Quest3.RewardGold} gold is offered to whoever will retrive the precious heirloom. \r\n";
+                DoQ2 = false;
+            }
+
+
+            txtMainWindow.Text += "3- A caravan is leaving for Marrakesh, the most prosperous and wealthy city of this land. There might still be a place available, if not you can join as a guard. \r\n";
             txtMainWindow.Text += "4- ... the jobs avaiable are boring. Maybe you would like to visit the local General Store?\r\n";
+
+            UpdateBtn();
 
 
 
@@ -408,6 +454,27 @@ namespace HerosTale
         private void bExit_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            switch (CurrentPhase)
+            {
+                case GamePhase.Tavern:
+                    playerQuest = new PlayerQuest(QuestOption.Quest1);
+                    txtMainWindow.Text = $"You start your journey to kill the {Quest1.MonsterName}. \r\n";
+                    txtMainWindow.Text += "\r\n";
+                    Journey();
+                    break;
+                case GamePhase.Combat:
+                    break;
+                case GamePhase.Caravan:
+                    break;
+                case GamePhase.CaravanIntro:
+                    break;
+                case GamePhase.Marrakesh:
+                    break;
+            }
         }
 
         private void tInputName_KeyPress(object sender, KeyPressEventArgs e)

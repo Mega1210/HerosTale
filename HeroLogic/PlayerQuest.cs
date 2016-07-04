@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HeroLogic.World;
 
 namespace HeroLogic
 {
     public class PlayerQuest
     {
-        public Quest Details { get; set; }
+        public QuestOption ID { get; set; }
         public bool IsCompleted { get; set; }
 
-        public PlayerQuest(Quest details)
+        public PlayerQuest(QuestOption id)
         {
-            Details = details;
+            ID = id;
             IsCompleted = false;
         }
     }

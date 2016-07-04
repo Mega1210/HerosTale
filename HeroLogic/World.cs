@@ -15,7 +15,17 @@ namespace HeroLogic
         public static readonly List<QuestGiver> QuestGivers = new List<QuestGiver>();
         public static readonly List<QuestWho> QuestWhois = new List<QuestWho>();
         public static readonly List<WorldLocation> WorldLocations = new List<WorldLocation>();
-        private static Random rnd = new Random();
+        public static Random rnd = new Random();
+
+        public enum QuestOption
+        {
+            Quest1, Quest2, Quest3
+        }
+
+        public enum GamePhase
+        {
+            Tavern, Combat, CaravanIntro, Caravan, Marrakesh
+        }
 
         public enum CreatureType : byte
         {
