@@ -19,6 +19,7 @@ namespace HerosTale
         
         private Quest1Class Quest1;
         private Quest2Class Quest2;
+        private Quest3Class Quest3;
         private Random rnd = new Random();
         private int tmpStr, tmpDex, tmpInt, tmpChar;
         private const int HEALTH_LEVEL = 500;
@@ -195,7 +196,7 @@ namespace HerosTale
             do
             {
 
-                rndnumber = rnd.Next(0, listOfElements.Count() + 1);
+                rndnumber = rnd.Next(0, listOfElements.Count());
             }
             while (rndnumber > listOfElements.Count());
 
@@ -220,42 +221,13 @@ namespace HerosTale
         {
             Monster QMonster;
             WorldLocation QLocation;
-            bool error = false;
+           
             IEnumerable<int> ExtractList = MonstersList();
-            do
-            {
-                try
-                {
-                    QMonster = MonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+            QMonster = MonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+            ExtractList = LocationListMonster(QMonster.ID);
+            QLocation = LocationByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
 
-                    error = false;
-                    ExtractList = LocationListMonster(QMonster.ID);
-                    bool error1 = false;
-                    do
-                    {
-                        try
-                        {
-
-                            QLocation = LocationByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
-                            Quest1 = new Quest1Class(1, QuestType.Kill, QLocation.ID, QLocation.LocationName, CreateGold(), CreatureType.Monster, QMonster.ID, QMonster.Name);
-                            error1 = false;
-                        }
-                        catch (ArgumentOutOfRangeException outOfRange)
-                        {
-                            error1 = true;
-                        }
-                    }
-                    while (error1);
-
-                }
-                catch (ArgumentOutOfRangeException outOfRange)
-                {
-                    error = true;
-                }
-            }
-            while (error);
-
-            
+            Quest1 = new Quest1Class(1, QuestType.Kill, QLocation.ID, QLocation.LocationName, CreateGold(), CreatureType.Monster, QMonster.ID, QMonster.Name);
         }
 
         private void generateQuest2()
@@ -275,15 +247,36 @@ namespace HerosTale
             Quest2 = new Quest2Class(1, QuestType.SaveKidnap, QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
         }
 
+        private void generateQuest3()
+        {
+            QuestGiver QGiver;            
+            WorldLocation QLocation;
+            Item QItem;
+            do
+            {
+                QLocation = LocationByID(RandomElement(WorldLocations.Count));
+            }
+            while (QLocation.ID == LOC_DESERT);
+
+            QGiver = GiverByID(RandomElement(QuestGivers.Count()));
+
+            IEnumerable<int> ExtractList = StolenItems();
+            QItem = ItemByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+
+            Quest3 = new Quest3Class(1, QuestType.Retrive, QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
+
+        }
+
         private void Tavern()
         {
             generateQuest1();
             generateQuest2();
-
+            generateQuest3();
 
             txtMainWindow.Text = "These missions are available: \r\n";
             txtMainWindow.Text += $"1- There is a dangerous {Quest1.MonsterName} lurking in the nearby {Quest1.LocationName}. {Quest1.RewardGold} gold is offered to whoever kills it. \r\n";
-            txtMainWindow.Text += $"2- The {Quest2.WhoQuestName} of a {Quest2.GiverQuestName} has been kidnapped by a bandit. It's rumored he is hiding in the {Quest2.LocationName} nearby. {Quest2.RewardGold} gold is offered to whoever is going to free the kidnapped and kill the criminal. \r\n";
+            txtMainWindow.Text += $"2- The {Quest2.WhoQuestName} of a {Quest2.GiverQuestName} has been kidnapped by a bandit. It's rumored he is hiding with his gang in the {Quest2.LocationName} nearby. {Quest2.RewardGold} gold is offered to whoever is going to free the kidnapped and kill the criminal and his followers. \r\n";
+            txtMainWindow.Text += $"2- A thief has stolen a precious {Quest3.ItemName} from the house of a {Quest3.GiverQuestName}. He was last seen heading towards the {Quest3.LocationName}. {Quest2.RewardGold} gold is offered to whoever will retrive the precious heirloom. \r\n";
             txtMainWindow.Text += "3- A caravan is leaving for Marrakesh, the most prosperous and wealthy city of this land. There might still be a place available if not you can join as a guard. \r\n";
             txtMainWindow.Text += "4- ... the jobs avaiable are boring. Maybe you would like to visit the local General Store?\r\n";
 
@@ -443,18 +436,13 @@ namespace HerosTale
                 player.Dexterity = tmpDex;
                 player.Intelligence = tmpInt;
                 player.Charisma = tmpChar;
-                /*
-                txtMainWindow.Text += $"Strenght is now {player.Strength} \r\n";
-                txtMainWindow.Text += $"Dexterity is now {player.Dexterity} \r\n";
-                txtMainWindow.Text += $"Intelligence is now {player.Intelligence} \r\n";
-                txtMainWindow.Text += $"Charisma is now {player.Charisma} \r\n";
-                */
+ 
                 ScrollDownText(txtMainWindow);
-                await Task.Delay(1000);
+               
                 
                 if (firstTime)
                 {
-                    txtMainWindow.Text += "\r\n";
+                    
                     txtMainWindow.Text += "You head to the local tavern to pick up some contracts \r\n";
                     ScrollDownText(txtMainWindow);
                     await Task.Delay(1500);
@@ -466,7 +454,7 @@ namespace HerosTale
             }
             else
             {
-                txtMainWindow.Text += "You have points to assign! \r\n";
+                txtMainWindow.Text += "You still have points to assign! \r\n";
                 ScrollDownText(txtMainWindow);
             }
 

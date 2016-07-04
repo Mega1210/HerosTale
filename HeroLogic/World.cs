@@ -17,14 +17,6 @@ namespace HeroLogic
         public static readonly List<WorldLocation> WorldLocations = new List<WorldLocation>();
         private static Random rnd = new Random();
 
-
-
-        /*public enum Areas : byte
-        {
-            Forest, Hills, Mountains, Desert, CastleRuins, TempleRuins
-
-        }*/
-
         public enum CreatureType : byte
         {
             HumanPeaceful, HumanDanger, Animal, Monster
@@ -50,10 +42,15 @@ namespace HeroLogic
         public const int LOC_TEMPLERUINS = 6;
         
             
-        public const int GIVER_LORD = 1;
+        public const int GIVER_NOBLEMAN = 1;
         public const int GIVER_NOBLEWOMAN = 2;
-        public const int GIVER_WEALTHYMAERCHANT = 3;
-        public const int GIVER_MERCHANTGUILD = 4;
+        public const int GIVER_SPICEMERCHANT = 3;
+        public const int GIVER_DUCHESS = 4;
+        public const int GIVER_DUKE = 5;
+        public const int GIVER_WEAPONMERCHANT = 6;
+        public const int GIVER_JEWELMERCHANT = 7;
+        public const int GIVER_PRIEST = 8;
+        public const int GIVER_PRIESTESS = 9;
 
 
         public const int WHO_SISTER= 1;
@@ -300,11 +297,17 @@ namespace HeroLogic
 
         private static void PopulateQGivers()
         {
-            QuestGivers.Add(new QuestGiver(GIVER_LORD, "Lord"));
+            QuestGivers.Add(new QuestGiver(GIVER_NOBLEMAN, "Noble Man"));
             QuestGivers.Add(new QuestGiver(GIVER_NOBLEWOMAN, "Noble Woman"));
-            QuestGivers.Add(new QuestGiver(GIVER_WEALTHYMAERCHANT, "Wealthy Merchant"));
-            QuestGivers.Add(new QuestGiver(GIVER_MERCHANTGUILD, "Merchant Guild"));
-            
+            QuestGivers.Add(new QuestGiver(GIVER_SPICEMERCHANT, "Wealthy Spice Merchant"));
+            QuestGivers.Add(new QuestGiver(GIVER_DUCHESS, "Duchess"));
+            QuestGivers.Add(new QuestGiver(GIVER_DUKE, "Duke"));
+            QuestGivers.Add(new QuestGiver(GIVER_WEAPONMERCHANT, "Wealthy Weapon Merchant"));
+            QuestGivers.Add(new QuestGiver(GIVER_JEWELMERCHANT, "Wealthy Jewels Merchant"));
+            QuestGivers.Add(new QuestGiver(GIVER_PRIEST, "Priest"));
+            QuestGivers.Add(new QuestGiver(GIVER_PRIESTESS, "Priestess"));
+
+
         }
               
         public static IEnumerable<int> MonstersList()
@@ -315,7 +318,15 @@ namespace HeroLogic
                 select selectedMonster.ID;
             return monstersList;
         }
-        
+
+        public static IEnumerable<int> StolenItems()
+        {
+            IEnumerable<int> stolenList =
+                from selectedItems in Items
+                where selectedItems.ID>=100 && selectedItems.ID < 200
+                select selectedItems.ID;
+            return stolenList;
+        }
 
         public static IEnumerable<int> LocationListMonster(int monsterID)
         {
@@ -325,6 +336,7 @@ namespace HeroLogic
                 select monsterLoc.Location;
             return locList;
         }
+
         public static int HitTarget(int dex)
         {
             switch (dex)
@@ -473,7 +485,7 @@ namespace HeroLogic
         public static int Damage(int str, int lvl, int minDmg, int maxDmg)
         {
             double factor1 = Math.Pow((str * (1 + lvl / 100)), 2);
-            Random rnd = new Random();
+            //Random rnd = new Random();
             return Convert.ToInt32(rnd.Next(minDmg, maxDmg + 1) * (1 + factor1 / 100));
 
         }

@@ -52,6 +52,7 @@
     <Compile Include="Quest.cs" />
     <Compile Include="Quest1Class.cs" />
     <Compile Include="Quest2Class.cs" />
+    <Compile Include="Quest3Class.cs" />
     <Compile Include="QuestGiver.cs" />
     <Compile Include="QuestWho.cs" />
     <Compile Include="Weapon.cs" />
