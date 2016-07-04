@@ -28,7 +28,13 @@ namespace HerosTale
         private bool firstTime = true;
         private bool DoQ2 = true;
         private GamePhase CurrentPhase;
-        
+        private int EventProb;
+        private int Days;
+        private int CountDays = 0;
+        private int FoesNr;
+        private int FoesRemaining;
+        private Monster attackMonster;
+
 
         public frmBase()
         {
@@ -69,110 +75,134 @@ namespace HerosTale
 
         private void CheckLvlUp(int exp, int lvl)
         {
+            bool DolvlUp=false;
+
             if (lvl < 20 && exp >= 70000)
             {
                 player.Level = 20;
+                DolvlUp = true;
 
             }
             else if (lvl < 19 && exp >= 62000)
             {
                 player.Level = 19;
+                DolvlUp = true;
 
             }
             else if (lvl < 18 && exp >= 55000)
             {
                 player.Level = 18;
+                DolvlUp = true;
 
             }
             else if (lvl < 17 && exp >= 48000)
             {
                 player.Level = 17;
+                DolvlUp = true;
 
             }
             else if (lvl < 16 && exp >= 43000)
             {
                 player.Level = 16;
+                DolvlUp = true;
 
             }
             else if (lvl < 15 && exp >= 38000)
             {
                 player.Level = 15;
+                DolvlUp = true;
 
             }
             else if (lvl < 14 && exp >= 33000)
             {
                 player.Level = 14;
+                DolvlUp = true;
 
             }
             else if (lvl < 13 && exp >= 28000)
             {
                 player.Level = 13;
+                DolvlUp = true;
 
             }
             else if (lvl < 12 && exp >= 23000)
             {
                 player.Level = 12;
+                DolvlUp = true;
 
             }
             else if (lvl < 11 && exp >= 18000)
             {
                 player.Level = 11;
+                DolvlUp = true;
 
             }
             else if (lvl < 10 && exp >= 13000)
             {
                 player.Level = 10;
+                DolvlUp = true;
 
             }
             else if (lvl < 9 && exp >= 11000)
             {
                 player.Level = 9;
+                DolvlUp = true;
 
             }
             else if (lvl < 8 && exp >= 9000)
             {
                 player.Level = 8;
+                DolvlUp = true;
 
             }
             else if (lvl < 7 && exp >= 7000)
             {
                 player.Level = 7;
+                DolvlUp = true;
 
             }
             else if (lvl < 6 && exp >= 5000)
             {
                 player.Level = 6;
+                DolvlUp = true;
 
             }
             else if (lvl < 5 && exp >= 3000)
             {
                 player.Level = 5;
+                DolvlUp = true;
 
             }
             else if (lvl < 4 && exp >= 2000)
             {
                 player.Level = 4;
+                DolvlUp = true;
 
             }
             else if (lvl < 3 && exp >= 1000)
             {
                 player.Level = 3;
+                DolvlUp = true;
 
             }
             else if (lvl < 2 && exp >= 500)
             {
                 player.Level = 2;
+                DolvlUp = true;
 
             }
 
-            txtMainWindow.Text += $"Congratrulations you are now level {player.Level}!! \r\n";
-            ScrollDownText(txtMainWindow);
-            player.MaximumHitPoints += (player.Level - lvl) * HEALTH_LEVEL;
-            player.CurrentHitPoints = player.MaximumHitPoints;
-            txtMainWindow.Text += $"You have gained {(player.Level - lvl) * POINTS_LEVEL} stats point to assign and {(player.Level - lvl) * HEALTH_LEVEL} health. \r\n";
-            ScrollDownText(txtMainWindow);
-            LevelUp((player.Level - lvl) * POINTS_LEVEL);
-            UpdateStats();
+            if (DolvlUp)
+            {
+                txtMainWindow.Text += $"Congratrulations you are now level {player.Level}!! \r\n";
+                ScrollDownText(txtMainWindow);
+                player.MaximumHitPoints += (player.Level - lvl) * HEALTH_LEVEL;
+                player.CurrentHitPoints = player.MaximumHitPoints;
+                txtMainWindow.Text += $"You have gained {(player.Level - lvl) * POINTS_LEVEL} stats point to assign and {(player.Level - lvl) * HEALTH_LEVEL} health. \r\n";
+                ScrollDownText(txtMainWindow);
+                LevelUp((player.Level - lvl) * POINTS_LEVEL);
+                UpdateStats();
+            }
 
         }
 
@@ -204,7 +234,7 @@ namespace HerosTale
 
             return rndnumber;
         }
-       
+        
         private int RandomElement(int maxNr)
         {
            
@@ -269,9 +299,78 @@ namespace HerosTale
 
         }
 
+        private void Heal()
+        {
+            if (player.CurrentHitPoints<player.MaximumHitPoints)
+            {
+                player.CurrentHitPoints += player.Level * 50;
+                if (player.CurrentHitPoints>player.MaximumHitPoints)
+                {
+                    player.CurrentHitPoints = player.MaximumHitPoints;
+                }
+            }
+        }
+
+        private void GenerateFoesEncounter()
+        {
+            
+            WorldLocation JLocation;
+            do
+            {
+                JLocation = LocationByID(RandomElement(WorldLocations.Count));
+            }
+            while (JLocation.ID == LOC_DESERT);
+
+            IEnumerable<int> ExtractList = MonstersByLocID(JLocation.ID);
+            do
+            {
+                attackMonster = MonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+            }
+            while (attackMonster.Type == CreatureType.Monster);
+
+        }
+
         private void Journey()
         {
 
+
+            ++CountDays;
+            if (CountDays < Days)
+            {
+                //journey still on
+
+                txtMainWindow.Text += $"Youe have {Days} days of travel. Days travelled: {CountDays} \r\n";
+
+                //generate 3 possible events during the journey
+                EventProb = rnd.Next(1, 101);
+                if (EventProb <= 35)
+                {
+                    //Nothing happens
+                    txtMainWindow.Text += "\r\n";
+                    txtMainWindow.Text += "Nothing has heppened today \r\n";
+                    Heal();
+                }
+                else if (EventProb <= 70)
+                {
+                    //See x creatrues
+                    FoesRemaining = FoesNr = rnd.Next(1, 4);
+
+                    GenerateFoesEncounter();
+
+                    string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
+                    txtMainWindow.Text += "\r\n";
+                    txtMainWindow.Text += $"You see {FoesNr} {text} from the distance\r\n";
+                }
+                else
+                {
+                    // hear noises nearby
+                }
+            }
+            else
+            {
+                //arrived at destination
+            }
+           
         }
 
         private void UpdateBtn()
@@ -286,6 +385,10 @@ namespace HerosTale
                     button4.Text = "Shop";
                     break;
                 case GamePhase.Combat:
+                    button1.Text = "Attack";
+                    button2.Text = "Ambush";
+                    button3.Text = "Use Item";
+                    button4.Text = "Continue";
                     break;
                 case GamePhase.Caravan:
                     break;
@@ -461,12 +564,179 @@ namespace HerosTale
             switch (CurrentPhase)
             {
                 case GamePhase.Tavern:
+                    // selected Quest 1 type
+                    Days = rnd.Next(2, 5);
                     playerQuest = new PlayerQuest(QuestOption.Quest1);
                     txtMainWindow.Text = $"You start your journey to kill the {Quest1.MonsterName}. \r\n";
                     txtMainWindow.Text += "\r\n";
+                    CurrentPhase = GamePhase.Combat;
+                    UpdateBtn();
                     Journey();
                     break;
                 case GamePhase.Combat:
+                    // if the journey has started now try to attack something
+                    if (EventProb <= 35)
+                    {
+                        //Nothing happens & we attack
+                        txtMainWindow.Text += "\r\n";
+                        txtMainWindow.Text += "There is nothing to attack!";                        
+                    }
+                    else if (EventProb <= 70)
+                    {
+                        //we See x creatrues and we attack
+                        if (FoesRemaining > 0)
+                        {
+                            // need to manage inventory and current weapon to get min/max dmg!!!
+                            int Hit = Damage(player.Strength, player.Level, 10, 20);
+                            attackMonster.CurrentHitPoints -= Hit;
+                            txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
+                            ScrollDownText(txtMainWindow);
+                            if (attackMonster.CurrentHitPoints<=0)
+                            {
+                                FoesRemaining--;
+                                txtMainWindow.Text += "You have killed 1 enemy!\r\n";
+                                ScrollDownText(txtMainWindow);
+                                attackMonster.CurrentHitPoints = attackMonster.MaximumHitPoints;
+                            }
+
+
+                        }
+                        else
+                        {
+                            txtMainWindow.Text += $"You have killed all your enemies! \r\n";
+                            txtMainWindow.Text += $"You have gained {FoesNr*attackMonster.RewardExperiencePoints} experience points!\r\n";
+                            ScrollDownText(txtMainWindow);                            
+                            player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
+                            UpdateStats();
+                            CheckLvlUp(player.ExperiecePoints, player.Level);
+                        }
+
+
+                    }
+                    else
+                    {
+                        //we hear noises nearby and we attack
+                    }
+                    break;
+
+                case GamePhase.Caravan:
+                    // if we are on the caravan this is option 1 of that scenario
+                    break;
+                case GamePhase.CaravanIntro:
+                    // before joining the caravan we have this option
+                    break;
+                case GamePhase.Marrakesh:
+                    // when we are in Marrakesh this option taked use to the Weapon Shop
+                    break;
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            switch(CurrentPhase)
+            {
+                case GamePhase.Tavern:
+                    if (DoQ2)
+                    {
+                        playerQuest = new PlayerQuest(QuestOption.Quest2);
+                        txtMainWindow.Text = $"You start your journey to free the kidnapped {Quest2.WhoQuestName}. \r\n";
+                    } else
+                    {
+                        playerQuest = new PlayerQuest(QuestOption.Quest3);
+                        txtMainWindow.Text = $"You start your journey to recover the stolen {Quest3.ItemName}. \r\n";
+
+                    }
+                    
+                    txtMainWindow.Text += "\r\n";
+                    Days = rnd.Next(2, 5);
+                    CurrentPhase = GamePhase.Combat;
+                    UpdateBtn();
+                    Journey();
+                    break;
+                case GamePhase.Combat:
+                    if (EventProb <= 35)
+                    {
+                        //Nothing happens & ambush
+                        txtMainWindow.Text += "\r\n";
+                        txtMainWindow.Text += "You try to ambush your own shadow but you fail! \r\n";                        
+
+                    }
+                    else if (EventProb <= 70)
+                    {
+                        //See x creatrues & ambush
+                    }
+                    else
+                    {
+                        // hear noises nearby & ambush
+                    }
+                break;
+                case GamePhase.Caravan:
+                    break;
+                case GamePhase.CaravanIntro:
+                    break;
+                case GamePhase.Marrakesh:
+                    break;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            switch(CurrentPhase)
+            {
+                case GamePhase.Tavern:
+                    CurrentPhase = GamePhase.Caravan;
+                    UpdateBtn();
+                    Journey();
+                    break;
+                case GamePhase.Combat:
+                    if (EventProb <= 35)
+                    {
+                        //Nothing happens & we use item
+                    }
+                    else if (EventProb <= 70)
+                    {
+                        //See x creatrues
+                    }
+                    else
+                    {
+                        // hear noises nearby
+                    }
+                    break;
+                case GamePhase.Caravan:
+                    break;
+                case GamePhase.CaravanIntro:
+                    break;
+                case GamePhase.Marrakesh:
+                    break;
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            switch(CurrentPhase)
+            {
+                case GamePhase.Tavern:
+                    //go to shop                    
+                break;
+                case GamePhase.Combat:
+                    if (EventProb <= 35)
+                    {
+                        //Nothing happens & we continue
+                        txtMainWindow.Text = "";
+                        Journey();
+                    }
+                    else if (EventProb <= 70)
+                    {
+                        //See x creatrues & we continue
+                        txtMainWindow.Text = "";
+                        Journey();
+                    }
+                    else
+                    {
+                        // hear noises nearby & we continue
+                        txtMainWindow.Text = "";
+                        Journey();
+                    }
                     break;
                 case GamePhase.Caravan:
                     break;

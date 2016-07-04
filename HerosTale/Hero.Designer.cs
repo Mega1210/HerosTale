@@ -190,7 +190,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 11);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(200, 22);
+            this.label2.Size = new System.Drawing.Size(160, 18);
             this.label2.TabIndex = 54;
             this.label2.Text = "Assign Stats Points";
             // 
@@ -222,7 +222,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(24, 45);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 22);
+            this.label1.Size = new System.Drawing.Size(56, 18);
             this.label1.TabIndex = 51;
             this.label1.Text = "Points";
             // 
@@ -355,7 +355,7 @@
             this.label4.Location = new System.Drawing.Point(550, 376);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(110, 22);
+            this.label4.Size = new System.Drawing.Size(88, 18);
             this.label4.TabIndex = 41;
             this.label4.Text = "Experience";
             // 
@@ -376,7 +376,7 @@
             this.lLevelTxt.Location = new System.Drawing.Point(550, 348);
             this.lLevelTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lLevelTxt.Name = "lLevelTxt";
-            this.lLevelTxt.Size = new System.Drawing.Size(60, 22);
+            this.lLevelTxt.Size = new System.Drawing.Size(48, 18);
             this.lLevelTxt.TabIndex = 39;
             this.lLevelTxt.Text = "Level";
             // 
@@ -397,7 +397,7 @@
             this.lGoldtxt.Location = new System.Drawing.Point(550, 318);
             this.lGoldtxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lGoldtxt.Name = "lGoldtxt";
-            this.lGoldtxt.Size = new System.Drawing.Size(50, 22);
+            this.lGoldtxt.Size = new System.Drawing.Size(40, 18);
             this.lGoldtxt.TabIndex = 37;
             this.lGoldtxt.Text = "Gold";
             // 
@@ -462,6 +462,7 @@
             this.button2.TabIndex = 31;
             this.button2.Text = "2";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -474,6 +475,7 @@
             this.button3.TabIndex = 32;
             this.button3.Text = "3";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
@@ -486,6 +488,7 @@
             this.button4.TabIndex = 33;
             this.button4.Text = "4";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // lChrNr
             // 
@@ -504,7 +507,7 @@
             this.lChrTxt.Location = new System.Drawing.Point(550, 537);
             this.lChrTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lChrTxt.Name = "lChrTxt";
-            this.lChrTxt.Size = new System.Drawing.Size(90, 22);
+            this.lChrTxt.Size = new System.Drawing.Size(72, 18);
             this.lChrTxt.TabIndex = 27;
             this.lChrTxt.Text = "Charisma";
             // 
@@ -525,7 +528,7 @@
             this.lDexTxt.Location = new System.Drawing.Point(550, 472);
             this.lDexTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lDexTxt.Name = "lDexTxt";
-            this.lDexTxt.Size = new System.Drawing.Size(100, 22);
+            this.lDexTxt.Size = new System.Drawing.Size(80, 18);
             this.lDexTxt.TabIndex = 25;
             this.lDexTxt.Text = "Dexterity";
             // 
@@ -546,7 +549,7 @@
             this.lIntTxt.Location = new System.Drawing.Point(550, 504);
             this.lIntTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lIntTxt.Name = "lIntTxt";
-            this.lIntTxt.Size = new System.Drawing.Size(130, 22);
+            this.lIntTxt.Size = new System.Drawing.Size(104, 18);
             this.lIntTxt.TabIndex = 23;
             this.lIntTxt.Text = "Intelligence";
             // 
@@ -567,7 +570,7 @@
             this.lStrTxt.Location = new System.Drawing.Point(550, 437);
             this.lStrTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lStrTxt.Name = "lStrTxt";
-            this.lStrTxt.Size = new System.Drawing.Size(90, 22);
+            this.lStrTxt.Size = new System.Drawing.Size(72, 18);
             this.lStrTxt.TabIndex = 21;
             this.lStrTxt.Text = "Strength";
             // 
@@ -588,7 +591,7 @@
             this.lHealthTxt.Location = new System.Drawing.Point(550, 406);
             this.lHealthTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lHealthTxt.Name = "lHealthTxt";
-            this.lHealthTxt.Size = new System.Drawing.Size(70, 22);
+            this.lHealthTxt.Size = new System.Drawing.Size(56, 18);
             this.lHealthTxt.TabIndex = 19;
             this.lHealthTxt.Text = "Health";
             // 
@@ -599,7 +602,7 @@
             this.lHeroName.Location = new System.Drawing.Point(632, 280);
             this.lHeroName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lHeroName.Name = "lHeroName";
-            this.lHeroName.Size = new System.Drawing.Size(64, 28);
+            this.lHeroName.Size = new System.Drawing.Size(50, 22);
             this.lHeroName.TabIndex = 18;
             this.lHeroName.Text = "Name";
             // 
@@ -614,7 +617,7 @@
             this.tInputName.Location = new System.Drawing.Point(7, 48);
             this.tInputName.MaxLength = 20;
             this.tInputName.Name = "tInputName";
-            this.tInputName.Size = new System.Drawing.Size(194, 29);
+            this.tInputName.Size = new System.Drawing.Size(194, 25);
             this.tInputName.TabIndex = 17;
             this.tInputName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tInputName_KeyPress);
             // 
@@ -623,7 +626,7 @@
             this.lNameInut.AutoSize = true;
             this.lNameInut.Location = new System.Drawing.Point(9, 14);
             this.lNameInut.Name = "lNameInut";
-            this.lNameInut.Size = new System.Drawing.Size(240, 22);
+            this.lNameInut.Size = new System.Drawing.Size(192, 18);
             this.lNameInut.TabIndex = 18;
             this.lNameInut.Text = "What\'s you Hero\'s Name?";
             // 
@@ -652,7 +655,7 @@
             // 
             // frmBase
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1068, 618);

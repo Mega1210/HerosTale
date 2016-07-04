@@ -329,6 +329,15 @@ namespace HeroLogic
             return monstersList;
         }
 
+        public static IEnumerable<int> MonstersByLocID(int id)
+        {
+            IEnumerable<int> monstersList =
+                from selectedMonster in CreatureLocations
+                where selectedMonster.Location== id
+                select selectedMonster.CreatureID;
+            return monstersList;
+        }
+
         public static IEnumerable<int> StolenItems()
         {
             IEnumerable<int> stolenList =
@@ -494,15 +503,14 @@ namespace HeroLogic
 
         public static int Damage(int str, int lvl, int minDmg, int maxDmg)
         {
-            double factor1 = Math.Pow((str * (1 + lvl / 100)), 2);
-            //Random rnd = new Random();
+            double factor1 = Math.Pow((str * (1 + lvl / 100)), 2);           
             return Convert.ToInt32(rnd.Next(minDmg, maxDmg + 1) * (1 + factor1 / 100));
 
         }
 
         public static int CreateGold()
         {
-            //Random rnd = new Random();
+            
             int gold = rnd.Next(1, 5 + 1)*1000+ rnd.Next(0, 2) * 500;
             return gold;
         }
