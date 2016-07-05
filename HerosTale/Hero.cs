@@ -26,6 +26,7 @@ namespace HerosTale
         private const int HEALTH_LEVEL = 500;
         private const int POINTS_LEVEL = 3;
         private bool firstTime = true;
+        private bool firstTimeCombat = true;
         private bool inCombat = false;
         private InitialMenuChoice mChoice;
         private bool DoQ2 = true;
@@ -36,6 +37,7 @@ namespace HerosTale
         private int FoesNr;
         private int FoesRemaining;
         private Monster attackMonster;
+        
 
 
         public frmBase()
@@ -47,11 +49,30 @@ namespace HerosTale
             pNameInput.Enabled = false;
             pnlLevelUp.Enabled = false;
             pnlLevelUp.Visible = false;
+            pnlMainBtn.Visible = false;
+            pnlMainBtn.Enabled = false;
+            firstTime = true;
+            firstTimeCombat = true;
+            DoQ2 = true;
+            CountDays = 0;
+            inCombat = false;
             player = new Player(1, 1, 1, 1, 100, "", 1, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
             
             
         }
                 
+
+        private void ResetAfterDead()
+        {
+            firstTime = true;
+            firstTimeCombat = true;
+            DoQ2 = true;
+            CountDays = 0;
+            inCombat = false;
+            player = new Player(1, 1, 1, 1, 100, "", 1, 1, 1000, 1000, CreatureType.HumanPeaceful, CreatureClass.Player);
+            tInputName.Text = "";
+        }
+
         private void bNewGane_Click(object sender, EventArgs e)
         {
             pNameInput.Visible = true;
@@ -311,6 +332,22 @@ namespace HerosTale
             }
         }
 
+        private bool CheckAllMonsterDead()
+        {
+            if (FoesRemaining == 0)
+            {
+                txtMainWindow.Text += $"You have killed all your enemies! \r\n";
+                txtMainWindow.Text += $"You have gained {FoesNr * attackMonster.RewardExperiencePoints} experience points!\r\n";
+                ScrollDownText(txtMainWindow);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+
         private void CheckMonsterHealth()
         {
             if (attackMonster.CurrentHitPoints <= 0)
@@ -320,16 +357,7 @@ namespace HerosTale
                 ScrollDownText(txtMainWindow);
                 attackMonster.CurrentHitPoints = attackMonster.MaximumHitPoints;
 
-                if (FoesRemaining==0)
-                {
-                    txtMainWindow.Text += $"You have killed all your enemies! \r\n";
-                    txtMainWindow.Text += $"You have gained {FoesNr * attackMonster.RewardExperiencePoints} experience points!\r\n";
-                    ScrollDownText(txtMainWindow);
-                    player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
-                    UpdateStats();
-                    CheckLvlUp(player.ExperiecePoints, player.Level);
-                    inCombat = false;
-                }
+                
             }
         }
 
@@ -355,11 +383,12 @@ namespace HerosTale
         private void Journey()
         {
             ++CountDays;
-            if (CountDays < Days)
+            if (CountDays <= Days)
             {
                 //journey still on
 
                 txtMainWindow.Text += $"Youe have {Days} days of travel. Days travelled: {CountDays} \r\n";
+                txtMainWindow.Text += "\r\n";
 
                 //generate 3 possible events during the journey
                 EventGenerated = GenerateEvent();
@@ -368,25 +397,28 @@ namespace HerosTale
                 case EventJourney.Nothing:
 
                     //Nothing happens
-                    txtMainWindow.Text += "\r\n";
-                    txtMainWindow.Text += "Nothing has heppened today \r\n";
-                    Heal();
+                    
+                        txtMainWindow.Text += "Nothing has heppened today \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        Heal();
                     break;
                 case EventJourney.Approach:
 
-                    //See x creatrues
-                    FoesRemaining = FoesNr = rnd.Next(1, 4);
-                    GenerateFoesEncounter();
-                    string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                    txtMainWindow.Text += "\r\n";
-                    txtMainWindow.Text += $"You see {FoesNr} {text} approaching\r\n";
-                    break;
-                case EventJourney.Noise:
+                        //See x creatrues
+                        inCombat = true;
                         FoesRemaining = FoesNr = rnd.Next(1, 4);
                         GenerateFoesEncounter();
-                        
+                        string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;                        
+                        txtMainWindow.Text += $"You see {FoesNr} {text} \r\n";
                         txtMainWindow.Text += "\r\n";
-                        txtMainWindow.Text += $"You hear some strange noises. \r\n";                        
+                        break;
+                case EventJourney.Noise:
+
+                        inCombat = true;
+                        FoesRemaining = FoesNr = rnd.Next(1, 4);
+                        GenerateFoesEncounter();                                                
+                        txtMainWindow.Text += $"You hear some strange noises. \r\n";
+                        txtMainWindow.Text += "\r\n";
                         break;
                 }
             }
@@ -394,6 +426,463 @@ namespace HerosTale
             {
                 //Arrived
             }
+           
+        }
+
+
+        private void GenerateMessage()
+        {
+
+        }
+
+        private int RollDice(int min)
+        {
+            return rnd.Next(min, 101);
+        }
+
+        private int RollMonsterDamage(int maxDmg)
+        {
+            return rnd.Next(0, maxDmg);
+        }
+
+        private async void CheckPlayerHealth()
+        {
+            if (player.CurrentHitPoints<=0)
+            {
+                await Task.Delay(1500);
+                txtMainWindow.Text = "YOU ARE DEAD!! \r\n";
+                ScrollDownText(txtMainWindow);
+                await Task.Delay(2000);
+                pnlMainBtn.Enabled = false;
+                pnlMainBtn.Visible = false;
+                pMain.Enabled = false;
+                pMain.Visible = false;
+                pStart.Visible = true;
+                pStart.Enabled = true;
+                ResetAfterDead();                
+            }
+           
+        }
+
+        private EventJourney GenerateEvent()
+        {
+            int EventProb = rnd.Next(1, 101);
+
+            if (EventProb <= 35)
+            {
+                return EventJourney.Nothing;
+            }
+            else if (EventProb <= 70)
+            {
+                return EventJourney.Approach;
+            }
+            else
+            {
+                return EventJourney.Noise;
+            }
+        }
+
+        private async void Actions(ButtonChoice button)
+        {
+            switch (button)
+            {
+//-------------------BUTTON 1 CLICK OPTIONS
+                case ButtonChoice.Button1:
+
+                    switch (CurrentPhase)
+                    {
+
+//-------------BUTTON 1 - TAVERN PHASE
+                        case GamePhase.Tavern:
+                            
+                            // Selected Quest 1 type
+                            Days = rnd.Next(2, 5);
+                            mChoice = InitialMenuChoice.Quest1;
+                            playerQuest = new PlayerQuest(QuestOption.Quest1);
+                            txtMainWindow.Text = $"You start your journey to kill the {Quest1.MonsterName}. \r\n";
+                            txtMainWindow.Text += "\r\n";
+                            CurrentPhase = GamePhase.Journey;
+                            UpdateBtn();
+                            Journey();
+                            break;
+
+//-------------BUTTON 1 - JOURNEY PHASE                        
+                        case GamePhase.Journey:
+
+                            switch (EventGenerated)
+                            {
+                                case EventJourney.Nothing:
+                                    //Nothing happens & we attack
+                                    
+                                    txtMainWindow.Text += "There is nothing to attack! \r\n";
+                                    txtMainWindow.Text += "\r\n";
+                                    ScrollDownText(txtMainWindow);
+                                    break;
+                                case EventJourney.Approach:
+
+                                    //we See x creatrues and we attack
+                                    if (FoesRemaining > 0)
+                                    {
+                                        if (firstTimeCombat)
+                                        {
+                                            firstTimeCombat = false;                                            
+                                            string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
+                                            txtMainWindow.Text += $"You run towards the {text} and start the combat! \r\n";
+                                            txtMainWindow.Text += "\r\n";
+                                            ScrollDownText(txtMainWindow);
+                                        }
+
+                                        // need to manage inventory and current weapon to get min/max dmg!!!
+                                        int Hit = Damage(player.Strength, player.Level, 10, 20);
+                                        attackMonster.CurrentHitPoints -= Hit;
+                                        txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
+                                        txtMainWindow.Text += "\r\n";
+                                        CheckMonsterHealth();
+
+                                        if (CheckAllMonsterDead())
+                                        {
+                                            player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
+                                            UpdateStats();
+                                            CheckLvlUp(player.ExperiecePoints, player.Level);
+                                            inCombat = false;
+                                        }
+                                        else
+                                        {
+                                            int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
+                                            player.CurrentHitPoints -= MonsterHit;
+                                            txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
+                                            txtMainWindow.Text += "\r\n";
+                                            UpdateStats();
+                                            ScrollDownText(txtMainWindow);
+                                            CheckPlayerHealth();
+                                        }
+                                        
+                                    
+                                        
+                                                                                
+                                    }
+                                    break;
+                                case EventJourney.Noise:
+
+                                    if (FoesRemaining > 0)
+                                    {
+                                        if (firstTimeCombat)
+                                        {
+                                            firstTimeCombat = false;
+                                            string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
+                                            txtMainWindow.Text += $"You run towards the {text} and start the combat! \r\n";
+                                            txtMainWindow.Text += "\r\n";
+                                            ScrollDownText(txtMainWindow);
+                                        }
+
+                                        // need to manage inventory and current weapon to get min/max dmg!!!
+                                        int Hit = Damage(player.Strength, player.Level, 10, 20);
+                                        attackMonster.CurrentHitPoints -= Hit;
+                                        txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
+                                        txtMainWindow.Text += "\r\n";
+                                        CheckMonsterHealth();
+
+                                        if (CheckAllMonsterDead())
+                                        {
+                                            player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
+                                            UpdateStats();
+                                            CheckLvlUp(player.ExperiecePoints, player.Level);
+                                            inCombat = false;
+                                        }
+                                        else
+                                        {
+                                            int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
+                                            player.CurrentHitPoints -= MonsterHit;
+                                            txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
+                                            txtMainWindow.Text += "\r\n";
+                                            UpdateStats();
+                                            ScrollDownText(txtMainWindow);
+                                            CheckPlayerHealth();
+
+                                        }
+
+
+
+
+                                    }
+                                    break;
+                            }
+                            break;
+
+//-------------BUTTON 1 - CARAVAN PHASE
+                        case GamePhase.Caravan:
+                            // if we are on the caravan this is option 1 of that scenario
+                            break;
+
+//-------------BUTTON 1 - SHOP PHASE
+                        case GamePhase.Shop:
+                            // before joining the caravan we have this option
+                            break;
+//-------------BUTTON 1 - MARRAKESH PHASE
+                        case GamePhase.Marrakesh:
+                            // when we are in Marrakesh this option taked use to the Weapon Shop
+                            break;
+                    }
+
+                    break;
+
+                case ButtonChoice.Button2:
+//-------------------BUTTON 2 CLICK OPTIONS
+                    switch (CurrentPhase)
+                    {
+//-------------BUTTON 2 - TAVERN PHASE
+                        case GamePhase.Tavern:
+                            Days = rnd.Next(2, 5);
+                            if (DoQ2)
+                            {
+                                mChoice = InitialMenuChoice.Quest2;
+                                playerQuest = new PlayerQuest(QuestOption.Quest2);
+                                txtMainWindow.Text = $"You start your journey to save the {Quest2.GiverQuestName}'s {Quest2.WhoQuestName}. \r\n";
+                                txtMainWindow.Text += "\r\n";
+                            }
+                            else
+                            {
+                                mChoice = InitialMenuChoice.Quest3;
+                                playerQuest = new PlayerQuest(QuestOption.Quest3);
+                                txtMainWindow.Text = $"You start your journey to recover the {Quest3.ItemName}. \r\n";
+                                txtMainWindow.Text += "\r\n";
+
+                            }
+
+                            CurrentPhase = GamePhase.Journey;
+                            UpdateBtn();
+                            Journey();
+                            break;
+
+//-------------BUTTON 2 - JOURNEY PHASE
+                        case GamePhase.Journey:
+
+                            switch (EventGenerated)
+                            {
+                                case EventJourney.Nothing:
+                                    //Nothing happens & we ambush
+                                    
+                                    txtMainWindow.Text += "There is nothing to ambush!";
+                                    txtMainWindow.Text += "\r\n";
+                                    ScrollDownText(txtMainWindow);
+                                    break;
+                                case EventJourney.Approach:
+
+                                    if (inCombat)
+                                    {
+                                        if (firstTimeCombat)
+                                        {
+
+                                            txtMainWindow.Text += "You try to ambush your enemy. \r\n";
+                                            await Task.Delay(1500);
+                                            txtMainWindow.Text += "You have to roll a higher number than ";
+                                            ScrollDownText(txtMainWindow);
+                                            await Task.Delay(750);
+                                            int mRoll = RollDice(1);
+                                            txtMainWindow.Text += $"{mRoll} \r\n";
+                                            ScrollDownText(txtMainWindow);
+                                            await Task.Delay(1500);
+                                            int myRoll = RollDice(SpecialAction(player.Intelligence));
+                                            txtMainWindow.Text += $"Your roll is: {myRoll} \r\n";
+                                            ScrollDownText(txtMainWindow);
+                                            await Task.Delay(1500);
+                                            if (myRoll >= mRoll)
+                                            {
+                                                txtMainWindow.Text += "You succeed! \r\n";
+                                                ScrollDownText(txtMainWindow);
+                                                await Task.Delay(1500);
+                                                inCombat = true;
+                                                firstTimeCombat = false;
+
+                                                int Hit = Convert.ToInt32(Damage(player.Strength, player.Level, 10, 20) * 1.5);
+                                                attackMonster.CurrentHitPoints -= Hit;
+                                                txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
+                                                txtMainWindow.Text += "\r\n";
+                                                ScrollDownText(txtMainWindow);
+                                                CheckMonsterHealth();
+
+                                                if (CheckAllMonsterDead())
+                                                {
+                                                    player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
+                                                    UpdateStats();
+                                                    CheckLvlUp(player.ExperiecePoints, player.Level);
+                                                    inCombat = false;
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                txtMainWindow.Text += "You've failed! The enemy sees you and attacks you first! \r\n";
+                                                txtMainWindow.Text += "\r\n";
+                                                ScrollDownText(txtMainWindow);
+                                                await Task.Delay(1000);
+
+
+                                                int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
+                                                player.CurrentHitPoints -= MonsterHit;
+                                                txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
+                                                txtMainWindow.Text += "\r\n";
+                                                UpdateStats();
+                                                ScrollDownText(txtMainWindow);
+                                                CheckPlayerHealth();
+                                                firstTimeCombat = false;
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            txtMainWindow.Text += "You cannot ambush your enemy, you're already in combat! \r\n";
+                                            txtMainWindow.Text += "\r\n";
+                                            ScrollDownText(txtMainWindow);
+                                            await Task.Delay(1500);
+
+                                            int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
+                                            player.CurrentHitPoints -= MonsterHit;
+                                            txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
+                                            txtMainWindow.Text += "\r\n";
+                                            ScrollDownText(txtMainWindow);
+                                            UpdateStats();                                            
+                                            CheckPlayerHealth();
+                                        }
+                                    }
+
+                                    break;
+                                case EventJourney.Noise:
+
+                                    break;
+                            }
+                            break;
+
+//-------------BUTTON 2 - CARAVAN PHASE
+                        case GamePhase.Caravan:
+                            
+                            break;
+//-------------BUTTON 2 - SHOP PHASE                        
+                        case GamePhase.Shop:
+                            
+                            break;
+
+//-------------BUTTON 2 - MARRAKESH PHASE
+                        case GamePhase.Marrakesh:
+                          
+                            break;
+                    }
+                    break;
+
+                case ButtonChoice.Button3:
+//-------------------BUTTON 3 CLICK OPTIONS
+                    switch (CurrentPhase)
+                    {
+//-------------BUTTON 3 - TAVERN PHASE
+                        case GamePhase.Tavern:
+
+                            break;
+
+//-------------BUTTON 3 - JOURNEY PHASE
+                        case GamePhase.Journey:
+
+                            break;
+
+//-------------BUTTON 3 - CARAVAN PHASE
+                        case GamePhase.Caravan:
+
+                            break;
+//-------------BUTTON 3 - SHOP PHASE                        
+                        case GamePhase.Shop:
+
+                            break;
+
+//-------------BUTTON 3 - MARRAKESH PHASE
+                        case GamePhase.Marrakesh:
+
+                            break;
+                    }
+                    break;
+
+                case ButtonChoice.Button4:
+//-------------------BUTTON 4 CLICK OPTIONS
+
+                    switch (CurrentPhase)
+                    {
+//-------------BUTTON 4 - TAVERN PHASE
+                        case GamePhase.Tavern:
+
+                            break;
+
+//-------------BUTTON 4 - JOURNEY PHASE
+                        case GamePhase.Journey:
+
+                            if (inCombat) //----------Either I'm already fighting or one of the 2 "fighting events" have been generated
+                            {
+                                if (firstTimeCombat)  //----- means I haven't started the fight so I can try to avoid it
+                                {
+                                    txtMainWindow.Text += "You try to avoid the fight. \r\n";
+                                    await Task.Delay(1500);
+                                    txtMainWindow.Text += "You have to roll a higher number than ";
+                                    ScrollDownText(txtMainWindow);
+                                    await Task.Delay(750);
+                                    int mRoll = RollDice(1);
+                                    txtMainWindow.Text += $"{mRoll} \r\n";
+                                    ScrollDownText(txtMainWindow);
+                                    await Task.Delay(1500);
+                                    int myRoll = RollDice(SpecialAction(player.Intelligence));
+                                    txtMainWindow.Text += $"Your roll is: {myRoll} \r\n";
+                                    ScrollDownText(txtMainWindow);
+                                    await Task.Delay(1500);
+                                    if (myRoll>=mRoll)
+                                    {
+                                        txtMainWindow.Text += "You avoid the fight! \r\n";
+                                        ScrollDownText(txtMainWindow);
+                                        await Task.Delay(1500);
+                                        inCombat = false;
+                                        firstTimeCombat = true;
+                                        txtMainWindow.Text = "";
+                                        Heal();
+                                        Journey();
+                                    }
+                                    else
+                                    {
+                                        txtMainWindow.Text += "You've failed to avoid the fight and now you're in combat! \r\n";
+                                        ScrollDownText(txtMainWindow);
+                                        firstTimeCombat = false;
+                                    }
+
+                                }
+                                else //--- I'm dutring the right but I can try to flee
+                                {
+
+                                }
+                            }
+                            else //---------- either I've finished my fight or "nothing" event has been generated
+                            {
+                                
+                                firstTimeCombat = true;
+                                txtMainWindow.Text = "";
+                                Heal();                                
+                                Journey();
+                            }
+
+                            break;
+
+//-------------BUTTON 4 - CARAVAN PHASE
+                        case GamePhase.Caravan:
+
+                            break;
+//-------------BUTTON 4 - SHOP PHASE                        
+                        case GamePhase.Shop:
+
+                            break;
+
+//-------------BUTTON 4 - MARRAKESH PHASE
+                        case GamePhase.Marrakesh:
+
+                            break;
+                    }
+                    break;
+
+            }
+
+
            
         }
 
@@ -430,6 +919,8 @@ namespace HerosTale
         private void Tavern()
         {
             CurrentPhase = GamePhase.Tavern;
+            pnlMainBtn.Visible = true;
+            pnlMainBtn.Enabled = true;
             UpdateBtn();
             generateQuest1();
             generateQuest2();
@@ -467,7 +958,7 @@ namespace HerosTale
             lHeroName.Text = player.Name;
             UpdateStats();
 
-            txtMainWindow.Text = $"This is the moment to become a hero {player.Name} \r\n";
+            txtMainWindow.Text = $"So you want to become a hero {player.Name} \r\n";
             txtMainWindow.Text += "\r\n";
             await Task.Delay(2000);
             txtMainWindow.Text += "You start as a puny \"wanna be hero\" barely able to wield a sword and kill a rat \r\n";
@@ -580,151 +1071,32 @@ namespace HerosTale
             this.Close();
         }
 
-        private void GenerateMessage()
-        {
-
-        }
-
-        private EventJourney GenerateEvent()
-        {
-            int EventProb = rnd.Next(1, 101);
-
-            if (EventProb <= 35)
-            {
-                return EventJourney.Nothing;
-            }
-            else if (EventProb <= 70)
-            {
-                return EventJourney.Approach;
-            }
-            else
-            {
-                return EventJourney.Noise;
-            }
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            switch (CurrentPhase)
-            {
-                case GamePhase.Tavern:
-                    // selected Quest 1 type
-                    Days = rnd.Next(2, 5);
-                    mChoice = InitialMenuChoice.Quest1;
-                    playerQuest = new PlayerQuest(QuestOption.Quest1);
-                    txtMainWindow.Text = $"You start your journey to kill the {Quest1.MonsterName}. \r\n";
-                    txtMainWindow.Text += "\r\n";
-                    CurrentPhase = GamePhase.Journey;                    
-                    UpdateBtn();
-                    Journey();
-                    break;
-                case GamePhase.Journey:
-
-                    switch (EventGenerated)
-                    {
-                        case EventJourney.Nothing:
-                            //Nothing happens & we attack
-                            txtMainWindow.Text += "\r\n";
-                            txtMainWindow.Text += "There is nothing to attack!";
-                            break;
-                        case EventJourney.Approach:
-
-                            //we See x creatrues and we attack
-                            if (FoesRemaining > 0)
-                            {
-                                 if (firstTime)
-                                {
-                                    firstTime = false;
-                                    inCombat = true;
-                                    string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                                    txtMainWindow.Text += $"You run towards the {text} and start the combat! \r\n";
-                                    txtMainWindow.Text += "\r\n";
-                                    ScrollDownText(txtMainWindow);
-                                }
-                                
-                                // need to manage inventory and current weapon to get min/max dmg!!!
-                                int Hit = Damage(player.Strength, player.Level, 10, 20);
-                                attackMonster.CurrentHitPoints -= Hit;
-                                txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
-                                ScrollDownText(txtMainWindow);
-                                CheckMonsterHealth();
-                                if (!inCombat)
-                                {
-                                    button4.PerformClick();
-                                }
-                            }
-                            break;
-                        case EventJourney.Noise:
-
-                            //we hear noises nearby and we attack
-                            break;
-                    }                  
-                    break;
-
-                case GamePhase.Caravan:
-                    // if we are on the caravan this is option 1 of that scenario
-                    break;
-                case GamePhase.Shop:
-                    // before joining the caravan we have this option
-                    break;
-                case GamePhase.Marrakesh:
-                    // when we are in Marrakesh this option taked use to the Weapon Shop
-                    break;
-            }
+            ButtonChoice button = ButtonChoice.Button1;
+            Actions(button);
+           
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            switch(CurrentPhase)
-            {
-                case GamePhase.Tavern:
-                    if (DoQ2)
-                    {
-                        playerQuest = new PlayerQuest(QuestOption.Quest2);
-                        mChoice = InitialMenuChoice.Quest2;
-                        txtMainWindow.Text = $"You start your journey to free the kidnapped {Quest2.WhoQuestName}. \r\n";
-                    } else
-                    {
-                        playerQuest = new PlayerQuest(QuestOption.Quest3);
-                        mChoice = InitialMenuChoice.Quest3;
-                        txtMainWindow.Text = $"You start your journey to recover the stolen {Quest3.ItemName}. \r\n";
-                    }
-                    
-                    txtMainWindow.Text += "\r\n";
-                    Days = rnd.Next(2, 5);
-                    CurrentPhase = GamePhase.Journey;
-                    UpdateBtn();
-                    Journey();
-                    break;
-                case GamePhase.Journey:                   
-                    break;
-                case GamePhase.Caravan:
-                    break;
-                case GamePhase.Shop:
-                    break;
-                case GamePhase.Marrakesh:
-                    break;
-            }
+
+            ButtonChoice button = ButtonChoice.Button2;
+            Actions(button);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-           
+            ButtonChoice button = ButtonChoice.Button3;
+            Actions(button);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            switch (EventGenerated)
-            {
-                case EventJourney.Nothing:
-                    //Nothing happens & we continue
-                    txtMainWindow.Text += "\r\n";
-                    txtMainWindow.Text += "You journer on";
-                    Heal();
-                    Journey();
-                    break;
-            }
-            }
+            ButtonChoice button = ButtonChoice.Button4;
+            Actions(button);
+        }
 
         private void tInputName_KeyPress(object sender, KeyPressEventArgs e)
         {

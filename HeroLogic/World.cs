@@ -17,6 +17,12 @@ namespace HeroLogic
         public static readonly List<WorldLocation> WorldLocations = new List<WorldLocation>();
         public static Random rnd = new Random();
 
+        public enum ButtonChoice
+        {
+            Button1, Button2, Button3, Button4
+        }
+
+
         public enum QuestOption
         {
             Quest1, Quest2, Quest3
@@ -479,26 +485,26 @@ namespace HeroLogic
         {
             switch (inte)
             {
-                case 1: return 10;
-                case 2: return 10;
-                case 3: return 10;
-                case 4: return 10;
-                case 5: return 15;
-                case 6: return 15;
-                case 7: return 15;
-                case 8: return 15;
-                case 9: return 15;
-                case 10: return 20;
-                case 11: return 20;
-                case 12: return 20;
-                case 13: return 25;
-                case 14: return 25;
-                case 15: return 25;
-                case 16: return 25;
-                case 17: return 25;
-                case 18: return 30;
-                case 19: return 30;
-                case 20: return 30;
+                case 1: return 30;
+                case 2: return 30;
+                case 3: return 30;
+                case 4: return 30;
+                case 5: return 35;
+                case 6: return 35;
+                case 7: return 35;
+                case 8: return 35;
+                case 9: return 35;
+                case 10: return 50;
+                case 11: return 50;
+                case 12: return 50;
+                case 13: return 65;
+                case 14: return 65;
+                case 15: return 65;
+                case 16: return 65;
+                case 17: return 65;
+                case 18: return 80;
+                case 19: return 80;
+                case 20: return 80;
             }
 
             return 0;

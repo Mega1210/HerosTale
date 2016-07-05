@@ -76,10 +76,12 @@
             this.pNameInput = new System.Windows.Forms.Panel();
             this.bOk = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.pnlMainBtn = new System.Windows.Forms.Panel();
             this.pStart.SuspendLayout();
             this.pMain.SuspendLayout();
             this.pnlLevelUp.SuspendLayout();
             this.pNameInput.SuspendLayout();
+            this.pnlMainBtn.SuspendLayout();
             this.SuspendLayout();
             // 
             // bLoadGame
@@ -134,6 +136,7 @@
             // 
             // pMain
             // 
+            this.pMain.Controls.Add(this.pnlMainBtn);
             this.pMain.Controls.Add(this.pnlLevelUp);
             this.pMain.Controls.Add(this.lExpTxt);
             this.pMain.Controls.Add(this.label4);
@@ -144,10 +147,6 @@
             this.pMain.Controls.Add(this.bExit);
             this.pMain.Controls.Add(this.bLoad);
             this.pMain.Controls.Add(this.bSave);
-            this.pMain.Controls.Add(this.button1);
-            this.pMain.Controls.Add(this.button2);
-            this.pMain.Controls.Add(this.button3);
-            this.pMain.Controls.Add(this.button4);
             this.pMain.Controls.Add(this.lChrNr);
             this.pMain.Controls.Add(this.lChrTxt);
             this.pMain.Controls.Add(this.lDexNr);
@@ -441,7 +440,7 @@
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(108, 267);
+            this.button1.Location = new System.Drawing.Point(20, 11);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(4);
@@ -454,7 +453,7 @@
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(108, 325);
+            this.button2.Location = new System.Drawing.Point(20, 69);
             this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Padding = new System.Windows.Forms.Padding(4);
@@ -467,7 +466,7 @@
             // button3
             // 
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Location = new System.Drawing.Point(108, 385);
+            this.button3.Location = new System.Drawing.Point(20, 129);
             this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
             this.button3.Padding = new System.Windows.Forms.Padding(4);
@@ -480,7 +479,7 @@
             // button4
             // 
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Location = new System.Drawing.Point(108, 445);
+            this.button4.Location = new System.Drawing.Point(20, 189);
             this.button4.Margin = new System.Windows.Forms.Padding(4);
             this.button4.Name = "button4";
             this.button4.Padding = new System.Windows.Forms.Padding(4);
@@ -653,6 +652,17 @@
             this.bOk.UseVisualStyleBackColor = true;
             this.bOk.Click += new System.EventHandler(this.bOk_Click);
             // 
+            // pnlMainBtn
+            // 
+            this.pnlMainBtn.Controls.Add(this.button1);
+            this.pnlMainBtn.Controls.Add(this.button2);
+            this.pnlMainBtn.Controls.Add(this.button3);
+            this.pnlMainBtn.Controls.Add(this.button4);
+            this.pnlMainBtn.Location = new System.Drawing.Point(88, 256);
+            this.pnlMainBtn.Name = "pnlMainBtn";
+            this.pnlMainBtn.Size = new System.Drawing.Size(170, 255);
+            this.pnlMainBtn.TabIndex = 55;
+            // 
             // frmBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -679,6 +689,7 @@
             this.pnlLevelUp.PerformLayout();
             this.pNameInput.ResumeLayout(false);
             this.pNameInput.PerformLayout();
+            this.pnlMainBtn.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -731,6 +742,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Panel pnlMainBtn;
     }
 }
 
