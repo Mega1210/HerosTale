@@ -24,19 +24,28 @@ namespace HeroLogic
 
         public enum GamePhase
         {
-            Tavern, Combat, CaravanIntro, Caravan, Marrakesh
+            Journey, BossEncounter, Shop, Caravan, Marrakesh, Tavern
         }
+
+        public enum InitialMenuChoice
+        {
+            Quest1,Quest2,Quest3,Caravan,Shop
+        }
+
+        public enum EventJourney
+        {
+            Nothing, Approach, Noise
+        }
+
 
         public enum CreatureType : byte
         {
             HumanPeaceful, HumanDanger, Animal, Monster
-
         }
 
         public enum CreatureClass : byte
         {
             Normal, Boss, Player
-
         }
 
         public enum QuestType : byte
@@ -50,8 +59,7 @@ namespace HeroLogic
         public const int LOC_DESERT = 4;
         public const int LOC_CASTLERUINS=5;
         public const int LOC_TEMPLERUINS = 6;
-        
-            
+                    
         public const int GIVER_NOBLEMAN = 1;
         public const int GIVER_NOBLEWOMAN = 2;
         public const int GIVER_SPICEMERCHANT = 3;
@@ -61,16 +69,14 @@ namespace HeroLogic
         public const int GIVER_JEWELMERCHANT = 7;
         public const int GIVER_PRIEST = 8;
         public const int GIVER_PRIESTESS = 9;
-
-
+        
         public const int WHO_SISTER= 1;
         public const int WHO_MOTHER= 2;
         public const int WHO_BROTHER = 3;
         public const int WHO_FATHER = 4;
         public const int WHO_UNCLE = 5;
         public const int WHO_AUNT= 6;
-
-
+        
         public const int ITEM_ID_RUSTY_SWORD = 1;
         public const int ITEM_ID_CLUB = 2;
         public const int ITEM_ID_SILVERSWORD = 3;
@@ -94,8 +100,7 @@ namespace HeroLogic
         public const int ITEM_ID_NORMAL_HEALING_POTION = 401;
         public const int ITEM_ID_LARGE_HEALING_POTION = 402;
         public const int ITEM_ID_SUPER_HEALING_POTION = 403;
-
-
+        
         public const int MONSTER_ID_RAT = 1;
         public const int MONSTER_ID_SNAKE = 2;
         public const int MONSTER_ID_RABIDDOG = 3;
@@ -126,9 +131,7 @@ namespace HeroLogic
         public const int MONSTER_ID_SPECTRE = 28;
         public const int MONSTER_ID_SORCERER = 29;
         public const int MONSTER_ID_WITCH = 30;
-
-
-        
+               
 
         static World()
         {
@@ -579,7 +582,6 @@ namespace HeroLogic
 
             return null;
         }
-
 
     }
 }

@@ -26,9 +26,11 @@ namespace HerosTale
         private const int HEALTH_LEVEL = 500;
         private const int POINTS_LEVEL = 3;
         private bool firstTime = true;
+        private bool inCombat = false;
+        private InitialMenuChoice mChoice;
         private bool DoQ2 = true;
         private GamePhase CurrentPhase;
-        private int EventProb;
+        private EventJourney EventGenerated;
         private int Days;
         private int CountDays = 0;
         private int FoesNr;
@@ -70,8 +72,6 @@ namespace HerosTale
 
 
         }
-
-
 
         private void CheckLvlUp(int exp, int lvl)
         {
@@ -249,7 +249,7 @@ namespace HerosTale
             return rndnumber;
         }
 
-        private void  generateQuest1()
+        private void generateQuest1()
         {
             Monster QMonster;
             WorldLocation QLocation;
@@ -316,7 +316,7 @@ namespace HerosTale
             if (attackMonster.CurrentHitPoints <= 0)
             {
                 FoesRemaining--;
-                txtMainWindow.Text += "You have killed 1 enemy!\r\n";
+                txtMainWindow.Text += $"You have killed 1 enemy! {FoesRemaining} remain \r\n";
                 ScrollDownText(txtMainWindow);
                 attackMonster.CurrentHitPoints = attackMonster.MaximumHitPoints;
 
@@ -328,6 +328,7 @@ namespace HerosTale
                     player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
                     UpdateStats();
                     CheckLvlUp(player.ExperiecePoints, player.Level);
+                    inCombat = false;
                 }
             }
         }
@@ -353,8 +354,6 @@ namespace HerosTale
 
         private void Journey()
         {
-
-
             ++CountDays;
             if (CountDays < Days)
             {
@@ -363,33 +362,37 @@ namespace HerosTale
                 txtMainWindow.Text += $"Youe have {Days} days of travel. Days travelled: {CountDays} \r\n";
 
                 //generate 3 possible events during the journey
-                EventProb = rnd.Next(1, 101);
-                if (EventProb <= 35)
-                {
+                EventGenerated = GenerateEvent();
+                switch (EventGenerated)
+                { 
+                case EventJourney.Nothing:
+
                     //Nothing happens
                     txtMainWindow.Text += "\r\n";
                     txtMainWindow.Text += "Nothing has heppened today \r\n";
                     Heal();
-                }
-                else if (EventProb <= 70)
-                {
+                    break;
+                case EventJourney.Approach:
+
                     //See x creatrues
                     FoesRemaining = FoesNr = rnd.Next(1, 4);
-
                     GenerateFoesEncounter();
-
                     string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
                     txtMainWindow.Text += "\r\n";
-                    txtMainWindow.Text += $"You see {FoesNr} {text} from the distance\r\n";
-                }
-                else
-                {
-                    // hear noises nearby
+                    txtMainWindow.Text += $"You see {FoesNr} {text} approaching\r\n";
+                    break;
+                case EventJourney.Noise:
+                        FoesRemaining = FoesNr = rnd.Next(1, 4);
+                        GenerateFoesEncounter();
+                        
+                        txtMainWindow.Text += "\r\n";
+                        txtMainWindow.Text += $"You hear some strange noises. \r\n";                        
+                        break;
                 }
             }
             else
             {
-                //arrived at destination
+                //Arrived
             }
            
         }
@@ -405,7 +408,7 @@ namespace HerosTale
                     button3.Text = "Caravan";
                     button4.Text = "Shop";
                     break;
-                case GamePhase.Combat:
+                case GamePhase.Journey:
                     button1.Text = "Attack";
                     button2.Text = "Ambush";
                     button3.Text = "Use Item";
@@ -413,9 +416,11 @@ namespace HerosTale
                     break;
                 case GamePhase.Caravan:
                     break;
-                case GamePhase.CaravanIntro:
+                case GamePhase.BossEncounter:
                     break;
                 case GamePhase.Marrakesh:
+                    break;
+                case GamePhase.Shop:
                     break;
             }
             
@@ -424,12 +429,12 @@ namespace HerosTale
 
         private void Tavern()
         {
-            
+            CurrentPhase = GamePhase.Tavern;
+            UpdateBtn();
             generateQuest1();
             generateQuest2();
             generateQuest3();
-
-            CurrentPhase = GamePhase.Tavern;
+            
             txtMainWindow.Text = "These missions are available: \r\n";
             txtMainWindow.Text += $"1- There is a dangerous {Quest1.MonsterName} lurking in the nearby {Quest1.LocationName}. {Quest1.RewardGold} gold is offered to whoever kills it. \r\n";
 
@@ -447,11 +452,6 @@ namespace HerosTale
 
             txtMainWindow.Text += "3- A caravan is leaving for Marrakesh, the most prosperous and wealthy city of this land. There might still be a place available, if not you can join as a guard. \r\n";
             txtMainWindow.Text += "4- ... the jobs avaiable are boring. Maybe you would like to visit the local General Store?\r\n";
-
-            UpdateBtn();
-
-
-
         }
 
         private async void bOk_Click(object sender, EventArgs e)
@@ -580,6 +580,29 @@ namespace HerosTale
             this.Close();
         }
 
+        private void GenerateMessage()
+        {
+
+        }
+
+        private EventJourney GenerateEvent()
+        {
+            int EventProb = rnd.Next(1, 101);
+
+            if (EventProb <= 35)
+            {
+                return EventJourney.Nothing;
+            }
+            else if (EventProb <= 70)
+            {
+                return EventJourney.Approach;
+            }
+            else
+            {
+                return EventJourney.Noise;
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             switch (CurrentPhase)
@@ -587,47 +610,61 @@ namespace HerosTale
                 case GamePhase.Tavern:
                     // selected Quest 1 type
                     Days = rnd.Next(2, 5);
+                    mChoice = InitialMenuChoice.Quest1;
                     playerQuest = new PlayerQuest(QuestOption.Quest1);
                     txtMainWindow.Text = $"You start your journey to kill the {Quest1.MonsterName}. \r\n";
                     txtMainWindow.Text += "\r\n";
-                    CurrentPhase = GamePhase.Combat;
+                    CurrentPhase = GamePhase.Journey;                    
                     UpdateBtn();
                     Journey();
                     break;
-                case GamePhase.Combat:
-                    // if the journey has started now try to attack something
-                    if (EventProb <= 35)
-                    {
-                        //Nothing happens & we attack
-                        txtMainWindow.Text += "\r\n";
-                        txtMainWindow.Text += "There is nothing to attack!";                        
-                    }
-                    else if (EventProb <= 70)
-                    {
-                        //we See x creatrues and we attack
-                        if (FoesRemaining > 0)
-                        {
-                            // need to manage inventory and current weapon to get min/max dmg!!!
-                            int Hit = Damage(player.Strength, player.Level, 10, 20);
-                            attackMonster.CurrentHitPoints -= Hit;
-                            txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
-                            ScrollDownText(txtMainWindow);
-                            CheckMonsterHealth();                           
-                        }
-       
+                case GamePhase.Journey:
 
-
-                    }
-                    else
+                    switch (EventGenerated)
                     {
-                        //we hear noises nearby and we attack
-                    }
+                        case EventJourney.Nothing:
+                            //Nothing happens & we attack
+                            txtMainWindow.Text += "\r\n";
+                            txtMainWindow.Text += "There is nothing to attack!";
+                            break;
+                        case EventJourney.Approach:
+
+                            //we See x creatrues and we attack
+                            if (FoesRemaining > 0)
+                            {
+                                 if (firstTime)
+                                {
+                                    firstTime = false;
+                                    inCombat = true;
+                                    string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
+                                    txtMainWindow.Text += $"You run towards the {text} and start the combat! \r\n";
+                                    txtMainWindow.Text += "\r\n";
+                                    ScrollDownText(txtMainWindow);
+                                }
+                                
+                                // need to manage inventory and current weapon to get min/max dmg!!!
+                                int Hit = Damage(player.Strength, player.Level, 10, 20);
+                                attackMonster.CurrentHitPoints -= Hit;
+                                txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
+                                ScrollDownText(txtMainWindow);
+                                CheckMonsterHealth();
+                                if (!inCombat)
+                                {
+                                    button4.PerformClick();
+                                }
+                            }
+                            break;
+                        case EventJourney.Noise:
+
+                            //we hear noises nearby and we attack
+                            break;
+                    }                  
                     break;
 
                 case GamePhase.Caravan:
                     // if we are on the caravan this is option 1 of that scenario
                     break;
-                case GamePhase.CaravanIntro:
+                case GamePhase.Shop:
                     // before joining the caravan we have this option
                     break;
                 case GamePhase.Marrakesh:
@@ -644,40 +681,26 @@ namespace HerosTale
                     if (DoQ2)
                     {
                         playerQuest = new PlayerQuest(QuestOption.Quest2);
+                        mChoice = InitialMenuChoice.Quest2;
                         txtMainWindow.Text = $"You start your journey to free the kidnapped {Quest2.WhoQuestName}. \r\n";
                     } else
                     {
                         playerQuest = new PlayerQuest(QuestOption.Quest3);
+                        mChoice = InitialMenuChoice.Quest3;
                         txtMainWindow.Text = $"You start your journey to recover the stolen {Quest3.ItemName}. \r\n";
-
                     }
                     
                     txtMainWindow.Text += "\r\n";
                     Days = rnd.Next(2, 5);
-                    CurrentPhase = GamePhase.Combat;
+                    CurrentPhase = GamePhase.Journey;
                     UpdateBtn();
                     Journey();
                     break;
-                case GamePhase.Combat:
-                    if (EventProb <= 35)
-                    {
-                        //Nothing happens & ambush
-                        txtMainWindow.Text += "\r\n";
-                        txtMainWindow.Text += "You try to ambush your own shadow but you fail! \r\n";                        
-
-                    }
-                    else if (EventProb <= 70)
-                    {
-                        //See x creatrues & ambush
-                    }
-                    else
-                    {
-                        // hear noises nearby & ambush
-                    }
-                break;
+                case GamePhase.Journey:                   
+                    break;
                 case GamePhase.Caravan:
                     break;
-                case GamePhase.CaravanIntro:
+                case GamePhase.Shop:
                     break;
                 case GamePhase.Marrakesh:
                     break;
@@ -686,71 +709,22 @@ namespace HerosTale
 
         private void button3_Click(object sender, EventArgs e)
         {
-            switch(CurrentPhase)
-            {
-                case GamePhase.Tavern:
-                    CurrentPhase = GamePhase.Caravan;
-                    UpdateBtn();
-                    Journey();
-                    break;
-                case GamePhase.Combat:
-                    if (EventProb <= 35)
-                    {
-                        //Nothing happens & we use item
-                    }
-                    else if (EventProb <= 70)
-                    {
-                        //See x creatrues
-                    }
-                    else
-                    {
-                        // hear noises nearby
-                    }
-                    break;
-                case GamePhase.Caravan:
-                    break;
-                case GamePhase.CaravanIntro:
-                    break;
-                case GamePhase.Marrakesh:
-                    break;
-            }
+           
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            switch(CurrentPhase)
+            switch (EventGenerated)
             {
-                case GamePhase.Tavern:
-                    //go to shop                    
-                break;
-                case GamePhase.Combat:
-                    if (EventProb <= 35)
-                    {
-                        //Nothing happens & we continue
-                        txtMainWindow.Text = "";
-                        Journey();
-                    }
-                    else if (EventProb <= 70)
-                    {
-                        //See x creatrues & we continue
-                        txtMainWindow.Text = "";
-                        Journey();
-                    }
-                    else
-                    {
-                        // hear noises nearby & we continue
-                        txtMainWindow.Text = "";
-                        Journey();
-                    }
-                    break;
-                case GamePhase.Caravan:
-                    break;
-                case GamePhase.CaravanIntro:
-                    break;
-                case GamePhase.Marrakesh:
+                case EventJourney.Nothing:
+                    //Nothing happens & we continue
+                    txtMainWindow.Text += "\r\n";
+                    txtMainWindow.Text += "You journer on";
+                    Heal();
+                    Journey();
                     break;
             }
-        }
+            }
 
         private void tInputName_KeyPress(object sender, KeyPressEventArgs e)
         {
