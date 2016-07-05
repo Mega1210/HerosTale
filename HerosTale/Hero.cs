@@ -311,6 +311,27 @@ namespace HerosTale
             }
         }
 
+        private void CheckMonsterHealth()
+        {
+            if (attackMonster.CurrentHitPoints <= 0)
+            {
+                FoesRemaining--;
+                txtMainWindow.Text += "You have killed 1 enemy!\r\n";
+                ScrollDownText(txtMainWindow);
+                attackMonster.CurrentHitPoints = attackMonster.MaximumHitPoints;
+
+                if (FoesRemaining==0)
+                {
+                    txtMainWindow.Text += $"You have killed all your enemies! \r\n";
+                    txtMainWindow.Text += $"You have gained {FoesNr * attackMonster.RewardExperiencePoints} experience points!\r\n";
+                    ScrollDownText(txtMainWindow);
+                    player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
+                    UpdateStats();
+                    CheckLvlUp(player.ExperiecePoints, player.Level);
+                }
+            }
+        }
+
         private void GenerateFoesEncounter()
         {
             
@@ -591,25 +612,9 @@ namespace HerosTale
                             attackMonster.CurrentHitPoints -= Hit;
                             txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
                             ScrollDownText(txtMainWindow);
-                            if (attackMonster.CurrentHitPoints<=0)
-                            {
-                                FoesRemaining--;
-                                txtMainWindow.Text += "You have killed 1 enemy!\r\n";
-                                ScrollDownText(txtMainWindow);
-                                attackMonster.CurrentHitPoints = attackMonster.MaximumHitPoints;
-                            }
-
-
+                            CheckMonsterHealth();                           
                         }
-                        else
-                        {
-                            txtMainWindow.Text += $"You have killed all your enemies! \r\n";
-                            txtMainWindow.Text += $"You have gained {FoesNr*attackMonster.RewardExperiencePoints} experience points!\r\n";
-                            ScrollDownText(txtMainWindow);                            
-                            player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
-                            UpdateStats();
-                            CheckLvlUp(player.ExperiecePoints, player.Level);
-                        }
+       
 
 
                     }
