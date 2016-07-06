@@ -35,7 +35,7 @@ namespace HeroLogic
 
         public enum GamePhase
         {
-            Journey, BossEncounter, Shop, Caravan, Marrakesh, Tavern
+            Journey, BossEncounter, Shop, Caravan, Marrakesh, Tavern, BossEnd
         }
 
         public enum InitialMenuChoice
@@ -394,6 +394,8 @@ namespace HeroLogic
                 case 18: return 86;
                 case 19: return 88;
                 case 20: return 90;
+                case 21: return 91;
+                case 22: return 92;
             }
 
             return 0;
