@@ -17,6 +17,11 @@ namespace HeroLogic
         public static readonly List<WorldLocation> WorldLocations = new List<WorldLocation>();
         public static Random rnd = new Random();
 
+        public enum EscAvoid
+        {
+            AvoidAmbush, Ambush, AvoidCombat, FleeCombat
+        }
+
         public enum ButtonChoice
         {
             Button1, Button2, Button3, Button4

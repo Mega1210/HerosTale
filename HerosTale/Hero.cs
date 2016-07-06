@@ -56,7 +56,7 @@ namespace HerosTale
             DoQ2 = true;
             CountDays = 0;
             inCombat = false;
-            player = new Player(1, 1, 1, 1, 100, "", 1, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
+            player = new Player(1, 1, 1, 1, 100, "", 0, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
             
             
         }
@@ -320,8 +320,9 @@ namespace HerosTale
 
         }
 
-        private void Heal()
+        private async void Heal()
         {
+            int healed = player.CurrentHitPoints;
             if (player.CurrentHitPoints<player.MaximumHitPoints)
             {
                 player.CurrentHitPoints += player.Level * 50;
@@ -329,6 +330,10 @@ namespace HerosTale
                 {
                     player.CurrentHitPoints = player.MaximumHitPoints;
                 }
+                txtMainWindow.Text += $"You healed {player.CurrentHitPoints-healed} \r\n";
+                txtMainWindow.Text += "\r\n";
+                UpdateStats();
+                await Task.Delay(1500);
             }
         }
 
@@ -346,6 +351,84 @@ namespace HerosTale
                 return false;
             }
             
+        }
+
+        private void EnemyTurn()
+        {
+
+            if (CheckAllMonsterDead())
+            {
+                player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
+                UpdateStats();
+                CheckLvlUp(player.ExperiecePoints, player.Level);
+                inCombat = false;
+            }
+            else
+            {
+                int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
+                player.CurrentHitPoints -= MonsterHit;
+                txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
+                txtMainWindow.Text += "\r\n";
+                UpdateStats();
+                ScrollDownText(txtMainWindow);
+                CheckPlayerHealth();
+            }
+        }
+
+        private void MyTurnAttack(int mod)
+        {
+            if (firstTimeCombat)
+            {
+                firstTimeCombat = false;
+                string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
+                txtMainWindow.Text += $"You run towards the {text} and start the combat! \r\n";
+                txtMainWindow.Text += "\r\n";
+                ScrollDownText(txtMainWindow);
+            }
+
+            // need to manage inventory and current weapon to get min/max dmg!!!
+            int Hit = Damage(player.Strength, player.Level, 10, 20)*mod;
+            attackMonster.CurrentHitPoints -= Hit;
+            txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
+            txtMainWindow.Text += "\r\n";
+        }
+
+        private async void TimeDelay(int time)
+        {
+            await Task.Delay(time);
+        }
+
+        private bool Ambush(EscAvoid ambushType)
+        {
+            switch (ambushType)
+            {
+                case EscAvoid.AvoidAmbush:
+                    txtMainWindow.Text += "You try to avoid an ambush. \r\n";                
+                    break;
+                case EscAvoid.Ambush:
+                    txtMainWindow.Text += "You try to ambush your enemy. \r\n";                
+                    break;
+                case EscAvoid.AvoidCombat:
+                    txtMainWindow.Text += "You try to avoid the fight. \r\n";
+                    break;
+                case EscAvoid.FleeCombat:
+                    txtMainWindow.Text += "You try to flee the fight. \r\n";
+                    break;
+            }
+            TimeDelay(1500);
+            txtMainWindow.Text += "You have to roll a higher number than ";
+            ScrollDownText(txtMainWindow);
+            TimeDelay(750);
+            int mRoll = RollDice(1);
+            txtMainWindow.Text += $"{mRoll} \r\n";
+            ScrollDownText(txtMainWindow);
+            TimeDelay(750);
+            int myRoll = RollDice(SpecialAction(player.Intelligence));
+            txtMainWindow.Text += $"Your roll is: {myRoll} \r\n";
+            ScrollDownText(txtMainWindow);
+            TimeDelay(500);
+            return (myRoll >= mRoll);
+        
         }
 
         private void CheckMonsterHealth()
@@ -424,11 +507,24 @@ namespace HerosTale
             }
             else
             {
-                //Arrived
+                switch (mChoice)
+                {
+                    case InitialMenuChoice.Quest1:
+                        txtMainWindow.Text = $"You arrive at the {Quest1.LocationName} and see the {Quest1.MonsterName} in the distance. \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        break;
+                    case InitialMenuChoice.Quest2:
+                        txtMainWindow.Text = $"You arrive at the {Quest2.LocationName} and see the {Quest2.WhoQuestName} in chains and the Bandit Leader alone nearby. \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        break;
+                    case InitialMenuChoice.Quest3:
+                        txtMainWindow.Text = $"You arrive at the {Quest3.LocationName} and see the Thief sitting at a campfire. \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        break;
+                }
             }
            
         }
-
 
         private void GenerateMessage()
         {
@@ -521,90 +617,58 @@ namespace HerosTale
                                 case EventJourney.Approach:
 
                                     //we See x creatrues and we attack
-                                    if (FoesRemaining > 0)
+                                    if (inCombat)
                                     {
-                                        if (firstTimeCombat)
+                                        if (FoesRemaining > 0)
                                         {
-                                            firstTimeCombat = false;                                            
-                                            string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                                            txtMainWindow.Text += $"You run towards the {text} and start the combat! \r\n";
-                                            txtMainWindow.Text += "\r\n";
-                                            ScrollDownText(txtMainWindow);
+                                            MyTurnAttack(1);
+                                            CheckMonsterHealth();
+                                            EnemyTurn();
                                         }
-
-                                        // need to manage inventory and current weapon to get min/max dmg!!!
-                                        int Hit = Damage(player.Strength, player.Level, 10, 20);
-                                        attackMonster.CurrentHitPoints -= Hit;
-                                        txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
-                                        txtMainWindow.Text += "\r\n";
-                                        CheckMonsterHealth();
-
-                                        if (CheckAllMonsterDead())
-                                        {
-                                            player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
-                                            UpdateStats();
-                                            CheckLvlUp(player.ExperiecePoints, player.Level);
-                                            inCombat = false;
-                                        }
-                                        else
-                                        {
-                                            int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
-                                            player.CurrentHitPoints -= MonsterHit;
-                                            txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
-                                            txtMainWindow.Text += "\r\n";
-                                            UpdateStats();
-                                            ScrollDownText(txtMainWindow);
-                                            CheckPlayerHealth();
-                                        }
-                                        
-                                    
-                                        
-                                                                                
                                     }
                                     break;
                                 case EventJourney.Noise:
 
-                                    if (FoesRemaining > 0)
+
+                                    if (inCombat)
                                     {
                                         if (firstTimeCombat)
                                         {
-                                            firstTimeCombat = false;
-                                            string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                                            txtMainWindow.Text += $"You run towards the {text} and start the combat! \r\n";
-                                            txtMainWindow.Text += "\r\n";
-                                            ScrollDownText(txtMainWindow);
+
+                                            if (Ambush(EscAvoid.AvoidAmbush))
+                                            {
+                                                string text = (FoesNr == 1) ? attackMonster.Name +" was": attackMonster.NamePlural +" were";
+                                                txtMainWindow.Text += $"{FoesNr} {text} trying to ambush you! You avoided it and now you're in combat \r\n";
+                                                ScrollDownText(txtMainWindow);
+                                                await Task.Delay(1500);
+                                                inCombat = true;
+                                                firstTimeCombat = false;                                     
+
+                                            }
+                                            else
+                                            {
+                                                string text = (FoesNr == 1) ? attackMonster.Name + " is" : attackMonster.NamePlural + " are";
+                                                txtMainWindow.Text += $"You've failed! You fall into a trap! {FoesNr} {text} attacking you\r\n";
+                                                txtMainWindow.Text += "\r\n";
+                                                ScrollDownText(txtMainWindow);
+                                                await Task.Delay(1000);
+                                                EnemyTurn();
+                                                firstTimeCombat = false;
+                                            }
+
                                         }
 
-                                        // need to manage inventory and current weapon to get min/max dmg!!!
-                                        int Hit = Damage(player.Strength, player.Level, 10, 20);
-                                        attackMonster.CurrentHitPoints -= Hit;
-                                        txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
-                                        txtMainWindow.Text += "\r\n";
-                                        CheckMonsterHealth();
-
-                                        if (CheckAllMonsterDead())
+                                        if (FoesRemaining > 0)
                                         {
-                                            player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
-                                            UpdateStats();
-                                            CheckLvlUp(player.ExperiecePoints, player.Level);
-                                            inCombat = false;
+                                            MyTurnAttack(1);
+                                            CheckMonsterHealth();
+                                            EnemyTurn();
                                         }
-                                        else
-                                        {
-                                            int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
-                                            player.CurrentHitPoints -= MonsterHit;
-                                            txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
-                                            txtMainWindow.Text += "\r\n";
-                                            UpdateStats();
-                                            ScrollDownText(txtMainWindow);
-                                            CheckPlayerHealth();
-
-                                        }
-
-
-
 
                                     }
+
+
+
                                     break;
                             }
                             break;
@@ -672,59 +736,30 @@ namespace HerosTale
                                     {
                                         if (firstTimeCombat)
                                         {
-
-                                            txtMainWindow.Text += "You try to ambush your enemy. \r\n";
-                                            await Task.Delay(1500);
-                                            txtMainWindow.Text += "You have to roll a higher number than ";
-                                            ScrollDownText(txtMainWindow);
-                                            await Task.Delay(750);
-                                            int mRoll = RollDice(1);
-                                            txtMainWindow.Text += $"{mRoll} \r\n";
-                                            ScrollDownText(txtMainWindow);
-                                            await Task.Delay(1500);
-                                            int myRoll = RollDice(SpecialAction(player.Intelligence));
-                                            txtMainWindow.Text += $"Your roll is: {myRoll} \r\n";
-                                            ScrollDownText(txtMainWindow);
-                                            await Task.Delay(1500);
-                                            if (myRoll >= mRoll)
+                                           
+                                            if (Ambush(EscAvoid.Ambush))
                                             {
-                                                txtMainWindow.Text += "You succeed! \r\n";
+
+                                                string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
+                                                txtMainWindow.Text += $"You succeed! You successfully ambushed {FoesNr} {text}\r\n";
                                                 ScrollDownText(txtMainWindow);
                                                 await Task.Delay(1500);
                                                 inCombat = true;
                                                 firstTimeCombat = false;
 
-                                                int Hit = Convert.ToInt32(Damage(player.Strength, player.Level, 10, 20) * 1.5);
-                                                attackMonster.CurrentHitPoints -= Hit;
-                                                txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
-                                                txtMainWindow.Text += "\r\n";
-                                                ScrollDownText(txtMainWindow);
+                                                MyTurnAttack(2);
                                                 CheckMonsterHealth();
-
-                                                if (CheckAllMonsterDead())
-                                                {
-                                                    player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
-                                                    UpdateStats();
-                                                    CheckLvlUp(player.ExperiecePoints, player.Level);
-                                                    inCombat = false;
-                                                }
+                                                EnemyTurn();
 
                                             }
                                             else
                                             {
-                                                txtMainWindow.Text += "You've failed! The enemy sees you and attacks you first! \r\n";
+                                                string text = (FoesNr == 1) ? attackMonster.Name+ " sees": attackMonster.NamePlural+" see";
+                                                txtMainWindow.Text += $"You've failed! {FoesNr} {text} you and attacks you first! \r\n";
                                                 txtMainWindow.Text += "\r\n";
                                                 ScrollDownText(txtMainWindow);
                                                 await Task.Delay(1000);
-
-
-                                                int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
-                                                player.CurrentHitPoints -= MonsterHit;
-                                                txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
-                                                txtMainWindow.Text += "\r\n";
-                                                UpdateStats();
-                                                ScrollDownText(txtMainWindow);
-                                                CheckPlayerHealth();
+                                                EnemyTurn();
                                                 firstTimeCombat = false;
                                             }
 
@@ -735,20 +770,52 @@ namespace HerosTale
                                             txtMainWindow.Text += "\r\n";
                                             ScrollDownText(txtMainWindow);
                                             await Task.Delay(1500);
-
-                                            int MonsterHit = RollMonsterDamage(attackMonster.MaximumDamage);
-                                            player.CurrentHitPoints -= MonsterHit;
-                                            txtMainWindow.Text += $"Your enemy attacks and does {MonsterHit} of damage. \r\n";
-                                            txtMainWindow.Text += "\r\n";
-                                            ScrollDownText(txtMainWindow);
-                                            UpdateStats();                                            
-                                            CheckPlayerHealth();
+                                            EnemyTurn();
                                         }
                                     }
 
                                     break;
                                 case EventJourney.Noise:
+                                    if (inCombat)
+                                    {
+                                        if (firstTimeCombat)
+                                        {
 
+                                            if (Ambush(EscAvoid.AvoidAmbush))
+                                            {
+                                                string text = (FoesNr == 1) ? attackMonster.Name + " was" : attackMonster.NamePlural + " were";
+                                                txtMainWindow.Text += $"{FoesNr} {text} trying to ambush you! You avoided it and now you're in combat \r\n";
+                                                ScrollDownText(txtMainWindow);
+                                                await Task.Delay(1500);
+                                                inCombat = true;
+                                                firstTimeCombat = false;
+
+                                                MyTurnAttack(2);
+                                                CheckMonsterHealth();
+                                                EnemyTurn();
+
+                                            }
+                                            else
+                                            {
+                                                string text = (FoesNr == 1) ? attackMonster.Name + " is" : attackMonster.NamePlural + " are";
+                                                txtMainWindow.Text += $"You've failed! You fall into a trap! {FoesNr} {text} attacking you\r\n";
+                                                txtMainWindow.Text += "\r\n";
+                                                ScrollDownText(txtMainWindow);
+                                                await Task.Delay(1000);
+                                                EnemyTurn();
+                                                firstTimeCombat = false;
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            txtMainWindow.Text += "You cannot ambush your enemy, you're already in combat! \r\n";
+                                            txtMainWindow.Text += "\r\n";
+                                            ScrollDownText(txtMainWindow);
+                                            await Task.Delay(1500);
+                                            EnemyTurn();
+                                        }
+                                    }
                                     break;
                             }
                             break;
@@ -816,20 +883,8 @@ namespace HerosTale
                             {
                                 if (firstTimeCombat)  //----- means I haven't started the fight so I can try to avoid it
                                 {
-                                    txtMainWindow.Text += "You try to avoid the fight. \r\n";
-                                    await Task.Delay(1500);
-                                    txtMainWindow.Text += "You have to roll a higher number than ";
-                                    ScrollDownText(txtMainWindow);
-                                    await Task.Delay(750);
-                                    int mRoll = RollDice(1);
-                                    txtMainWindow.Text += $"{mRoll} \r\n";
-                                    ScrollDownText(txtMainWindow);
-                                    await Task.Delay(1500);
-                                    int myRoll = RollDice(SpecialAction(player.Intelligence));
-                                    txtMainWindow.Text += $"Your roll is: {myRoll} \r\n";
-                                    ScrollDownText(txtMainWindow);
-                                    await Task.Delay(1500);
-                                    if (myRoll>=mRoll)
+                                 
+                                    if (Ambush(EscAvoid.AvoidCombat))
                                     {
                                         txtMainWindow.Text += "You avoid the fight! \r\n";
                                         ScrollDownText(txtMainWindow);
@@ -848,9 +903,25 @@ namespace HerosTale
                                     }
 
                                 }
-                                else //--- I'm dutring the right but I can try to flee
+                                else //--- I'm during the fight but I can try to flee
                                 {
-
+                                    if (Ambush(EscAvoid.FleeCombat))
+                                    {
+                                        txtMainWindow.Text += "You escaped the fight! \r\n";
+                                        ScrollDownText(txtMainWindow);
+                                        await Task.Delay(1500);
+                                        inCombat = false;
+                                        firstTimeCombat = true;
+                                        txtMainWindow.Text = "";
+                                        Heal();
+                                        Journey();
+                                    }
+                                    else
+                                    {
+                                        txtMainWindow.Text += "You've failed to escape the fight! \r\n";
+                                        ScrollDownText(txtMainWindow);
+                                        EnemyTurn();
+                                    }
                                 }
                             }
                             else //---------- either I've finished my fight or "nothing" event has been generated
