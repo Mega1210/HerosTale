@@ -51,14 +51,19 @@ namespace HerosTale
             pnlLevelUp.Visible = false;
             pnlMainBtn.Visible = false;
             pnlMainBtn.Enabled = false;
+            pnlInventory.Enabled = false;
+            pnlInventory.Visible = false;
             firstTime = true;
             firstTimeCombat = true;
             DoQ2 = true;
             CountDays = 0;
             inCombat = false;
             player = new Player(1, 1, 1, 1, 100, "", 0, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
+            player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_RUSTY_SWORD), 1));
+            player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_SMALL_HEALING_POTION), 5));
             
-            
+
+
         }
                 
 
@@ -337,7 +342,7 @@ namespace HerosTale
             }
         }
 
-        private bool CheckAllMonsterDead()
+        private void CheckAllMonsterDead()
         {
             if (FoesRemaining == 0 && CurrentPhase!=GamePhase.BossEncounter)
             {
@@ -345,30 +350,19 @@ namespace HerosTale
                 txtMainWindow.Text += $"You have gained {FoesNr * attackMonster.RewardExperiencePoints} experience points!\r\n";
                 txtMainWindow.Text += "\r\n";
                 ScrollDownText(txtMainWindow);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
+                UpdateStats();
+                CheckLvlUp(player.ExperiecePoints, player.Level);
+                inCombat = false;
+                firstTimeCombat = true;             
+            }            
             
         }
 
         private void EnemyTurn(CreatureClass eClass)
         {
-
-            if (CheckAllMonsterDead() && CurrentPhase!=GamePhase.BossEncounter)
-            {
-                
-
-                    player.ExperiecePoints += FoesNr * attackMonster.RewardExperiencePoints;
-                    UpdateStats();
-                    CheckLvlUp(player.ExperiecePoints, player.Level);
-                    inCombat = false;
-                
-            }
-            else
-            {
+            
+           
                 if (!CheckHit(player.Dexterity, eClass))
                 {
                     if (!CheckAvoid(player.Dexterity,eClass))
@@ -419,7 +413,7 @@ namespace HerosTale
                 }
 
                 
-            }
+            
         }
 
         private void MyTurnAttack(int mod)
@@ -621,7 +615,7 @@ namespace HerosTale
                     }
                     
                     UpdateStats();
-                    txtMainWindow.Text += $"Now yuo can head back and claim the reward! \r\n";
+                    txtMainWindow.Text += $"Now you can head back and claim the reward! \r\n";
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                     CurrentPhase = GamePhase.BossEnd;
@@ -829,7 +823,8 @@ namespace HerosTale
                                         {
                                             MyTurnAttack(1);
                                             CheckMonsterHealth();
-                                            EnemyTurn(attackMonster.Difficulty);
+                                            CheckAllMonsterDead();
+                                            if (inCombat) EnemyTurn(attackMonster.Difficulty);
                                         }
                                     }
                                     break;
@@ -869,7 +864,8 @@ namespace HerosTale
                                         {
                                             MyTurnAttack(1);
                                             CheckMonsterHealth();
-                                            EnemyTurn(attackMonster.Difficulty);
+                                            CheckAllMonsterDead();
+                                            if (inCombat) EnemyTurn(attackMonster.Difficulty);
                                         }
 
                                     }
@@ -971,16 +967,14 @@ namespace HerosTale
                                             {
 
                                                 string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                                                txtMainWindow.Text += $"You succeed! You successfully ambushed {FoesNr} {text}\r\n";
+                                                txtMainWindow.Text += $"You succeed! You successfully ambushed {FoesNr} {text} and killed one of them\r\n";
                                                 txtMainWindow.Text += "\r\n";
                                                 ScrollDownText(txtMainWindow);
                                                 await Task.Delay(1500);
                                                 inCombat = true;
                                                 firstTimeCombat = false;
-
-                                                MyTurnAttack(2);
-                                                CheckMonsterHealth();
-                                                EnemyTurn(attackMonster.Difficulty);
+                                                FoesRemaining--;
+                                                CheckAllMonsterDead();                                                
 
                                             }
                                             else
@@ -1024,7 +1018,8 @@ namespace HerosTale
 
                                                 MyTurnAttack(2);
                                                 CheckMonsterHealth();
-                                                EnemyTurn(attackMonster.Difficulty);
+                                                CheckAllMonsterDead();
+                                                if (inCombat) EnemyTurn(attackMonster.Difficulty);
 
                                             }
                                             else
@@ -1215,6 +1210,15 @@ namespace HerosTale
                         case GamePhase.Marrakesh:
 
                             break;
+                        case GamePhase.BossEnd:
+                            txtMainWindow.Text += $"You return home and clain your reward! {GetReward(mChoice)} \r\n";
+                            txtMainWindow.Text += "\r\n";
+                            player.Gold += GetReward(mChoice);
+                            UpdateStats();                            
+                            ScrollDownText(txtMainWindow);
+                            await Task.Delay(1500);
+                            Tavern();
+                            break;
                     }
                     break;
 
@@ -1222,6 +1226,23 @@ namespace HerosTale
 
 
            
+        }
+
+        private int GetReward(InitialMenuChoice mC)
+        {
+            switch (mC)
+            {
+                case InitialMenuChoice.Quest1:
+                    return Quest1.RewardGold;
+                    break;
+                case InitialMenuChoice.Quest2:
+                    return Quest2.RewardGold;
+                    break;
+                case InitialMenuChoice.Quest3:
+                    return Quest3.RewardGold;
+                    break;
+            }
+            return 0;
         }
 
         private void UpdateBtn()
@@ -1259,6 +1280,8 @@ namespace HerosTale
             CurrentPhase = GamePhase.Tavern;
             pnlMainBtn.Visible = true;
             pnlMainBtn.Enabled = true;
+            pnlInventory.Visible = true;
+            pnlInventory.Enabled = true;
             UpdateBtn();
             generateQuest1();
             generateQuest2();
@@ -1409,7 +1432,6 @@ namespace HerosTale
             this.Close();
         }
 
-
         private void button1_Click(object sender, EventArgs e)
         {
             ButtonChoice button = ButtonChoice.Button1;
@@ -1434,6 +1456,11 @@ namespace HerosTale
         {
             ButtonChoice button = ButtonChoice.Button4;
             Actions(button);
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void tInputName_KeyPress(object sender, KeyPressEventArgs e)

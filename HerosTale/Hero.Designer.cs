@@ -34,6 +34,11 @@
             this.bNewGane = new System.Windows.Forms.Button();
             this.pStart = new System.Windows.Forms.Panel();
             this.pMain = new System.Windows.Forms.Panel();
+            this.pnlMainBtn = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.pnlLevelUp = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.btLvlUpOk = new System.Windows.Forms.Button();
@@ -56,10 +61,6 @@
             this.bExit = new System.Windows.Forms.Button();
             this.bLoad = new System.Windows.Forms.Button();
             this.bSave = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.lChrNr = new System.Windows.Forms.Label();
             this.lChrTxt = new System.Windows.Forms.Label();
             this.lDexNr = new System.Windows.Forms.Label();
@@ -76,12 +77,17 @@
             this.pNameInput = new System.Windows.Forms.Panel();
             this.bOk = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.pnlMainBtn = new System.Windows.Forms.Panel();
+            this.cmbWeapon = new System.Windows.Forms.ComboBox();
+            this.cmdConsumable = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.pnlInventory = new System.Windows.Forms.Panel();
             this.pStart.SuspendLayout();
             this.pMain.SuspendLayout();
+            this.pnlMainBtn.SuspendLayout();
             this.pnlLevelUp.SuspendLayout();
             this.pNameInput.SuspendLayout();
-            this.pnlMainBtn.SuspendLayout();
+            this.pnlInventory.SuspendLayout();
             this.SuspendLayout();
             // 
             // bLoadGame
@@ -136,6 +142,7 @@
             // 
             // pMain
             // 
+            this.pMain.Controls.Add(this.pnlInventory);
             this.pMain.Controls.Add(this.pnlMainBtn);
             this.pMain.Controls.Add(this.pnlLevelUp);
             this.pMain.Controls.Add(this.lExpTxt);
@@ -164,6 +171,69 @@
             this.pMain.Name = "pMain";
             this.pMain.Size = new System.Drawing.Size(816, 603);
             this.pMain.TabIndex = 16;
+            // 
+            // pnlMainBtn
+            // 
+            this.pnlMainBtn.Controls.Add(this.button1);
+            this.pnlMainBtn.Controls.Add(this.button2);
+            this.pnlMainBtn.Controls.Add(this.button3);
+            this.pnlMainBtn.Controls.Add(this.button4);
+            this.pnlMainBtn.Location = new System.Drawing.Point(88, 256);
+            this.pnlMainBtn.Name = "pnlMainBtn";
+            this.pnlMainBtn.Size = new System.Drawing.Size(170, 255);
+            this.pnlMainBtn.TabIndex = 55;
+            // 
+            // button1
+            // 
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Location = new System.Drawing.Point(20, 11);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(4);
+            this.button1.Size = new System.Drawing.Size(132, 45);
+            this.button1.TabIndex = 30;
+            this.button1.Text = "1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Location = new System.Drawing.Point(20, 69);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
+            this.button2.Name = "button2";
+            this.button2.Padding = new System.Windows.Forms.Padding(4);
+            this.button2.Size = new System.Drawing.Size(132, 45);
+            this.button2.TabIndex = 31;
+            this.button2.Text = "2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Location = new System.Drawing.Point(20, 129);
+            this.button3.Margin = new System.Windows.Forms.Padding(4);
+            this.button3.Name = "button3";
+            this.button3.Padding = new System.Windows.Forms.Padding(4);
+            this.button3.Size = new System.Drawing.Size(132, 45);
+            this.button3.TabIndex = 32;
+            this.button3.Text = "3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button4
+            // 
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button4.Location = new System.Drawing.Point(20, 189);
+            this.button4.Margin = new System.Windows.Forms.Padding(4);
+            this.button4.Name = "button4";
+            this.button4.Padding = new System.Windows.Forms.Padding(4);
+            this.button4.Size = new System.Drawing.Size(132, 45);
+            this.button4.TabIndex = 33;
+            this.button4.Text = "4";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // pnlLevelUp
             // 
@@ -437,58 +507,6 @@
             this.bSave.Text = "Save";
             this.bSave.UseVisualStyleBackColor = true;
             // 
-            // button1
-            // 
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(20, 11);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(4);
-            this.button1.Size = new System.Drawing.Size(132, 45);
-            this.button1.TabIndex = 30;
-            this.button1.Text = "1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(20, 69);
-            this.button2.Margin = new System.Windows.Forms.Padding(4);
-            this.button2.Name = "button2";
-            this.button2.Padding = new System.Windows.Forms.Padding(4);
-            this.button2.Size = new System.Drawing.Size(132, 45);
-            this.button2.TabIndex = 31;
-            this.button2.Text = "2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Location = new System.Drawing.Point(20, 129);
-            this.button3.Margin = new System.Windows.Forms.Padding(4);
-            this.button3.Name = "button3";
-            this.button3.Padding = new System.Windows.Forms.Padding(4);
-            this.button3.Size = new System.Drawing.Size(132, 45);
-            this.button3.TabIndex = 32;
-            this.button3.Text = "3";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button4
-            // 
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Location = new System.Drawing.Point(20, 189);
-            this.button4.Margin = new System.Windows.Forms.Padding(4);
-            this.button4.Name = "button4";
-            this.button4.Padding = new System.Windows.Forms.Padding(4);
-            this.button4.Size = new System.Drawing.Size(132, 45);
-            this.button4.TabIndex = 33;
-            this.button4.Text = "4";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // lChrNr
             // 
             this.lChrNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -652,16 +670,53 @@
             this.bOk.UseVisualStyleBackColor = true;
             this.bOk.Click += new System.EventHandler(this.bOk_Click);
             // 
-            // pnlMainBtn
+            // cmbWeapon
             // 
-            this.pnlMainBtn.Controls.Add(this.button1);
-            this.pnlMainBtn.Controls.Add(this.button2);
-            this.pnlMainBtn.Controls.Add(this.button3);
-            this.pnlMainBtn.Controls.Add(this.button4);
-            this.pnlMainBtn.Location = new System.Drawing.Point(88, 256);
-            this.pnlMainBtn.Name = "pnlMainBtn";
-            this.pnlMainBtn.Size = new System.Drawing.Size(170, 255);
-            this.pnlMainBtn.TabIndex = 55;
+            this.cmbWeapon.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbWeapon.FormattingEnabled = true;
+            this.cmbWeapon.Location = new System.Drawing.Point(105, 12);
+            this.cmbWeapon.Name = "cmbWeapon";
+            this.cmbWeapon.Size = new System.Drawing.Size(135, 26);
+            this.cmbWeapon.TabIndex = 56;
+            // 
+            // cmdConsumable
+            // 
+            this.cmdConsumable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmdConsumable.FormattingEnabled = true;
+            this.cmdConsumable.Location = new System.Drawing.Point(105, 45);
+            this.cmdConsumable.Name = "cmdConsumable";
+            this.cmdConsumable.Size = new System.Drawing.Size(135, 26);
+            this.cmdConsumable.TabIndex = 57;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(20, 15);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(56, 18);
+            this.label3.TabIndex = 58;
+            this.label3.Text = "Weapon";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(20, 48);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(40, 18);
+            this.label5.TabIndex = 59;
+            this.label5.Text = "Item";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
+            // pnlInventory
+            // 
+            this.pnlInventory.Controls.Add(this.label5);
+            this.pnlInventory.Controls.Add(this.label3);
+            this.pnlInventory.Controls.Add(this.cmdConsumable);
+            this.pnlInventory.Controls.Add(this.cmbWeapon);
+            this.pnlInventory.Location = new System.Drawing.Point(292, 256);
+            this.pnlInventory.Name = "pnlInventory";
+            this.pnlInventory.Size = new System.Drawing.Size(252, 83);
+            this.pnlInventory.TabIndex = 60;
             // 
             // frmBase
             // 
@@ -685,11 +740,13 @@
             this.pStart.ResumeLayout(false);
             this.pMain.ResumeLayout(false);
             this.pMain.PerformLayout();
+            this.pnlMainBtn.ResumeLayout(false);
             this.pnlLevelUp.ResumeLayout(false);
             this.pnlLevelUp.PerformLayout();
             this.pNameInput.ResumeLayout(false);
             this.pNameInput.PerformLayout();
-            this.pnlMainBtn.ResumeLayout(false);
+            this.pnlInventory.ResumeLayout(false);
+            this.pnlInventory.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -741,8 +798,13 @@
         private System.Windows.Forms.Label lblLvlPoints;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Panel pnlMainBtn;
+        private System.Windows.Forms.ComboBox cmbWeapon;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cmdConsumable;
+        private System.Windows.Forms.Panel pnlInventory;
     }
 }
 
