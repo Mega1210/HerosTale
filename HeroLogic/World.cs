@@ -239,8 +239,8 @@ namespace HeroLogic
 
         private static void PopulateItems()
         {
-            Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Rusty Sword", "Rusty Swords", 1, 5));
-            Items.Add(new Weapon(ITEM_ID_CLUB, "Club", "Clubs", 3, 10));
+            Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Rusty Sword", "Rusty Swords", 10, 20));
+            Items.Add(new Weapon(ITEM_ID_CLUB, "Club", "Clubs", 15, 30));
             Items.Add(new Weapon(ITEM_ID_SILVERSWORD, "Silver Sword", "Silver Swords", 80, 100));
             Items.Add(new Weapon(ITEM_ID_SWORD, "Sword", "Swords", 30, 60));
             Items.Add(new Weapon(ITEM_ID_AXE, "Axe", "Axes", 25, 85));
@@ -264,6 +264,9 @@ namespace HeroLogic
             Items.Add(new HealingPotion(ITEM_ID_SUPER_HEALING_POTION, "Super Healing Potion", "Super Healing Potions", 500));
 
         }
+
+
+     
 
         private static void PopulateMonsters()
         {

@@ -53,6 +53,7 @@ namespace HerosTale
             pnlMainBtn.Enabled = false;
             pnlInventory.Enabled = false;
             pnlInventory.Visible = false;
+            dgInventory.Visible = false;
             firstTime = true;
             firstTimeCombat = true;
             DoQ2 = true;
@@ -61,7 +62,10 @@ namespace HerosTale
             player = new Player(1, 1, 1, 1, 100, "", 0, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
             player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_RUSTY_SWORD), 1));
             player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_SMALL_HEALING_POTION), 5));
-            
+            UpdateWeaponListInUI();
+            UpdateConsumableListInUI();
+
+
 
 
         }
@@ -232,6 +236,58 @@ namespace HerosTale
 
         }
 
+        private void UpdateConsumableListInUI()
+        {
+            List<HealingPotion> healingPotions = new List<HealingPotion>();
+
+            foreach (InventoryItem inventoryItem in player.Inventory)
+            {
+                if (inventoryItem.Details is HealingPotion)
+                {
+                    if (inventoryItem.Quantity > 0)
+                    {
+                        healingPotions.Add((HealingPotion)inventoryItem.Details);
+                    }
+                }
+            }
+
+            if (healingPotions.Count>0)
+            {
+                cboConsumable.DataSource = healingPotions;
+                cboConsumable.DisplayMember = "Name";
+                cboConsumable.ValueMember = "ID";
+                cboConsumable.SelectedIndex = 0;
+            }
+            else
+            {S
+                cboConsumable.Text = "";
+            }
+
+            
+        }
+
+        private void UpdateWeaponListInUI()
+        {
+            List<Weapon> weapons = new List<Weapon>();
+
+            foreach (InventoryItem inventoryItem in player.Inventory)
+            {
+                if (inventoryItem.Details is Weapon)
+                {
+                    if (inventoryItem.Quantity > 0)
+                    {
+                        weapons.Add((Weapon)inventoryItem.Details);
+                    }
+                }
+            }
+
+            cboWeapons.DataSource = weapons;
+            cboWeapons.DisplayMember = "Name";
+            cboWeapons.ValueMember = "ID";
+            cboWeapons.SelectedIndex = 0;
+            
+        }
+
         private void UpdateStats()
         {
 
@@ -246,7 +302,7 @@ namespace HerosTale
 
         }
 
-       private int RandomElementEnum(IEnumerable<int> listOfElements)
+        private int RandomElementEnum(IEnumerable<int> listOfElements)
         {
             
             int rndnumber;
@@ -325,12 +381,12 @@ namespace HerosTale
 
         }
 
-        private async void Heal()
+        private async void Heal(int amount)
         {
             int healed = player.CurrentHitPoints;
             if (player.CurrentHitPoints<player.MaximumHitPoints)
             {
-                player.CurrentHitPoints += player.Level * 50;
+                player.CurrentHitPoints += amount;
                 if (player.CurrentHitPoints>player.MaximumHitPoints)
                 {
                     player.CurrentHitPoints = player.MaximumHitPoints;
@@ -338,7 +394,7 @@ namespace HerosTale
                 txtMainWindow.Text += $"You healed {player.CurrentHitPoints-healed} \r\n";
                 txtMainWindow.Text += "\r\n";
                 UpdateStats();
-                await Task.Delay(1500);
+                await Task.Delay(1000);
             }
         }
 
@@ -432,8 +488,9 @@ namespace HerosTale
             {
                 if (CheckHit(player.Dexterity, player.Difficulty))
                 {
-                    // need to manage inventory and current weapon to get min/max dmg!!!
-                    int Hit = Damage(player.Strength, player.Level, 10, 20) * mod;
+                    
+                    Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
+                    int Hit = Damage(player.Strength, player.Level, currentWeapon.MinimumDamage, currentWeapon.MaximumDamage) * mod;
                     attackMonster.CurrentHitPoints -= Hit;
                     txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
                     txtMainWindow.Text += "\r\n";
@@ -450,8 +507,8 @@ namespace HerosTale
             {
                 if (CheckHit(player.Dexterity, player.Difficulty))
                 {
-                    // need to manage inventory and current weapon to get min/max dmg!!!
-                    int Hit = Damage(player.Strength, player.Level, 10, 20) * mod;
+                    Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
+                    int Hit = Damage(player.Strength, player.Level, currentWeapon.MinimumDamage, currentWeapon.MaximumDamage) * mod;
                     int HP = 0;
                     int HPMax = 0;
 
@@ -619,6 +676,7 @@ namespace HerosTale
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                     CurrentPhase = GamePhase.BossEnd;
+                    inCombat = false;
                 }
             }
             else
@@ -676,7 +734,7 @@ namespace HerosTale
                     
                         txtMainWindow.Text += "Nothing has heppened today \r\n";
                         txtMainWindow.Text += "\r\n";
-                        Heal();
+                        Heal(player.Level*50);
                     break;
                 case EventJourney.Approach:
 
@@ -701,6 +759,7 @@ namespace HerosTale
             else
             {
                 CurrentPhase = GamePhase.BossEncounter;
+                inCombat = true;
                 switch (mChoice)
                 {
                     case InitialMenuChoice.Quest1:
@@ -729,6 +788,30 @@ namespace HerosTale
         {
             return rnd.Next(min, 101);
         }
+
+        private void UseItem()
+        {
+            HealingPotion currentItem = (HealingPotion) cboConsumable.SelectedItem;
+
+            if (currentItem is HealingPotion)
+            {                
+                foreach(InventoryItem ii in player.Inventory)
+                {
+                    if (ii.Details.ID==currentItem.ID)
+                    {
+                        if (ii.Quantity > 0)
+                        {
+                            Heal(currentItem.AmountToHeal);
+                            ii.Quantity--;
+                            UpdateConsumableListInUI();
+                        }
+                        break;
+                    }
+                }
+            }
+
+        }
+
 
         private int RollMonsterDamage(int maxDmg)
         {
@@ -800,7 +883,7 @@ namespace HerosTale
                         case GamePhase.BossEncounter:
                             MyTurnAttack(1);
                             CheckMonsterHealth();
-                            EnemyTurn(CreatureClass.Boss);
+                            if (inCombat) EnemyTurn(CreatureClass.Boss);
                             break;
 //-------------BUTTON 1 - JOURNEY PHASE        
                         case GamePhase.Journey:
@@ -1069,29 +1152,30 @@ namespace HerosTale
                     {
 //-------------BUTTON 3 - TAVERN PHASE
                         case GamePhase.Tavern:
-
+                            
                             break;
 
                         //-------------BUTTON 3 - BOSS ENCOUNTER
                         case GamePhase.BossEncounter:
+                            UseItem();
                             break;
                         //-------------BUTTON 3 - JOURNEY PHASE
                         case GamePhase.Journey:
-
+                            UseItem();
                             break;
 
 //-------------BUTTON 3 - CARAVAN PHASE
                         case GamePhase.Caravan:
-
+                            UseItem();
                             break;
 //-------------BUTTON 3 - SHOP PHASE                        
                         case GamePhase.Shop:
-
+                            UseItem();
                             break;
 
 //-------------BUTTON 3 - MARRAKESH PHASE
                         case GamePhase.Marrakesh:
-
+                            UseItem();
                             break;
                     }
                     break;
@@ -1121,9 +1205,7 @@ namespace HerosTale
                                 firstTimeCombat = true;
                                 txtMainWindow.Text = "";
                                 CountDays = 0;
-                                Heal();
-                                Heal();
-                                Heal();
+                                Heal(player.Level * 50*3);                                
                                 playerQuest.IsCompleted = false;
                                 Tavern();
                             }
@@ -1151,7 +1233,7 @@ namespace HerosTale
                                         inCombat = false;
                                         firstTimeCombat = true;
                                         txtMainWindow.Text = "";
-                                        Heal();
+                                        Heal(player.Level * 50);
                                         Journey();
                                     }
                                     else
@@ -1174,7 +1256,7 @@ namespace HerosTale
                                         inCombat = false;
                                         firstTimeCombat = true;
                                         txtMainWindow.Text = "";
-                                        Heal();
+                                        Heal(player.Level * 50);
                                         Journey();
                                     }
                                     else
@@ -1191,7 +1273,7 @@ namespace HerosTale
                                 
                                 firstTimeCombat = true;
                                 txtMainWindow.Text = "";
-                                Heal();                                
+                                Heal(player.Level * 50);
                                 Journey();
                             }
 
@@ -1282,6 +1364,7 @@ namespace HerosTale
             pnlMainBtn.Enabled = true;
             pnlInventory.Visible = true;
             pnlInventory.Enabled = true;
+            dgInventory.Visible = true;
             UpdateBtn();
             generateQuest1();
             generateQuest2();
