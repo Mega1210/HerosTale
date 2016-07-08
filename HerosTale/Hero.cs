@@ -259,7 +259,7 @@ namespace HerosTale
                 cboConsumable.SelectedIndex = 0;
             }
             else
-            {S
+            {
                 cboConsumable.Text = "";
             }
 
