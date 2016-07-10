@@ -55,6 +55,7 @@
     <Compile Include="Quest3Class.cs" />
     <Compile Include="QuestGiver.cs" />
     <Compile Include="QuestWho.cs" />
+    <Compile Include="Shop.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="World.cs" />
     <Compile Include="WorldLocations.cs" />

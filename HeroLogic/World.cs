@@ -9,6 +9,7 @@ namespace HeroLogic
     public static class World
     {
         public static readonly List<Item> Items = new List<Item>();
+        public static readonly List<Shop> GeneralStore = new List<Shop>();
         public static readonly List<Monster> Monsters = new List<Monster>();
         public static readonly List<Quest> Quests = new List<Quest>();
         public static readonly List<CreatureLocations> CreatureLocations = new List<CreatureLocations>();
@@ -152,6 +153,15 @@ namespace HeroLogic
             PopulateLocations();
             PopulateQGivers();
             PopulateWho();
+            PopulateGeneralStore();
+        }
+
+        private static void PopulateGeneralStore()
+        {
+            GeneralStore.Add(new Shop(ItemByID(ITEM_ID_SMALL_HEALING_POTION), 100));
+            GeneralStore.Add(new Shop(ItemByID(ITEM_ID_NORMAL_HEALING_POTION), 500));
+            GeneralStore.Add(new Shop(ItemByID(ITEM_ID_LARGE_HEALING_POTION), 750));
+            GeneralStore.Add(new Shop(ItemByID(ITEM_ID_SUPER_HEALING_POTION), 1000));
         }
 
         private static void PopulateCreatureLocations()
@@ -264,42 +274,40 @@ namespace HeroLogic
             Items.Add(new HealingPotion(ITEM_ID_SUPER_HEALING_POTION, "Super Healing Potion", "Super Healing Potions", 500));
 
         }
-
-
-     
-
+    
         private static void PopulateMonsters()
         {
-            Monsters.Add(new Monster(MONSTER_ID_RAT, "Rat","Rats", 5, 25, 40, 20, 20, CreatureType.Animal, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_RAT, "Rat", "Rats", 5, 25, 40, 20, 20, CreatureType.Animal, CreatureClass.Normal));
             Monsters.Add(new Monster(MONSTER_ID_SNAKE, "Snake", "Snakes", 8, 40, 60, 20, 20, CreatureType.Animal, CreatureClass.Normal));
             Monsters.Add(new Monster(MONSTER_ID_RABIDDOG, "Rabid Dog", "Rabid Dogs", 12, 60, 90, 50, 50, CreatureType.Animal, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_WOLF, "Wolf", "Wolves", 20, 100, 150, 50, 50, CreatureType.Animal, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_WOLF, "Wolf", "Wolves", 20, 100, 150, 75, 75, CreatureType.Animal, CreatureClass.Normal));
             Monsters.Add(new Monster(MONSTER_ID_BEAR, "Bear", "Bears", 25, 125, 190, 75, 75, CreatureType.Animal, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_GIANT_SCORPION, "Giant Scorpion", "Giant Scorpions", 25, 125, 190, 120, 120, CreatureType.Animal, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_CROW, "Crow", "Crows", 15, 75, 120, 75, 75, CreatureType.Animal, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_PYTHON, "Python", "Pythons", 25, 125, 190, 120, 120, CreatureType.Animal, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_GIANT_SCORPION, "Giant Scorpion", "Giant Scorpions", 25, 125, 190, 100, 100, CreatureType.Animal, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_CROW, "Evil Crow", "Evil Crows", 15, 75, 120, 60, 60, CreatureType.Animal, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_PYTHON, "Python", "Pythons", 25, 125, 190, 100, 100, CreatureType.Animal, CreatureClass.Normal));
             Monsters.Add(new Monster(MONSTER_ID_LION, "Lion", "Lions", 30, 150, 230, 200, 200, CreatureType.Animal, CreatureClass.Normal));
             Monsters.Add(new Monster(MONSTER_ID_VULTURE, "Vulture", "Vultures", 30, 150, 230, 150, 150, CreatureType.Animal, CreatureClass.Normal));
             Monsters.Add(new Monster(MONSTER_ID_GIANT_SPIDER, "Giant Spider", "Giant Spiders", 25, 125, 190, 150, 150, CreatureType.Animal, CreatureClass.Normal));
             Monsters.Add(new Monster(MONSTER_ID_GIANT_BEETLE, "Giant Beetle", "Giant Beetles", 20, 100, 150, 120, 120, CreatureType.Animal, CreatureClass.Normal));
             Monsters.Add(new Monster(MONSTER_ID_LYNX, "Lynx", "Lynxes", 30, 150, 230, 200, 200, CreatureType.Animal, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_BANDIT, "Bandit", "Bandits", 45, 225, 340, 500, 500, CreatureType.HumanDanger, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_THIEF, "Thief", "Thieves", 45, 225, 340, 500, 500, CreatureType.HumanDanger, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_BEGGAR, "Beggar", "Beggars", 8, 40, 60, 250, 250, CreatureType.HumanPeaceful, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_PEASANT, "Peasant", "Peasants", 10, 50, 80, 350, 350, CreatureType.HumanPeaceful, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_TRAVELLER, "Traveller", "Travellers", 15, 75, 120, 500, 500, CreatureType.HumanPeaceful, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_NOMAD, "Nomad", "Nomads", 15, 75, 120, 500, 500, CreatureType.HumanPeaceful, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_RAIDERS, "Raiders", "Raiders", 60, 300, 450, 600, 600, CreatureType.HumanDanger, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_SCOUNDREL, "Scoundrel", "Scoundrels", 50, 250, 380, 600, 600, CreatureType.HumanDanger, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_HARPY, "Harpy", "Harpies", 100, 500, 750, 800, 800, CreatureType.Monster, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_WEREWOLF, "Werewolf", "Werewolves", 120, 600, 900, 1000, 1000, CreatureType.Monster, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_VAMPIRE, "Vampire", "Vampires", 150, 750, 1130, 1000, 1000, CreatureType.Monster, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_LICH, "Lich", "Liches", 175, 875, 1320, 1000, 1000, CreatureType.Monster, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_WYRM, "Wyrm", "Wyrms", 200, 1000, 1500, 2000, 2000, CreatureType.Monster, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_ZOMBIE, "Zombie", "Zombies", 110, 550, 830, 1200, 1200, CreatureType.Monster, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_SPECTRE, "Spectre", "Spectres", 110, 550, 830, 1200, 1200, CreatureType.Monster, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_SORCERER, "Sorcerer", "Sorcerers", 110, 550, 830, 1400, 1400, CreatureType.Monster, CreatureClass.Normal));
-            Monsters.Add(new Monster(MONSTER_ID_WITCH, "Witch", "Witches", 110, 550, 830, 1400, 1400, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_BANDIT, "Bandit", "Bandits", 45, 225, 340, 250, 250, CreatureType.HumanDanger, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_THIEF, "Thief", "Thieves", 45, 225, 340, 250, 250, CreatureType.HumanDanger, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_BEGGAR, "Beggar", "Beggars", 8, 40, 60, 100, 100, CreatureType.HumanPeaceful, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_PEASANT, "Peasant", "Peasants", 10, 50, 80, 120, 120, CreatureType.HumanPeaceful, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_TRAVELLER, "Traveller", "Travellers", 15, 75, 120, 250, 250, CreatureType.HumanPeaceful, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_NOMAD, "Nomad", "Nomads", 15, 75, 120, 250, 250, CreatureType.HumanPeaceful, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_RAIDERS, "Raiders", "Raiders", 60, 300, 450, 300, 300, CreatureType.HumanDanger, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_SCOUNDREL, "Scoundrel", "Scoundrels", 50, 250, 380, 300, 300, CreatureType.HumanDanger, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_HARPY, "Harpy", "Harpies", 100, 500, 750, 350, 350, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_WEREWOLF, "Werewolf", "Werewolves", 120, 600, 900, 450, 450, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_VAMPIRE, "Vampire", "Vampires", 150, 750, 1130, 425, 425, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_LICH, "Lich", "Liches", 175, 875, 1320, 450, 450, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_WYRM, "Wyrm", "Wyrms", 200, 1000, 1500, 500, 500, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_ZOMBIE, "Zombie", "Zombies", 110, 550, 830, 300, 300, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_SPECTRE, "Spectre", "Spectres", 110, 550, 830, 275, 275, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_SORCERER, "Sorcerer", "Sorcerers", 110, 550, 830, 400, 400, CreatureType.Monster, CreatureClass.Normal));
+            Monsters.Add(new Monster(MONSTER_ID_WITCH, "Witch", "Witches", 110, 550, 830, 400, 400, CreatureType.Monster, CreatureClass.Normal));
+
         }
 
         private static void PopulateLocations()
@@ -311,10 +319,6 @@ namespace HeroLogic
             WorldLocations.Add(new WorldLocation(LOC_MOUNTAINS, "Mountains"));
             WorldLocations.Add(new WorldLocation(LOC_TEMPLERUINS, "Temple Ruins"));
         }
-
- 
-
-
 
         private static void PopulateWho()
         {

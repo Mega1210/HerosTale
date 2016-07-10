@@ -64,6 +64,7 @@ namespace HerosTale
             player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_SMALL_HEALING_POTION), 5));
             UpdateWeaponListInUI();
             UpdateConsumableListInUI();
+            UpdateInventoryGrid();
 
 
 
@@ -241,7 +242,7 @@ namespace HerosTale
             List<HealingPotion> healingPotions = new List<HealingPotion>();
 
             foreach (InventoryItem inventoryItem in player.Inventory)
-            {
+            {                
                 if (inventoryItem.Details is HealingPotion)
                 {
                     if (inventoryItem.Quantity > 0)
@@ -251,19 +252,53 @@ namespace HerosTale
                 }
             }
 
+            
+
             if (healingPotions.Count>0)
             {
+                if (cboConsumable.Items.Count > 0)
+                {
+                    cboConsumable.DataSource = null;
+                    cboConsumable.Text = "";
+                    cboConsumable.SelectedIndex = -1;
+                }
+                
+
                 cboConsumable.DataSource = healingPotions;
                 cboConsumable.DisplayMember = "Name";
                 cboConsumable.ValueMember = "ID";
-                cboConsumable.SelectedIndex = 0;
+                cboConsumable.SelectedIndex = 0;                                                                  
             }
             else
             {
+                cboConsumable.DataSource = null;
                 cboConsumable.Text = "";
+                cboConsumable.SelectedIndex = -1;
             }
 
             
+        }
+
+        private void UpdateInventoryGrid()
+        {
+            dgInventory.RowHeadersVisible = false;
+
+            dgInventory.ColumnCount = 2;
+            dgInventory.Columns[0].Name = "Name";
+            dgInventory.Columns[0].Width = 280;
+            //dgInventory.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgInventory.Columns[1].Name = "Quantity";
+            dgInventory.Columns[1].Width = 50;
+
+            dgInventory.Rows.Clear();
+
+            foreach (InventoryItem inventoryItem in player.Inventory)
+            {
+                if (inventoryItem.Quantity > 0)
+                {
+                    dgInventory.Rows.Add(new[] { inventoryItem.Details.Name, inventoryItem.Quantity.ToString() });
+                }
+            }
         }
 
         private void UpdateWeaponListInUI()
@@ -402,7 +437,7 @@ namespace HerosTale
         {
             if (FoesRemaining == 0 && CurrentPhase!=GamePhase.BossEncounter)
             {
-                txtMainWindow.Text += $"You have killed all your enemies! \r\n";
+                txtMainWindow.Text += "You have killed all your enemies! \r\n";
                 txtMainWindow.Text += $"You have gained {FoesNr * attackMonster.RewardExperiencePoints} experience points!\r\n";
                 txtMainWindow.Text += "\r\n";
                 ScrollDownText(txtMainWindow);
@@ -456,14 +491,14 @@ namespace HerosTale
                     }
                     else
                     {
-                        txtMainWindow.Text += $"You dodge the enemy attack. \r\n";
+                        txtMainWindow.Text += "You dodge the enemy attack. \r\n";
                         txtMainWindow.Text += "\r\n";
                         ScrollDownText(txtMainWindow);
                     }
                 }
                 else
                 {
-                    txtMainWindow.Text += $"The enemy misses the attack. \r\n";
+                    txtMainWindow.Text += "The enemy misses the attack. \r\n";
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                 }
@@ -478,7 +513,7 @@ namespace HerosTale
             {
                 firstTimeCombat = false;
                 string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                txtMainWindow.Text += $"You run towards the {text} and start the combat! \r\n";
+                txtMainWindow.Text = $"You run towards the {text} and start the combat! \r\n";
                 txtMainWindow.Text += "\r\n";
                 ScrollDownText(txtMainWindow);
             }
@@ -492,13 +527,13 @@ namespace HerosTale
                     Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
                     int Hit = Damage(player.Strength, player.Level, currentWeapon.MinimumDamage, currentWeapon.MaximumDamage) * mod;
                     attackMonster.CurrentHitPoints -= Hit;
-                    txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
+                    txtMainWindow.Text = $"You attack and do {Hit} of damage. Enemy health {attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}\r\n";
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                 }
                 else
                 {
-                    txtMainWindow.Text += $"You miss your attack!";
+                    txtMainWindow.Text = "You miss your attack!\r\n";
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                 }
@@ -531,13 +566,13 @@ namespace HerosTale
                             break;
                     }
                     HP -= Hit;
-                    txtMainWindow.Text += $"You attack and do {Hit} of damage. Enemy health {HP}/{HPMax}\r\n";
+                    txtMainWindow.Text = $"You attack and do {Hit} of damage. Enemy health {HP}/{HPMax}\r\n";
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                 }
                 else
                 {
-                    txtMainWindow.Text += $"You miss your attack!";
+                    txtMainWindow.Text = "You miss your attack!\r\n";
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                 }
@@ -672,7 +707,7 @@ namespace HerosTale
                     }
                     
                     UpdateStats();
-                    txtMainWindow.Text += $"Now you can head back and claim the reward! \r\n";
+                    txtMainWindow.Text += $"Now you head back and claim the reward! \r\n";
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                     CurrentPhase = GamePhase.BossEnd;
@@ -751,7 +786,7 @@ namespace HerosTale
                         inCombat = true;
                         FoesRemaining = FoesNr = rnd.Next(1, 4);
                         GenerateFoesEncounter();                                                
-                        txtMainWindow.Text += $"You hear some strange noises. \r\n";
+                        txtMainWindow.Text += "You hear some strange noises. \r\n";
                         txtMainWindow.Text += "\r\n";
                         break;
                 }
@@ -778,11 +813,7 @@ namespace HerosTale
             }
            
         }
-
-        private void GenerateMessage()
-        {
-
-        }
+     
 
         private int RollDice(int min)
         {
@@ -804,6 +835,7 @@ namespace HerosTale
                             Heal(currentItem.AmountToHeal);
                             ii.Quantity--;
                             UpdateConsumableListInUI();
+                            UpdateInventoryGrid();
                         }
                         break;
                     }
@@ -816,6 +848,15 @@ namespace HerosTale
         private int RollMonsterDamage(int maxDmg)
         {
             return rnd.Next(0, maxDmg);
+        }
+
+        private void GeneralStoreShop()
+        {
+            int option1 = RandomElement(GeneralStore.Count)-1;
+            int option2 = RandomElement(GeneralStore.Count)-1;
+
+            txtMainWindow.Text = $"1- There is a {GeneralStore.ElementAt(option1).Details.Name} for {GeneralStore.ElementAt(option1).Price} \r\n";
+            txtMainWindow.Text += $"2- There is a {GeneralStore.ElementAt(option2).Details.Name} for {GeneralStore.ElementAt(option2).Price} \r\n";
         }
 
         private async void CheckPlayerHealth()
@@ -867,9 +908,9 @@ namespace HerosTale
 
 //-------------BUTTON 1 - TAVERN PHASE
                         case GamePhase.Tavern:
-                            
+
                             // Selected Quest 1 type
-                            Days = rnd.Next(2, 5);
+                            GenerateDays();
                             mChoice = InitialMenuChoice.Quest1;
                             playerQuest = new PlayerQuest(QuestOption.Quest1);
                             txtMainWindow.Text = $"You start your journey to kill the {Quest1.MonsterName}. \r\n";
@@ -970,7 +1011,7 @@ namespace HerosTale
                             break;
 //-------------BUTTON 1 - MARRAKESH PHASE
                         case GamePhase.Marrakesh:
-                            // when we are in Marrakesh this option taked use to the Weapon Shop
+                            // when we are in Marrakesh this option takes us to the Weapon Shop
                             break;
                     }
 
@@ -982,7 +1023,7 @@ namespace HerosTale
                     {
 //-------------BUTTON 2 - TAVERN PHASE
                         case GamePhase.Tavern:
-                            Days = rnd.Next(2, 5);
+                            GenerateDays();
                             if (DoQ2)
                             {
                                 mChoice = InitialMenuChoice.Quest2;
@@ -1011,7 +1052,7 @@ namespace HerosTale
                                 txtMainWindow.Text += $"You succeed! You successfully ambushed the enemy \r\n";
                                 txtMainWindow.Text += "\r\n";
                                 ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);                                
+                                await Task.Delay(1000);                                
                                 MyTurnAttack(2);
                                 CheckMonsterHealth();
                                 EnemyTurn(CreatureClass.Boss);
@@ -1077,7 +1118,7 @@ namespace HerosTale
                                             txtMainWindow.Text += "You cannot ambush your enemy, you're already in combat! \r\n";
                                             txtMainWindow.Text += "\r\n";
                                             ScrollDownText(txtMainWindow);
-                                            await Task.Delay(1500);
+                                            await Task.Delay(1000);
                                             EnemyTurn(attackMonster.Difficulty);
                                         }
                                     }
@@ -1095,7 +1136,7 @@ namespace HerosTale
                                                 txtMainWindow.Text += $"{FoesNr} {text} trying to ambush you! You avoided it and now you're in combat \r\n";
                                                 txtMainWindow.Text += "\r\n";
                                                 ScrollDownText(txtMainWindow);
-                                                await Task.Delay(1500);
+                                                await Task.Delay(1000);
                                                 inCombat = true;
                                                 firstTimeCombat = false;
 
@@ -1122,7 +1163,7 @@ namespace HerosTale
                                             txtMainWindow.Text += "You cannot ambush your enemy, you're already in combat! \r\n";
                                             txtMainWindow.Text += "\r\n";
                                             ScrollDownText(txtMainWindow);
-                                            await Task.Delay(1500);
+                                            await Task.Delay(1000);
                                             EnemyTurn(attackMonster.Difficulty);
                                         }
                                     }
@@ -1187,6 +1228,9 @@ namespace HerosTale
                     {
 //-------------BUTTON 4 - TAVERN PHASE
                         case GamePhase.Tavern:
+                            GeneralStoreShop();
+                            CurrentPhase = GamePhase.Shop;
+                            UpdateBtn();
 
                             break;
                         //-------------BUTTON 4 - BOSS ENCOUNTER
@@ -1285,7 +1329,7 @@ namespace HerosTale
                             break;
 //-------------BUTTON 4 - SHOP PHASE                        
                         case GamePhase.Shop:
-
+                            Tavern();
                             break;
 
 //-------------BUTTON 4 - MARRAKESH PHASE
@@ -1293,20 +1337,17 @@ namespace HerosTale
 
                             break;
                         case GamePhase.BossEnd:
-                            txtMainWindow.Text += $"You return home and clain your reward! {GetReward(mChoice)} \r\n";
+                            txtMainWindow.Text += $"You return home with your reward: {GetReward(mChoice)} gold! \r\n";
                             txtMainWindow.Text += "\r\n";
                             player.Gold += GetReward(mChoice);
                             UpdateStats();                            
                             ScrollDownText(txtMainWindow);
-                            await Task.Delay(1500);
+                            await Task.Delay(2000);
                             Tavern();
                             break;
                     }
                     break;
-
             }
-
-
            
         }
 
@@ -1351,10 +1392,20 @@ namespace HerosTale
                 case GamePhase.Marrakesh:
                     break;
                 case GamePhase.Shop:
+                    button1.Text = "Buy Item 1";
+                    button2.Text = "Buy Item 2";
+                    button3.Text = "Buy Item 3";
+                    button4.Text = "Exit";
+                    break;
                     break;
             }
             
 
+        }
+
+        private void GenerateDays()
+        {
+            Days = rnd.Next(2, 5);
         }
 
         private void Tavern()
@@ -1366,6 +1417,7 @@ namespace HerosTale
             pnlInventory.Enabled = true;
             dgInventory.Visible = true;
             UpdateBtn();
+            CountDays = 0;        
             generateQuest1();
             generateQuest2();
             generateQuest3();
