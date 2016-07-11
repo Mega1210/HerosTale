@@ -37,7 +37,9 @@
             this.bLoadGame = new System.Windows.Forms.Button();
             this.bNewGane = new System.Windows.Forms.Button();
             this.pStart = new System.Windows.Forms.Panel();
+            this.btnExit = new System.Windows.Forms.Button();
             this.pMain = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
             this.dgInventory = new System.Windows.Forms.DataGridView();
             this.pnlInventory = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
@@ -49,6 +51,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.lHealthTxt = new System.Windows.Forms.Label();
             this.pnlLevelUp = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.btLvlUpOk = new System.Windows.Forms.Button();
@@ -62,6 +65,7 @@
             this.btLessStr = new System.Windows.Forms.Button();
             this.btPlusStr = new System.Windows.Forms.Button();
             this.btPlusInt = new System.Windows.Forms.Button();
+            this.lHealthNr = new System.Windows.Forms.Label();
             this.lExpTxt = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lLevelNr = new System.Windows.Forms.Label();
@@ -76,8 +80,6 @@
             this.lIntTxt = new System.Windows.Forms.Label();
             this.lStrNr = new System.Windows.Forms.Label();
             this.lStrTxt = new System.Windows.Forms.Label();
-            this.lHealthNr = new System.Windows.Forms.Label();
-            this.lHealthTxt = new System.Windows.Forms.Label();
             this.lHeroName = new System.Windows.Forms.Label();
             this.txtMainWindow = new System.Windows.Forms.TextBox();
             this.tInputName = new System.Windows.Forms.TextBox();
@@ -85,6 +87,10 @@
             this.pNameInput = new System.Windows.Forms.Panel();
             this.bOk = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.lblEnemyHealth = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblNrEnemies = new System.Windows.Forms.Label();
+            this.pnlTop = new System.Windows.Forms.Panel();
             this.pStart.SuspendLayout();
             this.pMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgInventory)).BeginInit();
@@ -92,6 +98,7 @@
             this.pnlMainBtn.SuspendLayout();
             this.pnlLevelUp.SuspendLayout();
             this.pNameInput.SuspendLayout();
+            this.pnlTop.SuspendLayout();
             this.SuspendLayout();
             // 
             // bLoadGame
@@ -121,16 +128,32 @@
             // 
             // pStart
             // 
+            this.pStart.Controls.Add(this.btnExit);
             this.pStart.Controls.Add(this.bLoadGame);
             this.pStart.Controls.Add(this.bNewGane);
             this.pStart.Location = new System.Drawing.Point(12, 13);
             this.pStart.Margin = new System.Windows.Forms.Padding(4);
             this.pStart.Name = "pStart";
-            this.pStart.Size = new System.Drawing.Size(121, 116);
+            this.pStart.Size = new System.Drawing.Size(121, 177);
             this.pStart.TabIndex = 7;
+            // 
+            // btnExit
+            // 
+            this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExit.Location = new System.Drawing.Point(4, 112);
+            this.btnExit.Margin = new System.Windows.Forms.Padding(4);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Padding = new System.Windows.Forms.Padding(4);
+            this.btnExit.Size = new System.Drawing.Size(108, 46);
+            this.btnExit.TabIndex = 3;
+            this.btnExit.Text = "Exit Game";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // pMain
             // 
+            this.pMain.Controls.Add(this.pnlTop);
+            this.pMain.Controls.Add(this.txtMainWindow);
             this.pMain.Controls.Add(this.dgInventory);
             this.pMain.Controls.Add(this.pnlInventory);
             this.pMain.Controls.Add(this.pnlMainBtn);
@@ -149,15 +172,22 @@
             this.pMain.Controls.Add(this.lIntTxt);
             this.pMain.Controls.Add(this.lStrNr);
             this.pMain.Controls.Add(this.lStrTxt);
-            this.pMain.Controls.Add(this.lHealthNr);
-            this.pMain.Controls.Add(this.lHealthTxt);
             this.pMain.Controls.Add(this.lHeroName);
-            this.pMain.Controls.Add(this.txtMainWindow);
             this.pMain.Location = new System.Drawing.Point(239, 13);
             this.pMain.Margin = new System.Windows.Forms.Padding(4);
             this.pMain.Name = "pMain";
-            this.pMain.Size = new System.Drawing.Size(816, 603);
+            this.pMain.Size = new System.Drawing.Size(816, 620);
             this.pMain.TabIndex = 16;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(248, 5);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(112, 18);
+            this.label6.TabIndex = 62;
+            this.label6.Text = "Enemy Health:";
             // 
             // dgInventory
             // 
@@ -182,7 +212,7 @@
             this.dgInventory.ColumnHeadersVisible = false;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Lime;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.Black;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Lime;
@@ -199,7 +229,7 @@
             this.dgInventory.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.ForestGreen;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle4.NullValue = null;
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.ForestGreen;
@@ -217,7 +247,7 @@
             this.dgInventory.RowsDefaultCellStyle = dataGridViewCellStyle5;
             this.dgInventory.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             this.dgInventory.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgInventory.Size = new System.Drawing.Size(355, 110);
+            this.dgInventory.Size = new System.Drawing.Size(355, 132);
             this.dgInventory.TabIndex = 61;
             // 
             // pnlInventory
@@ -226,7 +256,7 @@
             this.pnlInventory.Controls.Add(this.label3);
             this.pnlInventory.Controls.Add(this.cboConsumable);
             this.pnlInventory.Controls.Add(this.cboWeapons);
-            this.pnlInventory.Location = new System.Drawing.Point(202, 248);
+            this.pnlInventory.Location = new System.Drawing.Point(202, 262);
             this.pnlInventory.Name = "pnlInventory";
             this.pnlInventory.Size = new System.Drawing.Size(342, 83);
             this.pnlInventory.TabIndex = 60;
@@ -274,7 +304,7 @@
             this.pnlMainBtn.Controls.Add(this.button2);
             this.pnlMainBtn.Controls.Add(this.button3);
             this.pnlMainBtn.Controls.Add(this.button4);
-            this.pnlMainBtn.Location = new System.Drawing.Point(26, 256);
+            this.pnlMainBtn.Location = new System.Drawing.Point(26, 252);
             this.pnlMainBtn.Name = "pnlMainBtn";
             this.pnlMainBtn.Size = new System.Drawing.Size(160, 221);
             this.pnlMainBtn.TabIndex = 55;
@@ -331,6 +361,16 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // lHealthTxt
+            // 
+            this.lHealthTxt.AutoSize = true;
+            this.lHealthTxt.Location = new System.Drawing.Point(1, 3);
+            this.lHealthTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lHealthTxt.Name = "lHealthTxt";
+            this.lHealthTxt.Size = new System.Drawing.Size(104, 18);
+            this.lHealthTxt.TabIndex = 19;
+            this.lHealthTxt.Text = "Your Health:";
+            // 
             // pnlLevelUp
             // 
             this.pnlLevelUp.Controls.Add(this.label2);
@@ -345,7 +385,7 @@
             this.pnlLevelUp.Controls.Add(this.btLessStr);
             this.pnlLevelUp.Controls.Add(this.btPlusStr);
             this.pnlLevelUp.Controls.Add(this.btPlusInt);
-            this.pnlLevelUp.Location = new System.Drawing.Point(373, 385);
+            this.pnlLevelUp.Location = new System.Drawing.Point(373, 395);
             this.pnlLevelUp.Name = "pnlLevelUp";
             this.pnlLevelUp.Size = new System.Drawing.Size(171, 201);
             this.pnlLevelUp.TabIndex = 54;
@@ -503,10 +543,21 @@
             this.btPlusInt.UseVisualStyleBackColor = true;
             this.btPlusInt.Click += new System.EventHandler(this.btPlusInt_Click);
             // 
+            // lHealthNr
+            // 
+            this.lHealthNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lHealthNr.Location = new System.Drawing.Point(113, 2);
+            this.lHealthNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lHealthNr.Name = "lHealthNr";
+            this.lHealthNr.Size = new System.Drawing.Size(105, 20);
+            this.lHealthNr.TabIndex = 20;
+            this.lHealthNr.Text = "1000/1000";
+            this.lHealthNr.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
             // lExpTxt
             // 
             this.lExpTxt.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lExpTxt.Location = new System.Drawing.Point(652, 374);
+            this.lExpTxt.Location = new System.Drawing.Point(652, 383);
             this.lExpTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lExpTxt.Name = "lExpTxt";
             this.lExpTxt.Size = new System.Drawing.Size(100, 20);
@@ -527,7 +578,7 @@
             // lLevelNr
             // 
             this.lLevelNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lLevelNr.Location = new System.Drawing.Point(652, 346);
+            this.lLevelNr.Location = new System.Drawing.Point(652, 355);
             this.lLevelNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lLevelNr.Name = "lLevelNr";
             this.lLevelNr.Size = new System.Drawing.Size(100, 20);
@@ -548,7 +599,7 @@
             // lGold
             // 
             this.lGold.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lGold.Location = new System.Drawing.Point(652, 316);
+            this.lGold.Location = new System.Drawing.Point(652, 325);
             this.lGold.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lGold.Name = "lGold";
             this.lGold.Size = new System.Drawing.Size(100, 20);
@@ -569,7 +620,7 @@
             // lChrNr
             // 
             this.lChrNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lChrNr.Location = new System.Drawing.Point(652, 535);
+            this.lChrNr.Location = new System.Drawing.Point(652, 546);
             this.lChrNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lChrNr.Name = "lChrNr";
             this.lChrNr.Size = new System.Drawing.Size(100, 20);
@@ -580,7 +631,7 @@
             // lChrTxt
             // 
             this.lChrTxt.AutoSize = true;
-            this.lChrTxt.Location = new System.Drawing.Point(550, 537);
+            this.lChrTxt.Location = new System.Drawing.Point(551, 548);
             this.lChrTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lChrTxt.Name = "lChrTxt";
             this.lChrTxt.Size = new System.Drawing.Size(72, 18);
@@ -590,7 +641,7 @@
             // lDexNr
             // 
             this.lDexNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lDexNr.Location = new System.Drawing.Point(652, 471);
+            this.lDexNr.Location = new System.Drawing.Point(652, 483);
             this.lDexNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lDexNr.Name = "lDexNr";
             this.lDexNr.Size = new System.Drawing.Size(100, 20);
@@ -601,7 +652,7 @@
             // lDexTxt
             // 
             this.lDexTxt.AutoSize = true;
-            this.lDexTxt.Location = new System.Drawing.Point(550, 472);
+            this.lDexTxt.Location = new System.Drawing.Point(551, 486);
             this.lDexTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lDexTxt.Name = "lDexTxt";
             this.lDexTxt.Size = new System.Drawing.Size(80, 18);
@@ -611,7 +662,7 @@
             // lIntNr
             // 
             this.lIntNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lIntNr.Location = new System.Drawing.Point(652, 502);
+            this.lIntNr.Location = new System.Drawing.Point(652, 513);
             this.lIntNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lIntNr.Name = "lIntNr";
             this.lIntNr.Size = new System.Drawing.Size(100, 20);
@@ -622,7 +673,7 @@
             // lIntTxt
             // 
             this.lIntTxt.AutoSize = true;
-            this.lIntTxt.Location = new System.Drawing.Point(550, 504);
+            this.lIntTxt.Location = new System.Drawing.Point(551, 515);
             this.lIntTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lIntTxt.Name = "lIntTxt";
             this.lIntTxt.Size = new System.Drawing.Size(104, 18);
@@ -632,7 +683,7 @@
             // lStrNr
             // 
             this.lStrNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lStrNr.Location = new System.Drawing.Point(652, 436);
+            this.lStrNr.Location = new System.Drawing.Point(652, 447);
             this.lStrNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lStrNr.Name = "lStrNr";
             this.lStrNr.Size = new System.Drawing.Size(100, 20);
@@ -643,33 +694,12 @@
             // lStrTxt
             // 
             this.lStrTxt.AutoSize = true;
-            this.lStrTxt.Location = new System.Drawing.Point(550, 437);
+            this.lStrTxt.Location = new System.Drawing.Point(545, 447);
             this.lStrTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lStrTxt.Name = "lStrTxt";
             this.lStrTxt.Size = new System.Drawing.Size(72, 18);
             this.lStrTxt.TabIndex = 21;
             this.lStrTxt.Text = "Strength";
-            // 
-            // lHealthNr
-            // 
-            this.lHealthNr.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lHealthNr.Location = new System.Drawing.Point(652, 404);
-            this.lHealthNr.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lHealthNr.Name = "lHealthNr";
-            this.lHealthNr.Size = new System.Drawing.Size(100, 20);
-            this.lHealthNr.TabIndex = 20;
-            this.lHealthNr.Text = "1000/1000";
-            this.lHealthNr.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
-            // lHealthTxt
-            // 
-            this.lHealthTxt.AutoSize = true;
-            this.lHealthTxt.Location = new System.Drawing.Point(550, 406);
-            this.lHealthTxt.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lHealthTxt.Name = "lHealthTxt";
-            this.lHealthTxt.Size = new System.Drawing.Size(56, 18);
-            this.lHealthTxt.TabIndex = 19;
-            this.lHealthTxt.Text = "Health";
             // 
             // lHeroName
             // 
@@ -687,7 +717,7 @@
             this.txtMainWindow.BackColor = System.Drawing.Color.Black;
             this.txtMainWindow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtMainWindow.ForeColor = System.Drawing.Color.Lime;
-            this.txtMainWindow.Location = new System.Drawing.Point(12, 12);
+            this.txtMainWindow.Location = new System.Drawing.Point(4, 27);
             this.txtMainWindow.Margin = new System.Windows.Forms.Padding(4);
             this.txtMainWindow.Multiline = true;
             this.txtMainWindow.Name = "txtMainWindow";
@@ -744,12 +774,57 @@
             this.bOk.UseVisualStyleBackColor = true;
             this.bOk.Click += new System.EventHandler(this.bOk_Click);
             // 
+            // lblEnemyHealth
+            // 
+            this.lblEnemyHealth.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblEnemyHealth.Location = new System.Drawing.Point(358, 4);
+            this.lblEnemyHealth.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblEnemyHealth.Name = "lblEnemyHealth";
+            this.lblEnemyHealth.Size = new System.Drawing.Size(105, 20);
+            this.lblEnemyHealth.TabIndex = 63;
+            this.lblEnemyHealth.Text = "1000/1000";
+            this.lblEnemyHealth.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(539, 4);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(72, 18);
+            this.label7.TabIndex = 64;
+            this.label7.Text = "Enemies:";
+            // 
+            // lblNrEnemies
+            // 
+            this.lblNrEnemies.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lblNrEnemies.Location = new System.Drawing.Point(609, 1);
+            this.lblNrEnemies.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblNrEnemies.Name = "lblNrEnemies";
+            this.lblNrEnemies.Size = new System.Drawing.Size(38, 20);
+            this.lblNrEnemies.TabIndex = 65;
+            this.lblNrEnemies.Text = "1";
+            this.lblNrEnemies.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // pnlTop
+            // 
+            this.pnlTop.Controls.Add(this.lblNrEnemies);
+            this.pnlTop.Controls.Add(this.label7);
+            this.pnlTop.Controls.Add(this.lblEnemyHealth);
+            this.pnlTop.Controls.Add(this.label6);
+            this.pnlTop.Controls.Add(this.lHealthTxt);
+            this.pnlTop.Controls.Add(this.lHealthNr);
+            this.pnlTop.Location = new System.Drawing.Point(8, 1);
+            this.pnlTop.Name = "pnlTop";
+            this.pnlTop.Size = new System.Drawing.Size(726, 26);
+            this.pnlTop.TabIndex = 66;
+            // 
             // frmBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1068, 618);
+            this.ClientSize = new System.Drawing.Size(1068, 640);
             this.Controls.Add(this.pNameInput);
             this.Controls.Add(this.pMain);
             this.Controls.Add(this.pStart);
@@ -774,6 +849,8 @@
             this.pnlLevelUp.PerformLayout();
             this.pNameInput.ResumeLayout(false);
             this.pNameInput.PerformLayout();
+            this.pnlTop.ResumeLayout(false);
+            this.pnlTop.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -830,6 +907,12 @@
         private System.Windows.Forms.Panel pnlInventory;
         private System.Windows.Forms.DataGridView dgInventory;
         private System.Windows.Forms.TextBox txtMainWindow;
+        private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblNrEnemies;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblEnemyHealth;
+        private System.Windows.Forms.Panel pnlTop;
     }
 }
 
