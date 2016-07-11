@@ -36,7 +36,7 @@ namespace HeroLogic
 
         public enum GamePhase
         {
-            Journey, BossEncounter, Shop, Caravan, Marrakesh, Tavern, BossEnd
+            Journey, JourneyMarrakesh, BossEncounter, Shop, Caravan, Marrakesh, Tavern, BossEnd
         }
 
         public enum InitialMenuChoice
