@@ -40,7 +40,7 @@ namespace HerosTale
         private int Buy1;
         private int Buy2;
         private int Buy3;
-        
+        private int NeededExp = 500;
 
 
         public frmBase()
@@ -119,120 +119,11 @@ namespace HerosTale
         private void CheckLvlUp(int exp, int lvl)
         {
             bool DolvlUp=false;
-
-            if (lvl < 20 && exp >= 70000)
-            {
-                player.Level = 20;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 19 && exp >= 62000)
-            {
-                player.Level = 19;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 18 && exp >= 55000)
-            {
-                player.Level = 18;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 17 && exp >= 48000)
-            {
-                player.Level = 17;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 16 && exp >= 43000)
-            {
-                player.Level = 16;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 15 && exp >= 38000)
-            {
-                player.Level = 15;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 14 && exp >= 33000)
-            {
-                player.Level = 14;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 13 && exp >= 28000)
-            {
-                player.Level = 13;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 12 && exp >= 23000)
-            {
-                player.Level = 12;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 11 && exp >= 18000)
-            {
-                player.Level = 11;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 10 && exp >= 13000)
-            {
-                player.Level = 10;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 9 && exp >= 11000)
-            {
-                player.Level = 9;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 8 && exp >= 9000)
-            {
-                player.Level = 8;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 7 && exp >= 7000)
-            {
-                player.Level = 7;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 6 && exp >= 5000)
-            {
-                player.Level = 6;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 5 && exp >= 3000)
-            {
-                player.Level = 5;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 4 && exp >= 2000)
-            {
-                player.Level = 4;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 3 && exp >= 1000)
-            {
-                player.Level = 3;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 2 && exp >= 500)
-            {
-                player.Level = 2;
-                DolvlUp = true;
-
+            
+            //This way you arent having to constantly check
+            if(exp > NeededExp){
+                dolvlUp = true;
+                NeededXExp = NeededExp+500;//Change this to a formaula based on the lvl. or how ever you are doing it.
             }
 
             if (DolvlUp)
