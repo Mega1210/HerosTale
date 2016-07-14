@@ -44,6 +44,16 @@ namespace HeroLogic
             Quest1,Quest2,Quest3,Caravan,Shop
         }
 
+        public enum ItemRarity
+        {
+            Normal, Rare
+        }
+
+        public enum ItemType
+        {
+            Generic, Weapon, Consumable, Usable
+        }
+
         public enum EventJourney
         {
             Nothing, Approach, Noise
@@ -165,7 +175,8 @@ namespace HeroLogic
         }
 
         private static void PopulateCreatureLocations()
-        {
+        {            
+
             CreatureLocations.Add(new CreatureLocations(1, LOC_FOREST, MONSTER_ID_RAT));
             CreatureLocations.Add(new CreatureLocations(2, LOC_CASTLERUINS, MONSTER_ID_RAT));
             CreatureLocations.Add(new CreatureLocations(3, LOC_TEMPLERUINS, MONSTER_ID_RAT));
