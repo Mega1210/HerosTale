@@ -21,7 +21,9 @@ namespace HerosTale
         private Quest1Class Quest1;
         private Quest2Class Quest2;
         private Quest3Class Quest3;
-       
+
+        private Item testItem;
+
         private int tmpStr, tmpDex, tmpInt, tmpChar;
         private const int HEALTH_LEVEL = 500;
         private const int POINTS_LEVEL = 3;
@@ -64,6 +66,7 @@ namespace HerosTale
             CountDays = 0;
             inCombat = false;
 
+            testItem = GetItem(1);
 
             player = new Player(1, 1, 1, 1, 100, "", 0, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
             player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_RUSTY_SWORD), 1));

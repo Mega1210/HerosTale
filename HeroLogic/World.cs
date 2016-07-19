@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace HeroLogic
         public static readonly List<QuestWho> QuestWhois = new List<QuestWho>();
         public static readonly List<WorldLocation> WorldLocations = new List<WorldLocation>();
         public static Random rnd = new Random();
-
+       
         public enum EscAvoid
         {
             AvoidAmbush, Ambush, AvoidCombat, FleeCombat
@@ -260,7 +261,7 @@ namespace HeroLogic
 
         private static void PopulateItems()
         {
-            Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Rusty Sword", "Rusty Swords", 10, 20));
+         /*   Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Rusty Sword", "Rusty Swords", 10, 20));
             Items.Add(new Weapon(ITEM_ID_CLUB, "Club", "Clubs", 15, 30));
             Items.Add(new Weapon(ITEM_ID_SILVERSWORD, "Silver Sword", "Silver Swords", 80, 100));
             Items.Add(new Weapon(ITEM_ID_SWORD, "Sword", "Swords", 30, 60));
@@ -283,6 +284,7 @@ namespace HeroLogic
             Items.Add(new HealingPotion(ITEM_ID_NORMAL_HEALING_POTION, "Normal Healing Potion", "Normal Healing Potions", 100));
             Items.Add(new HealingPotion(ITEM_ID_LARGE_HEALING_POTION, "Large Healing Potion", "Large Healing Potions", 200));
             Items.Add(new HealingPotion(ITEM_ID_SUPER_HEALING_POTION, "Super Healing Potion", "Super Healing Potions", 500));
+            */
 
         }
     
@@ -355,7 +357,38 @@ namespace HeroLogic
 
 
         }
-              
+
+        public static Item GetItem(int id)
+        {
+            HerosDataTableAdapters.ItemsTableAdapter adapter = new HerosDataTableAdapters.ItemsTableAdapter();
+
+            HerosData.ItemsDataTable dt = new HerosData.ItemsDataTable();
+
+            adapter.FillByID(dt, id);
+
+            Item iitem = new Item(
+
+
+
+                (int)dt[0][0],
+                Convert.ToString(dt[0][1]),
+                Convert.ToString(dt[0][2]),
+                Convert.ToInt32(dt[0][6]),
+                Convert.ToInt32(dt[0][7]),
+                Convert.ToInt32(dt[0][8]),
+                Convert.ToInt32(dt[0][9]),
+                Convert.ToInt32(dt[0][10]),
+                Convert.ToInt32(dt[0][11]),
+                (ItemRarity)dt[0][12],
+                (ItemType)dt[0][13],
+                Convert.ToInt32(dt[0][14])
+
+                );
+
+
+            return iitem;
+        }
+
         public static IEnumerable<int> MonstersList()
         {
             IEnumerable<int> monstersList =

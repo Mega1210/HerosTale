@@ -41,15 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreatureLocations.cs" />
-    <Compile Include="HeroDataSet.cs">
-      <DependentUpon>HeroDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="HeroDataSet.Designer.cs">
+    <Compile Include="HealingPotion.cs" />
+    <Compile Include="HerosData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>HeroDataSet.xsd</DependentUpon>
+      <DependentUpon>HerosData.xsd</DependentUpon>
     </Compile>
-    <Compile Include="HealingPotion.cs" />
     <Compile Include="InventoryItem.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="LivingCreature.cs" />
@@ -75,16 +72,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="HeroDataSet.xsc">
-      <DependentUpon>HeroDataSet.xsd</DependentUpon>
+    <None Include="HerosData.xsc">
+      <DependentUpon>HerosData.xsd</DependentUpon>
     </None>
-    <None Include="HeroDataSet.xsd">
+    <None Include="HerosData.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>HeroDataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>HerosData.Designer.cs</LastGenOutput>
     </None>
-    <None Include="HeroDataSet.xss">
-      <DependentUpon>HeroDataSet.xsd</DependentUpon>
+    <None Include="HerosData.xss">
+      <DependentUpon>HerosData.xsd</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
