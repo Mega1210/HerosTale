@@ -66,11 +66,9 @@ namespace HerosTale
             CountDays = 0;
             inCombat = false;
 
-            testItem = GetItem(1);
-
             player = new Player(1, 1, 1, 1, 100, "", 0, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
-            player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_RUSTY_SWORD), 1));
-            player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_SMALL_HEALING_POTION), 5));
+            player.Inventory.Add(new InventoryItem(GetItembyID(1), 1));
+            player.Inventory.Add(new InventoryItem(GetItembyID(100), 5));
             UpdateWeaponListInUI();
             UpdateConsumableListInUI();
             UpdateInventoryGrid();
@@ -91,8 +89,8 @@ namespace HerosTale
             player = new Player(1, 1, 1, 1, 100, "", 1, 1, 1000, 1000, CreatureType.HumanPeaceful, CreatureClass.Player);
             tInputName.Text = "";
             player.Inventory.Clear();
-            player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_RUSTY_SWORD), 1));
-            player.Inventory.Add(new InventoryItem(ItemByID(ITEM_ID_SMALL_HEALING_POTION), 5));            
+            player.Inventory.Add(new InventoryItem(GetItembyID(1), 1));
+            player.Inventory.Add(new InventoryItem(GetItembyID(100), 5));
             UpdateConsumableListInUI();
             UpdateWeaponListInUI();
             UpdateInventoryGrid();
@@ -121,7 +119,7 @@ namespace HerosTale
 
         private void CheckLvlUp(int exp, int lvl)
         {
-            bool DolvlUp=false;
+           /* bool DolvlUp=false;
 
             if (lvl < 20 && exp >= 70000)
             {
@@ -237,9 +235,10 @@ namespace HerosTale
                 DolvlUp = true;
 
             }
-
-            if (DolvlUp)
+            */
+            if (exp>=(250*Math.Pow(lvl,2)))
             {
+                player.Level = (int) Math.Truncate(Math.Pow(exp / 250, 0.5));                           
                 txtMainWindow.Text += $"Congratrulations you are now level {player.Level}!! \r\n";
                 ScrollDownText(txtMainWindow);
                 player.MaximumHitPoints += (player.Level - lvl) * HEALTH_LEVEL;
@@ -249,27 +248,26 @@ namespace HerosTale
                 LevelUp((player.Level - lvl) * POINTS_LEVEL);
                 UpdateStats();
             }
-
         }
 
         private void UpdateConsumableListInUI()
         {
-            List<HealingPotion> healingPotions = new List<HealingPotion>();
+            List<Item> usableItems = new List<Item>();
 
             foreach (InventoryItem inventoryItem in player.Inventory)
             {                
-                if (inventoryItem.Details is HealingPotion)
+                if (inventoryItem.Details.Type==ItemType.Consumable || inventoryItem.Details.Type == ItemType.Usable)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        healingPotions.Add((HealingPotion)inventoryItem.Details);
+                        usableItems.Add(inventoryItem.Details);
                     }
                 }
             }
 
             
 
-            if (healingPotions.Count>0)
+            if (usableItems.Count>0)
             {
                 if (cboConsumable.Items.Count > 0)
                 {
@@ -279,7 +277,7 @@ namespace HerosTale
                 }
                 
 
-                cboConsumable.DataSource = healingPotions;
+                cboConsumable.DataSource = usableItems;
                 cboConsumable.DisplayMember = "Name";
                 cboConsumable.ValueMember = "ID";
                 cboConsumable.SelectedIndex = 0;                                                                  
@@ -289,9 +287,7 @@ namespace HerosTale
                 cboConsumable.DataSource = null;
                 cboConsumable.Text = "";
                 cboConsumable.SelectedIndex = -1;
-            }
-
-            
+            }            
         }
 
         private void UpdateInventoryGrid()
@@ -301,7 +297,7 @@ namespace HerosTale
             dgInventory.ColumnCount = 2;
             dgInventory.Columns[0].Name = "Name";
             dgInventory.Columns[0].Width = 280;
-            //dgInventory.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            
             dgInventory.Columns[1].Name = "Quantity";
             dgInventory.Columns[1].Width = 50;
 
@@ -318,15 +314,15 @@ namespace HerosTale
 
         private void UpdateWeaponListInUI()
         {
-            List<Weapon> weapons = new List<Weapon>();
+            List<Item> weapons = new List<Item>();
 
             foreach (InventoryItem inventoryItem in player.Inventory)
             {
-                if (inventoryItem.Details is Weapon)
+                if (inventoryItem.Details.Type==ItemType.Weapon)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        weapons.Add((Weapon)inventoryItem.Details);
+                        weapons.Add(inventoryItem.Details);
                     }
                 }
             }
@@ -383,15 +379,15 @@ namespace HerosTale
 
         private void generateQuest1()
         {
-            Monster QMonster;
-            WorldLocation QLocation;
+           // Monster QMonster;
+           // WorldLocation QLocation;
            
-            IEnumerable<int> ExtractList = MonstersList();
-            QMonster = MonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
-            ExtractList = LocationListMonster(QMonster.ID);
-            QLocation = LocationByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+           // IEnumerable<int> ExtractList = MonstersList();
+           // QMonster = MonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+           // ExtractList = LocationListMonster(QMonster.ID);
+            //QLocation = LocationByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
 
-            Quest1 = new Quest1Class(QuestOption.Quest1, QuestType.Kill, QLocation.ID, QLocation.LocationName, CreateGold(), CreatureType.Monster, QMonster.ID, QMonster.Name);
+            Quest1 = new Quest1Class(QLocation.ID, QLocation.LocationName, CreateGold(), CreatureType.Monster, QMonster.ID, QMonster.Name);
         }
 
         private void generateQuest2()

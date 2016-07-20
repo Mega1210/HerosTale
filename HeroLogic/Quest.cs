@@ -9,8 +9,7 @@ namespace HeroLogic
 {
     public class Quest
     {
-        public QuestOption ID { get; set; }      
-        public QuestType Qtype { get; set; }
+        
         public int LocationID { get; set; }
         public string LocationName { get; set; }
         public int RewardExperiencePoints { get; set; }
@@ -18,10 +17,9 @@ namespace HeroLogic
         
         
 
-        public Quest(QuestOption id, QuestType qtype, int locationID, string locationName, int rewardGold)
+        public Quest( int locationID, string locationName, int rewardGold)
         {
-            ID = id;
-            Qtype = qtype;
+         
             LocationID = locationID;
             LocationName = locationName;
             RewardGold = rewardGold;

@@ -358,7 +358,7 @@ namespace HeroLogic
 
         }
 
-        public static Item GetItem(int id)
+        public static Item GetItembyID(int id)
         {
             HerosDataTableAdapters.ItemsTableAdapter adapter = new HerosDataTableAdapters.ItemsTableAdapter();
 
@@ -373,6 +373,9 @@ namespace HeroLogic
                 (int)dt[0][0],
                 Convert.ToString(dt[0][1]),
                 Convert.ToString(dt[0][2]),
+                Convert.ToInt32(dt[0][3]),
+                Convert.ToInt32(dt[0][4]),
+                Convert.ToInt32(dt[0][5]),
                 Convert.ToInt32(dt[0][6]),
                 Convert.ToInt32(dt[0][7]),
                 Convert.ToInt32(dt[0][8]),

@@ -12,7 +12,9 @@ namespace HeroLogic
         public int ID { get; set; }
         public string Name { get; set; }
         public string NamePlural { get; set; }
-
+        public int MinDmg { get; set; }
+        public int MaxDmg { get; set; }
+        public int AmountHP { get; set; }
         public int PlusStr { get; set; }
         public int PlusDex { get; set; }
         public int PlusInt { get; set; }        
@@ -23,12 +25,15 @@ namespace HeroLogic
         public ItemType Type { get; set; }
         public int BaseValue { get; set; }
 
-        public Item(int id, string name, string namePlural, int plusStr, int plusDex, int plusInt, int plusChar, int plusGold, int plusExp, ItemRarity rarity, 
+        public Item(int id, string name, string namePlural, int minDmg, int maxDmg, int amountHP, int plusStr, int plusDex, int plusInt, int plusChar, int plusGold, int plusExp, ItemRarity rarity, 
             ItemType type, int baseValue)
         {
             ID = id;
             Name = name;
             NamePlural = namePlural;
+            MinDmg= minDmg;
+            MaxDmg = maxDmg;
+            AmountHP= amountHP;
             PlusStr = plusStr;
             PlusInt = PlusInt;
             PlusDex = plusDex;
