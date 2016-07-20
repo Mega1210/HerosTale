@@ -90,7 +90,7 @@ namespace HerosTale
             tInputName.Text = "";
             player.Inventory.Clear();
             player.Inventory.Add(new InventoryItem(GetItembyID(1), 1));
-            player.Inventory.Add(new InventoryItem(GetItembyID(100), 5));
+            player.Inventory.Add(new InventoryItem(GetItembyID(400), 5));
             UpdateConsumableListInUI();
             UpdateWeaponListInUI();
             UpdateInventoryGrid();
@@ -362,7 +362,22 @@ namespace HerosTale
 
             return rndnumber;
         }
-        
+
+        private int RandomElementList<T>(List<T> monsterList)
+        {
+
+            int rndnumber;
+            
+            do
+            {
+
+                rndnumber = rnd.Next(0, monsterList.Count());
+            }
+            while (rndnumber > monsterList.Count());
+
+            return rndnumber;
+        }
+
         private int RandomElement(int maxNr)
         {
            
@@ -379,15 +394,16 @@ namespace HerosTale
 
         private void generateQuest1()
         {
-           // Monster QMonster;
-           // WorldLocation QLocation;
-           
-           // IEnumerable<int> ExtractList = MonstersList();
-           // QMonster = MonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
-           // ExtractList = LocationListMonster(QMonster.ID);
-            //QLocation = LocationByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+            Monster QMonster;
+            WorldLocation QLocation;
 
-            Quest1 = new Quest1Class(QLocation.ID, QLocation.LocationName, CreateGold(), CreatureType.Monster, QMonster.ID, QMonster.Name);
+            List<Monster> ExtractList = GetCreaturebyTypeDifficulty((int)CreatureType.Monster, (int)CreatureClass.Boss);
+            QMonster = ExtractList.ElementAt(RandomElementList(ExtractList));
+             
+            List<int> ExtractLocations =GetMonsterLocations(QMonster.ID);
+            QLocation = GetLocation(ExtractLocations.ElementAt(RandomElementList(ExtractList)));
+
+            Quest1 = new Quest1Class(QLocation.ID, QLocation.LocationName, CreateGold(), QMonster.ID, QMonster.Name);
         }
 
         private void generateQuest2()
@@ -404,7 +420,7 @@ namespace HerosTale
             QGiver = GiverByID(RandomElement(QuestGivers.Count()));
             QWho = WhoByID(RandomElement(QuestWhois.Count()));
 
-            Quest2 = new Quest2Class(QuestOption.Quest2, QuestType.SaveKidnap, QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
+            Quest2 = new Quest2Class( QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
         }
 
         private void generateQuest3()
@@ -423,7 +439,7 @@ namespace HerosTale
             IEnumerable<int> ExtractList = StolenItems();
             QItem = ItemByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
 
-            Quest3 = new Quest3Class(QuestOption.Quest3, QuestType.Retrive, QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
+            Quest3 = new Quest3Class(QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
 
         }
 
@@ -544,8 +560,8 @@ namespace HerosTale
                 if (CheckHit(player.Dexterity, player.Difficulty))
                 {
                     
-                    Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
-                    int Hit = Damage(player.Strength, player.Level, currentWeapon.MinimumDamage, currentWeapon.MaximumDamage) * mod;
+                    Item currentWeapon = (Item)cboWeapons.SelectedItem;
+                    int Hit = Damage(player.Strength, player.Level, currentWeapon.MinDmg, currentWeapon.MaxDmg) * mod;
                     attackMonster.CurrentHitPoints -= Hit;
                     lblEnemyHealth.Text= $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
                     txtMainWindow.Text = $"You attack and do {Hit} of damage.\r\n";
@@ -563,8 +579,8 @@ namespace HerosTale
             {
                 if (CheckHit(player.Dexterity, player.Difficulty))
                 {
-                    Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
-                    int Hit = Damage(player.Strength, player.Level, currentWeapon.MinimumDamage, currentWeapon.MaximumDamage) * mod;
+                    Item currentWeapon = (Item)cboWeapons.SelectedItem;
+                    int Hit = Damage(player.Strength, player.Level, currentWeapon.MinDmg, currentWeapon.MaxDmg) * mod;
                     int HP = 0;
                     int HPMax = 0;
 
@@ -848,9 +864,9 @@ namespace HerosTale
 
         private void UseItem()
         {
-            HealingPotion currentItem = (HealingPotion) cboConsumable.SelectedItem;
+            Item currentItem = (Item) cboConsumable.SelectedItem;
 
-            if (currentItem is HealingPotion)
+            if (currentItem.Type==ItemType.Consumable)
             {                
                 foreach(InventoryItem ii in player.Inventory)
                 {
@@ -858,7 +874,7 @@ namespace HerosTale
                     {
                         if (ii.Quantity > 0)
                         {
-                            Heal(currentItem.AmountToHeal);
+                            Heal(currentItem.AmountHP);
                             ii.Quantity--;
                             UpdateConsumableListInUI();
                             UpdateInventoryGrid();

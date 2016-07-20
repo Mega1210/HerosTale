@@ -15,12 +15,15 @@ namespace HeroLogic
         public int MaximumDamage { get; set; }
         public int RewardExperiencePoints { get; set; }
         public int RewardGold { get; set; }
+        public int LootID  { get; set; }
+        public int Magic { get; set; }
 
         public Monster(int id, string name, string namePlural, int maxDamage, int rewardExp, int reward, int currentHitPoints, 
-            int maxHitPoints, CreatureType type, CreatureClass difficulty) : base (currentHitPoints,maxHitPoints, type, difficulty)
+            int maxHitPoints, CreatureType type, CreatureClass difficulty, int lootID, int magic) : base (currentHitPoints,maxHitPoints, type, difficulty)
         {
             ID = id;
             Name = name;
+            NamePlural = namePlural;
             MaximumDamage = maxDamage;
             RewardExperiencePoints = rewardExp;
             RewardGold = reward;
@@ -28,7 +31,9 @@ namespace HeroLogic
             MaximumHitPoints = maxHitPoints;
             Type = type;
             Difficulty = difficulty;
-            NamePlural = namePlural;
+            LootID = lootID;
+            Magic = magic;
+            
         }
     }
 }

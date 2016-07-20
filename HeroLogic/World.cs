@@ -71,10 +71,7 @@ namespace HeroLogic
             Normal, Boss, Player
         }
 
-        public enum QuestType : byte
-        {
-            Kill, Retrive, SaveKidnap, Caravan
-        }
+
 
         public const int LOC_FOREST = 1;
         public const int LOC_HILLS = 2;
@@ -158,15 +155,15 @@ namespace HeroLogic
 
         static World()
         {
-            PopulateItems();
+            /*PopulateItems();
             PopulateMonsters();
             PopulateCreatureLocations();
             PopulateLocations();
             PopulateQGivers();
             PopulateWho();
-            PopulateGeneralStore();
+            PopulateGeneralStore();*/
         }
-
+        /*
         private static void PopulateGeneralStore()
         {
             GeneralStore.Add(new Shop(ItemByID(ITEM_ID_SMALL_HEALING_POTION), 100));
@@ -174,7 +171,7 @@ namespace HeroLogic
             GeneralStore.Add(new Shop(ItemByID(ITEM_ID_LARGE_HEALING_POTION), 750));
             GeneralStore.Add(new Shop(ItemByID(ITEM_ID_SUPER_HEALING_POTION), 1000));
         }
-
+        
         private static void PopulateCreatureLocations()
         {            
 
@@ -261,7 +258,7 @@ namespace HeroLogic
 
         private static void PopulateItems()
         {
-         /*   Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Rusty Sword", "Rusty Swords", 10, 20));
+            Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Rusty Sword", "Rusty Swords", 10, 20));
             Items.Add(new Weapon(ITEM_ID_CLUB, "Club", "Clubs", 15, 30));
             Items.Add(new Weapon(ITEM_ID_SILVERSWORD, "Silver Sword", "Silver Swords", 80, 100));
             Items.Add(new Weapon(ITEM_ID_SWORD, "Sword", "Swords", 30, 60));
@@ -284,10 +281,10 @@ namespace HeroLogic
             Items.Add(new HealingPotion(ITEM_ID_NORMAL_HEALING_POTION, "Normal Healing Potion", "Normal Healing Potions", 100));
             Items.Add(new HealingPotion(ITEM_ID_LARGE_HEALING_POTION, "Large Healing Potion", "Large Healing Potions", 200));
             Items.Add(new HealingPotion(ITEM_ID_SUPER_HEALING_POTION, "Super Healing Potion", "Super Healing Potions", 500));
-            */
+            
 
         }
-    
+    /*
         private static void PopulateMonsters()
         {
             Monsters.Add(new Monster(MONSTER_ID_RAT, "Rat", "Rats", 5, 25, 40, 20, 20, CreatureType.Animal, CreatureClass.Normal));
@@ -357,7 +354,7 @@ namespace HeroLogic
 
 
         }
-
+        */
         public static Item GetItembyID(int id)
         {
             HerosDataTableAdapters.ItemsTableAdapter adapter = new HerosDataTableAdapters.ItemsTableAdapter();
@@ -385,13 +382,31 @@ namespace HeroLogic
                 (ItemRarity)dt[0][12],
                 (ItemType)dt[0][13],
                 Convert.ToInt32(dt[0][14])
-
                 );
 
 
             return iitem;
         }
 
+        public static List<Monster> GetCreaturebyTypeDifficulty(int type, int difficulty)
+        {
+            HerosDataTableAdapters.CreaturesTableAdapter adapter = new HerosDataTableAdapters.CreaturesTableAdapter();
+
+            HerosData.CreaturesDataTable dt = new HerosData.CreaturesDataTable();
+
+            adapter.FillByTypeDifficulty(dt, type, difficulty);
+
+            List<Monster> monster = new List<Monster>();
+
+            for (int i=0;i<dt.Rows.Count;i++)
+            {
+                monster.Add(new Monster((int)dt[i][0], (string)dt[i][1], (string)dt[i][2], (int)dt[i][3], (int)dt[i][4], (int)dt[i][5], (int)dt[i][6], 
+                    (int)dt[i][7],(CreatureType) dt[i][8], (CreatureClass)dt[i][9],(int) dt[i][10],(int) dt[i][11]));
+            }
+
+            return monster;
+        }
+        /*
         public static IEnumerable<int> MonstersList()
         {
             IEnumerable<int> monstersList =
@@ -400,7 +415,43 @@ namespace HeroLogic
                 select selectedMonster.ID;
             return monstersList;
         }
+        */
 
+        public static List<int> GetMonsterLocations(int id)
+        {
+            HerosDataTableAdapters.MonsterLocationTableAdapter adapter = new HerosDataTableAdapters.MonsterLocationTableAdapter();
+
+            HerosData.MonsterLocationDataTable dt = new HerosData.MonsterLocationDataTable();
+
+            adapter.FillByMonsterID(dt, id);
+
+            List<int> location = new List<int>();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                location.Add((int)dt[i][2]);
+            }
+
+            return location;
+
+        }
+
+        public static WorldLocation GetLocation(int id)
+        {
+            HerosDataTableAdapters.LocationsTableAdapter adapter = new HerosDataTableAdapters.LocationsTableAdapter();
+
+            HerosData.LocationsDataTable dt = new HerosData.LocationsDataTable();
+
+            adapter.FillByLocID(dt, id);
+
+            WorldLocation location = new WorldLocation(
+                (int)dt[0][0],
+                (string)dt[0][1]
+                );
+
+            return location;
+        }
+        /*
         public static IEnumerable<int> MonstersByLocID(int id)
         {
             IEnumerable<int> monstersList =
@@ -427,7 +478,7 @@ namespace HeroLogic
                 select monsterLoc.Location;
             return locList;
         }
-
+        */
         public static int HitTarget(int dex)
         {
             switch (dex)

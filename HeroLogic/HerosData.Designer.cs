@@ -4929,7 +4929,7 @@ SELECT CreatureID, Name, NamePlural, MaxDmg, RewExp, RewGold, CurrentHP, MaxHP, 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[3];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT CreatureID, Name, NamePlural, MaxDmg, RewExp, RewGold, CurrentHP, MaxHP, T" +
@@ -4942,6 +4942,14 @@ SELECT CreatureID, Name, NamePlural, MaxDmg, RewExp, RewGold, CurrentHP, MaxHP, 
                 "CreatureID = @ID)";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "CreatureID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[2].Connection = this.Connection;
+            this._commandCollection[2].CommandText = "SELECT        CreatureID, Name, NamePlural, MaxDmg, RewExp, RewGold, CurrentHP, M" +
+                "axHP, Type, Difficulty, LootID, Magic\r\nFROM            Creatures\r\nWHERE        (" +
+                "Type = @Type) AND (Difficulty = @Difficulty)";
+            this._commandCollection[2].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Type", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Difficulty", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Difficulty", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4989,6 +4997,34 @@ SELECT CreatureID, Name, NamePlural, MaxDmg, RewExp, RewGold, CurrentHP, MaxHP, 
         public virtual HerosData.CreaturesDataTable GetDataByCreatureID(int ID) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
             this.Adapter.SelectCommand.Parameters[0].Value = ((int)(ID));
+            HerosData.CreaturesDataTable dataTable = new HerosData.CreaturesDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
+        public virtual int FillByTypeDifficulty(HerosData.CreaturesDataTable dataTable, int Type, int Difficulty) {
+            this.Adapter.SelectCommand = this.CommandCollection[2];
+            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Type));
+            this.Adapter.SelectCommand.Parameters[1].Value = ((int)(Difficulty));
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual HerosData.CreaturesDataTable GetDataByTypeDifficulty(int Type, int Difficulty) {
+            this.Adapter.SelectCommand = this.CommandCollection[2];
+            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(Type));
+            this.Adapter.SelectCommand.Parameters[1].Value = ((int)(Difficulty));
             HerosData.CreaturesDataTable dataTable = new HerosData.CreaturesDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
