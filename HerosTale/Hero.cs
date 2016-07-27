@@ -66,7 +66,7 @@ namespace HerosTale
             CountDays = 0;
             inCombat = false;
 
-            player = new Player(1, 1, 1, 1, 100, "", 0, 1, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
+            player = new Player(1, 1, 1, 1, 100, "", 0, 1,QuestOption.None, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
             player.Inventory.Add(new InventoryItem(GetItembyID(1), 1));
             player.Inventory.Add(new InventoryItem(GetItembyID(100), 5));
             UpdateWeaponListInUI();
@@ -86,7 +86,7 @@ namespace HerosTale
             pnlInventory.Visible = false;
             dgInventory.Visible = false;
             pnlTop.Visible = false;
-            player = new Player(1, 1, 1, 1, 100, "", 1, 1, 1000, 1000, CreatureType.HumanPeaceful, CreatureClass.Player);
+            player = new Player(1, 1, 1, 1, 100, "", 1, 1,QuestOption.None, 1000, 1000, CreatureType.HumanPeaceful, CreatureClass.Player);
             tInputName.Text = "";
             player.Inventory.Clear();
             player.Inventory.Add(new InventoryItem(GetItembyID(1), 1));
@@ -378,14 +378,14 @@ namespace HerosTale
             return rndnumber;
         }
 
-        private int RandomElement(int maxNr)
+        private int RandomElement(int minNr, int maxNr)
         {
            
             int rndnumber;
 
             do
             {
-                rndnumber = rnd.Next(1, maxNr + 1);
+                rndnumber = rnd.Next(minNr, maxNr + 1);
             }
             while (rndnumber > maxNr);
 
@@ -403,7 +403,7 @@ namespace HerosTale
             List<int> ExtractLocations =GetMonsterLocations(QMonster.ID);
             QLocation = GetLocation(ExtractLocations.ElementAt(RandomElementList(ExtractList)));
 
-            Quest1 = new Quest1Class(QLocation.ID, QLocation.LocationName, CreateGold(), QMonster.ID, QMonster.Name);
+            Quests.Add(new Quest(QuestOption.Quest1, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster,null ,"",""));
         }
 
         private void generateQuest2()
@@ -411,16 +411,23 @@ namespace HerosTale
             QuestGiver QGiver;
             QuestWho QWho;
             WorldLocation QLocation;
+            Monster QMonster;
+
+            HerosData.LocationsDataTable dtL = new HerosData.LocationsDataTable();
+            HerosData.QuestGiversDataTable dtQG = new HerosData.QuestGiversDataTable();
+            HerosData.KidnappedDataTable dtK = new HerosData.KidnappedDataTable();
+
             do
             {
-                QLocation = LocationByID(RandomElement(WorldLocations.Count));
+                QLocation = GetLocation(RandomElement(1,dtL.Count));
             }
-            while (QLocation.ID == LOC_DESERT);
+            while (QLocation.ID == 4);
 
-            QGiver = GiverByID(RandomElement(QuestGivers.Count()));
-            QWho = WhoByID(RandomElement(QuestWhois.Count()));
-
-            Quest2 = new Quest2Class( QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
+            QGiver = GetGiverByID(RandomElement(1,dtQG.Count()));
+            QWho = GetKidnappedByID(RandomElement(1,dtK.Count()));
+            QMonster = GetMonsterByID(10); //ADD CORRECT ID FOR BANDIT BOSS!!
+            Quests.Add(new Quest(QuestOption.Quest2, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster, null,QWho.NameWho,QGiver.NameGiver));
+            //Quest2 = new Quest2Class( QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
         }
 
         private void generateQuest3()
@@ -428,18 +435,23 @@ namespace HerosTale
             QuestGiver QGiver;            
             WorldLocation QLocation;
             Item QItem;
+            Monster QMonster;
+
+            HerosData.LocationsDataTable dtL = new HerosData.LocationsDataTable();
+            HerosData.QuestGiversDataTable dtQG = new HerosData.QuestGiversDataTable();
             do
             {
-                QLocation = LocationByID(RandomElement(WorldLocations.Count));
+                QLocation = GetLocation(RandomElement(1,dtL.Count));
             }
-            while (QLocation.ID == LOC_DESERT);
+            while (QLocation.ID == 4);
 
-            QGiver = GiverByID(RandomElement(QuestGivers.Count()));
+            QGiver = GetGiverByID(RandomElement(1,dtQG.Count()));                                   
+            QItem = GetItembyID(RandomElement(100, 199));
 
-            IEnumerable<int> ExtractList = StolenItems();
-            QItem = ItemByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+            QMonster = GetMonsterByID(11); //ADD CORRECT ID FOR THIEF BOSS!!
 
-            Quest3 = new Quest3Class(QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
+            Quests.Add(new Quest(QuestOption.Quest3, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster,QItem , "",QGiver.NameGiver));
+            //Quest3 = new Quest3Class(QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
 
         }
 
@@ -492,10 +504,11 @@ namespace HerosTale
                         }
                         else
                         {
-                            switch (mChoice)
+                        MonsterHit = RollMonsterDamage(GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).MaximumDamage);
+                       /* switch (mChoice)
                             {
                                 case InitialMenuChoice.Quest1:
-                                    MonsterHit = RollMonsterDamage(MonsterByID(Quest1.MonsterID).MaximumDamage);
+                                    MonsterHit = RollMonsterDamage(GetMonsterByID(Quest1.MonsterID).MaximumDamage);
                                     break;
 
                                 case InitialMenuChoice.Quest2:
@@ -505,7 +518,7 @@ namespace HerosTale
                                     MonsterHit = RollMonsterDamage(MonsterByID(MONSTER_ID_THIEF).MaximumDamage);
                                     break;
 
-                            }
+                            }*/
                         }
 
                         
@@ -584,24 +597,28 @@ namespace HerosTale
                     int HP = 0;
                     int HPMax = 0;
 
-                    switch (mChoice)
+                    HP = GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).CurrentHitPoints;
+                    GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).CurrentHitPoints -= Hit;
+                    HPMax = GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).MaximumHitPoints;
+
+                   /* switch (mChoice)
                     {
                         case InitialMenuChoice.Quest1:
-                            HP = MonsterByID(Quest1.MonsterID).CurrentHitPoints;
-                            MonsterByID(Quest1.MonsterID).CurrentHitPoints -= Hit;
-                            HPMax = MonsterByID(Quest1.MonsterID).MaximumHitPoints;
+                            HP = GetMonsterByID(Quest1.MonsterID).CurrentHitPoints;
+                            GetMonsterByID(Quest1.MonsterID).CurrentHitPoints -= Hit;
+                            HPMax = GetMonsterByID(Quest1.MonsterID).MaximumHitPoints;
                             break;
                         case InitialMenuChoice.Quest2:
-                            HP = MonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints;
-                            MonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints -= Hit;
-                            HPMax = MonsterByID(MONSTER_ID_BANDIT).MaximumHitPoints;
+                            HP = GetMonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints;
+                            GetMonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints -= Hit;
+                            HPMax = GetMonsterByID(MONSTER_ID_BANDIT).MaximumHitPoints;
                             break;
                         case InitialMenuChoice.Quest3:
-                            HP = MonsterByID(MONSTER_ID_THIEF).CurrentHitPoints;
-                            MonsterByID(MONSTER_ID_THIEF).CurrentHitPoints -= Hit;
-                            HPMax = MonsterByID(MONSTER_ID_THIEF).MaximumHitPoints;
+                            HP = GetMonsterByID(MONSTER_ID_THIEF).CurrentHitPoints;
+                            GetMonsterByID(MONSTER_ID_THIEF).CurrentHitPoints -= Hit;
+                            HPMax = GetMonsterByID(MONSTER_ID_THIEF).MaximumHitPoints;
                             break;
-                    }
+                    }*/
                     HP -= Hit;
                     lblEnemyHealth.Text = $"{HP}/{HPMax}";
                     txtMainWindow.Text = $"You attack and do {Hit} of damage.\r\n";
@@ -692,10 +709,12 @@ namespace HerosTale
             if (CurrentPhase == GamePhase.BossEncounter)
             {
                 int HP=0;
-                switch (mChoice)
+
+                HP = GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).CurrentHitPoints;
+                /*switch (mChoice)
                 {
                     case InitialMenuChoice.Quest1:
-                        HP = MonsterByID(Quest1.MonsterID).CurrentHitPoints;
+                        HP = GetMonsterByID(Quest1.MonsterID).CurrentHitPoints;
                         break;
                     case InitialMenuChoice.Quest2:
                         HP = MonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints;
@@ -703,17 +722,21 @@ namespace HerosTale
                     case InitialMenuChoice.Quest3:
                         HP = MonsterByID(MONSTER_ID_THIEF).CurrentHitPoints;
                         break;
-                }
+                }*/
                 if (HP<=0)
                 {
-                    
+                    txtMainWindow.Text += $"You have killed the {Quests.ElementAt((int)player.QuestOp).QMonster.Name}! \r\n";
+                    txtMainWindow.Text += "\r\n";
+                    txtMainWindow.Text += $"You gain {Quests.ElementAt((int)player.QuestOp).QMonster.RewardExperiencePoints} experience \r\n";
+                    txtMainWindow.Text += "\r\n";
+                    /*
                     switch (mChoice)
                     {
                         case InitialMenuChoice.Quest1:
                             
                             txtMainWindow.Text += $"You have killed the {Quest1.MonsterName}! \r\n";
                             txtMainWindow.Text += "\r\n";
-                            txtMainWindow.Text += $"You gain {MonsterByID(Quest1.MonsterID).RewardExperiencePoints} experience \r\n";
+                            txtMainWindow.Text += $"You gain {GetMonsterByID(Quest1.MonsterID).RewardExperiencePoints} experience \r\n";
                             txtMainWindow.Text += "\r\n";
                             player.ExperiecePoints += MonsterByID(Quest1.MonsterID).RewardExperiencePoints;
                             MonsterByID(Quest1.MonsterID).CurrentHitPoints = MonsterByID(Quest1.MonsterID).MaximumHitPoints;
@@ -737,7 +760,7 @@ namespace HerosTale
                             MonsterByID(MONSTER_ID_THIEF).CurrentHitPoints= MonsterByID(MONSTER_ID_THIEF).MaximumHitPoints;
                             
                             break;
-                    }
+                    }*/
                     
                     UpdateStats();
                     lblEnemyHealth.Text = "";
@@ -746,6 +769,7 @@ namespace HerosTale
                     txtMainWindow.Text += "\r\n";
                     ScrollDownText(txtMainWindow);
                     CurrentPhase = GamePhase.BossEnd;
+                    Quests.Clear();
                     inCombat = false;
                 }
             }
@@ -770,18 +794,21 @@ namespace HerosTale
         {
             
             WorldLocation JLocation;
+            HerosData.LocationsDataTable dtL = new HerosData.LocationsDataTable();
+            HerosData.MonsterLocationDataTable dtM = new HerosData.MonsterLocationDataTable();
             do
             {
-                JLocation = LocationByID(RandomElement(WorldLocations.Count));
+                JLocation = GetLocation(RandomElement(1,dtL.Count));
             }
-            while (JLocation.ID == LOC_DESERT);
+            while (JLocation.ID == 4);
 
-            IEnumerable<int> ExtractList = MonstersByLocID(JLocation.ID);
+            
+            IEnumerable<int> ExtractList = GetMonstersByLocationID(JLocation.ID);
             do
             {
-                attackMonster = MonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
+                attackMonster = GetMonsterByID(ExtractList.ElementAt(RandomElementEnum(ExtractList)));
             }
-            while (attackMonster.Type == CreatureType.Monster);
+            while (attackMonster.Type == CreatureType.Monster && attackMonster.Difficulty==CreatureClass.Normal);
 
         }
 
@@ -832,7 +859,9 @@ namespace HerosTale
                 CurrentPhase = GamePhase.BossEncounter;
                 inCombat = true;
                 lblNrEnemies.Text = "1";
-                switch (mChoice)
+                txtMainWindow.Text = $"You arrive at the {Quests.ElementAt((int)player.QuestOp).LocationName} and see the {Quests.ElementAt((int)player.QuestOp).QMonster.Name} in the distance. \r\n";
+                txtMainWindow.Text += "\r\n";
+                /*switch (mChoice)
                 {
                     case InitialMenuChoice.Quest1:
                         txtMainWindow.Text = $"You arrive at the {Quest1.LocationName} and see the {Quest1.MonsterName} in the distance. \r\n";
@@ -846,7 +875,7 @@ namespace HerosTale
                         txtMainWindow.Text = $"You arrive at the {Quest3.LocationName} and see the Thief sitting at a campfire. \r\n";
                         txtMainWindow.Text += "\r\n";
                         break;
-                }
+                }*/
             }
             else
             {
@@ -894,17 +923,17 @@ namespace HerosTale
 
         private void GenerateStoreOptions()
         {
-            Buy1 = RandomElement(GeneralStore.Count) - 1;
+            Buy1 = RandomElement(1,GeneralStore.Count) - 1;
 
             do
             {
-                Buy2 = RandomElement(GeneralStore.Count) - 1;
+                Buy2 = RandomElement(1,GeneralStore.Count) - 1;
             }
             while (Buy1 == Buy2);
 
             do
             {
-                Buy3= RandomElement(GeneralStore.Count) - 1;
+                Buy3= RandomElement(1,GeneralStore.Count) - 1;
             }
             while (Buy3 == Buy2 || Buy3==Buy1);
         }
@@ -968,12 +997,15 @@ namespace HerosTale
             }
             return false;
         }
+
         private void CaravanChoices()
         {
             txtMainWindow.Text += "1- You can buy a seat on the caravan for 10,000 gold\r\n";
             txtMainWindow.Text += "2- ... or you can join as a guard (for free of course!) \r\n";
         }
-private async void Actions(ButtonChoice button)
+
+
+        private async void Actions(ButtonChoice button)
         {
             switch (CurrentPhase)
             {
@@ -1608,7 +1640,7 @@ private async void Actions(ButtonChoice button)
             txtMainWindow.Text = "These missions are available: \r\n";
             txtMainWindow.Text += $"1- There is a dangerous {Quest1.MonsterName} lurking in the nearby {Quest1.LocationName}. {Quest1.RewardGold} gold is offered to whoever kills it. \r\n";
 
-            if (RandomElement(10) <= 5)
+            if (RandomElement(1,10) <= 5)
             {
                 txtMainWindow.Text += $"2- The {Quest2.WhoQuestName} of a {Quest2.GiverQuestName} has been kidnapped by a bandit. It's rumored that he is hiding with his gang in the {Quest2.LocationName} nearby. {Quest2.RewardGold} gold is offered to whoever is going to free the kidnapped and kill the criminal and his followers. \r\n";
             }
@@ -1816,8 +1848,7 @@ private async void Actions(ButtonChoice button)
                
                 
                 if (firstTime)
-                {
-                    
+                {                    
                     txtMainWindow.Text += "You head to the local tavern to pick up some contracts \r\n";
                     ScrollDownText(txtMainWindow);
                     await Task.Delay(1500);
@@ -1837,8 +1868,5 @@ private async void Actions(ButtonChoice button)
 
         }
     }
-
-
-
 
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace HeroLogic
 {
     public static class World
-    {
+    {        
         public static readonly List<Item> Items = new List<Item>();
         public static readonly List<Shop> GeneralStore = new List<Shop>();
         public static readonly List<Monster> Monsters = new List<Monster>();
@@ -32,7 +32,7 @@ namespace HeroLogic
 
         public enum QuestOption
         {
-            Quest1, Quest2, Quest3
+            None, Quest1, Quest2, Quest3
         }
 
         public enum GamePhase
@@ -406,16 +406,7 @@ namespace HeroLogic
 
             return monster;
         }
-        /*
-        public static IEnumerable<int> MonstersList()
-        {
-            IEnumerable<int> monstersList =
-                from selectedMonster in Monsters
-                where selectedMonster.Type == CreatureType.Monster
-                select selectedMonster.ID;
-            return monstersList;
-        }
-        */
+      
 
         public static List<int> GetMonsterLocations(int id)
         {
@@ -436,6 +427,25 @@ namespace HeroLogic
 
         }
 
+        public static List<int> GetMonstersByLocationID(int id)
+        {
+            HerosDataTableAdapters.MonsterLocationTableAdapter adapter = new HerosDataTableAdapters.MonsterLocationTableAdapter();
+
+            HerosData.MonsterLocationDataTable dt = new HerosData.MonsterLocationDataTable();
+
+          //  adapter.Fill(dt, id);
+
+            List<int> monster = new List<int>();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                monster.Add((int)dt[i][2]);
+            }
+
+            return monster;
+
+        }
+
         public static WorldLocation GetLocation(int id)
         {
             HerosDataTableAdapters.LocationsTableAdapter adapter = new HerosDataTableAdapters.LocationsTableAdapter();
@@ -451,6 +461,160 @@ namespace HeroLogic
 
             return location;
         }
+
+        public static Monster GetMonsterByID(int id)
+        {
+            HerosDataTableAdapters.CreaturesTableAdapter adapter = new HerosDataTableAdapters.CreaturesTableAdapter();
+
+            HerosData.CreaturesDataTable dt = new HerosData.CreaturesDataTable();
+
+            adapter.FillByCreatureID(dt, id);
+
+            Monster monster = new Monster(
+            
+                (int)dt[0][0], 
+                (string)dt[0][1], 
+                (string)dt[0][2], 
+                (int)dt[0][3], 
+                (int)dt[0][4], 
+                (int)dt[0][5], 
+                (int)dt[0][6],
+                (int)dt[0][7], 
+                (CreatureType)dt[0][8], 
+                (CreatureClass)dt[0][9], 
+                (int)dt[0][10], 
+                (int)dt[0][11]            
+        );
+            return monster;          
+        }
+
+
+        public static QuestGiver GetGiverByID(int id)
+        {
+
+            HerosDataTableAdapters.QuestGiversTableAdapter adapter = new HerosDataTableAdapters.QuestGiversTableAdapter();
+
+            HerosData.QuestGiversDataTable dt = new HerosData.QuestGiversDataTable();
+
+            adapter.FillByGiverID(dt, id);
+
+            QuestGiver qgiver = new QuestGiver(
+
+                (int)dt[0][0],
+                (string)dt[0][1],
+                (string)dt[0][2]                
+        );
+
+            return qgiver;
+        }
+
+      public static QuestWho GetKidnappedByID(int id)
+        {
+            HerosDataTableAdapters.KidnappedTableAdapter adapter = new HerosDataTableAdapters.KidnappedTableAdapter();
+
+            HerosData.KidnappedDataTable dt = new HerosData.KidnappedDataTable();
+
+            adapter.FillByID(dt, id);
+
+            QuestWho kidnapped = new QuestWho(
+
+                (int)dt[0][0],
+                (string)dt[0][1],
+                (string)dt[0][2]
+        );
+            return kidnapped;
+        }
+
+/*
+        public static IEnumerable<int> StolenItems()
+        {
+            IEnumerable<int> stolenList =
+                from selectedItems in Items
+                where selectedItems.ID >= 100 && selectedItems.ID < 200
+                select selectedItems.ID;
+            return stolenList;
+        }*/
+
+        /*
+        public static QuestWho WhoByID(int id)
+        {
+            foreach (QuestWho qwho in QuestWhois)
+            {
+                if (qwho.ID == id)
+                {
+                    return qwho;
+                }
+            }
+
+            return null;
+        }*/
+        /*
+      public static QuestGiver GiverByID(int id)
+      {
+          foreach (QuestGiver qgiver in QuestGivers)
+          {
+              if (qgiver.ID == id)
+              {
+                  return qgiver;
+              }
+          }
+
+          return null;
+      }*/
+
+        /*
+        public static Monster MonsterByID(int id)
+        {
+            foreach (Monster monster in Monsters)
+            {
+                if (monster.ID == id)
+                {
+                    return monster;
+                }
+            }
+
+            return null;
+        }*/
+
+        /*
+      public static IEnumerable<int> MonstersList()
+      {
+          IEnumerable<int> monstersList =
+              from selectedMonster in Monsters
+              where selectedMonster.Type == CreatureType.Monster
+              select selectedMonster.ID;
+          return monstersList;
+      }
+      */
+
+        /*
+                public static Item ItemByID(int id)
+                {
+                    foreach (Item item in Items)
+                    {
+                        if (item.ID == id)
+                        {
+                            return item;
+                        }
+                    }
+
+                    return null;
+                }
+                */
+        /*
+        public static WorldLocation LocationByID(int id)
+        {
+            foreach (WorldLocation location in WorldLocations)
+            {
+                if (location.ID == id)
+                {
+                    return location;
+                }
+            }
+
+            return null;
+        }
+        */
         /*
         public static IEnumerable<int> MonstersByLocID(int id)
         {
@@ -461,14 +625,7 @@ namespace HeroLogic
             return monstersList;
         }
 
-        public static IEnumerable<int> StolenItems()
-        {
-            IEnumerable<int> stolenList =
-                from selectedItems in Items
-                where selectedItems.ID>=100 && selectedItems.ID < 200
-                select selectedItems.ID;
-            return stolenList;
-        }
+
 
         public static IEnumerable<int> LocationListMonster(int monsterID)
         {
@@ -640,70 +797,6 @@ namespace HeroLogic
             return gold;
         }
 
-        public static Item ItemByID(int id)
-        {
-            foreach (Item item in Items)
-            {
-                if (item.ID == id)
-                {
-                    return item;
-                }
-            }
-
-            return null;
-        }
-
-        public static Monster MonsterByID(int id)
-        {
-            foreach (Monster monster in Monsters)
-            {
-                if (monster.ID == id)
-                {
-                    return monster;
-                }
-            }
-
-            return null;
-        }
-
-        public static QuestGiver GiverByID(int id)
-        {
-            foreach (QuestGiver qgiver in QuestGivers)
-            {
-                if (qgiver.ID == id)
-                {
-                    return qgiver;
-                }
-            }
-
-            return null;
-        }
-
-        public static QuestWho WhoByID(int id)
-        {
-            foreach (QuestWho qwho in QuestWhois)
-            {
-                if (qwho.ID == id)
-                {
-                    return qwho;
-                }
-            }
-
-            return null;
-        }
-
-        public static WorldLocation LocationByID(int id)
-        {
-            foreach (WorldLocation location in WorldLocations)
-            {
-                if (location.ID == id)
-                {
-                    return location;
-                }
-            }
-
-            return null;
-        }
 
     }
 }

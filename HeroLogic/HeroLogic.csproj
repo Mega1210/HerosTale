@@ -46,6 +46,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>HerosData.xsd</DependentUpon>
     </Compile>
+    <Compile Include="HerosData1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HerosData.xsd</DependentUpon>
+    </Compile>
     <Compile Include="InventoryItem.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="LivingCreature.cs" />
@@ -76,7 +81,7 @@
     <None Include="HerosData.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>HerosData.Designer.cs</LastGenOutput>
+      <LastGenOutput>HerosData1.Designer.cs</LastGenOutput>
     </None>
     <None Include="HerosData.xss">
       <DependentUpon>HerosData.xsd</DependentUpon>

@@ -10,11 +10,13 @@ namespace HeroLogic
     {
         public int ID { get; set; }
         public string NameWho { get; set; }
+        public string Pronoun { get; set; }
 
-        public QuestWho(int id, string nameWho)
+        public QuestWho(int id, string nameWho, string pronoun)
         {
             ID = id;
             NameWho = nameWho;
+            Pronoun = pronoun;
         }
     }
 }
