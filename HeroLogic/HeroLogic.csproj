@@ -46,11 +46,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>HerosData.xsd</DependentUpon>
     </Compile>
-    <Compile Include="HerosData1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HerosData.xsd</DependentUpon>
-    </Compile>
     <Compile Include="InventoryItem.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="LivingCreature.cs" />

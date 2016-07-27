@@ -433,7 +433,8 @@ namespace HeroLogic
 
             HerosData.MonsterLocationDataTable dt = new HerosData.MonsterLocationDataTable();
 
-          //  adapter.Fill(dt, id);
+            // add FillByLocationID in the adapter!!
+            adapter.Fill(dt, id);
 
             List<int> monster = new List<int>();
 
