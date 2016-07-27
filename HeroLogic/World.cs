@@ -379,8 +379,8 @@ namespace HeroLogic
                 Convert.ToInt32(dt[0][9]),
                 Convert.ToInt32(dt[0][10]),
                 Convert.ToInt32(dt[0][11]),
-                (ItemRarity)dt[0][12],
-                (ItemType)dt[0][13],
+                (ItemRarity)(int)dt[0][12],
+                (ItemType)(int)dt[0][13],
                 Convert.ToInt32(dt[0][14])
                 );
 
@@ -397,11 +397,12 @@ namespace HeroLogic
             adapter.FillByTypeDifficulty(dt, type, difficulty);
 
             List<Monster> monster = new List<Monster>();
-
+            
             for (int i=0;i<dt.Rows.Count;i++)
             {
+                
                 monster.Add(new Monster((int)dt[i][0], (string)dt[i][1], (string)dt[i][2], (int)dt[i][3], (int)dt[i][4], (int)dt[i][5], (int)dt[i][6], 
-                    (int)dt[i][7],(CreatureType) dt[i][8], (CreatureClass)dt[i][9],(int) dt[i][10],(int) dt[i][11]));
+                    (int)dt[i][7], (CreatureType)(int)dt[i][8], (CreatureClass)(int)dt[i][9], (int) dt[i][10],(int) dt[i][11]));
             }
 
             return monster;
@@ -433,8 +434,7 @@ namespace HeroLogic
 
             HerosData.MonsterLocationDataTable dt = new HerosData.MonsterLocationDataTable();
 
-            // add FillByLocationID in the adapter!!
-            adapter.Fill(dt, id);
+            adapter.FillByLocID(dt, id);
 
             List<int> monster = new List<int>();
 
@@ -481,8 +481,8 @@ namespace HeroLogic
                 (int)dt[0][5], 
                 (int)dt[0][6],
                 (int)dt[0][7], 
-                (CreatureType)dt[0][8], 
-                (CreatureClass)dt[0][9], 
+                (CreatureType)(int)dt[0][8], 
+                (CreatureClass)(int)dt[0][9], 
                 (int)dt[0][10], 
                 (int)dt[0][11]            
         );

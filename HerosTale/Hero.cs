@@ -18,12 +18,6 @@ namespace HerosTale
         private Player player;
         private PlayerQuest playerQuest;
 
-        private Quest1Class Quest1;
-        private Quest2Class Quest2;
-        private Quest3Class Quest3;
-
-        private Item testItem;
-
         private int tmpStr, tmpDex, tmpInt, tmpChar;
         private const int HEALTH_LEVEL = 500;
         private const int POINTS_LEVEL = 3;
@@ -401,7 +395,7 @@ namespace HerosTale
             QMonster = ExtractList.ElementAt(RandomElementList(ExtractList));
              
             List<int> ExtractLocations =GetMonsterLocations(QMonster.ID);
-            QLocation = GetLocation(ExtractLocations.ElementAt(RandomElementList(ExtractList)));
+            QLocation = GetLocation(ExtractLocations.ElementAt(RandomElementList(ExtractLocations)));
 
             Quests.Add(new Quest(QuestOption.Quest1, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster,null ,"",""));
         }
@@ -425,7 +419,7 @@ namespace HerosTale
 
             QGiver = GetGiverByID(RandomElement(1,dtQG.Count()));
             QWho = GetKidnappedByID(RandomElement(1,dtK.Count()));
-            QMonster = GetMonsterByID(10); //ADD CORRECT ID FOR BANDIT BOSS!!
+            QMonster = GetMonsterByID(40); // BANDIT LEADER BOSS
             Quests.Add(new Quest(QuestOption.Quest2, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster, null,QWho.NameWho,QGiver.NameGiver));
             //Quest2 = new Quest2Class( QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
         }
@@ -448,7 +442,7 @@ namespace HerosTale
             QGiver = GetGiverByID(RandomElement(1,dtQG.Count()));                                   
             QItem = GetItembyID(RandomElement(100, 199));
 
-            QMonster = GetMonsterByID(11); //ADD CORRECT ID FOR THIEF BOSS!!
+            QMonster = GetMonsterByID(41); //MASTER THIEF BOSS
 
             Quests.Add(new Quest(QuestOption.Quest3, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster,QItem , "",QGiver.NameGiver));
             //Quest3 = new Quest3Class(QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
@@ -819,7 +813,7 @@ namespace HerosTale
             {
                 //journey still on
 
-                txtMainWindow.Text = $"Youe have {Days} days of travel. Days travelled: {CountDays} \r\n";
+                txtMainWindow.Text = $"You have {Days} days of travel. Days travelled: {CountDays} \r\n";
                 txtMainWindow.Text += "\r\n";
 
                 //generate 3 possible events during the journey
