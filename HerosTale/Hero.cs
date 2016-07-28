@@ -665,23 +665,9 @@ namespace HerosTale
             return (myRoll >= mRoll);
         }
 
-        private bool Ambush(EscAvoid ambushType)
+        private bool AmbushFleeRoll()
         {
-            switch (ambushType)
-            {
-                case EscAvoid.AvoidAmbush:
-                    txtMainWindow.Text += "You try to avoid an ambush. \r\n";                
-                    break;
-                case EscAvoid.Ambush:
-                    txtMainWindow.Text += "You try to ambush your enemy. \r\n";                
-                    break;
-                case EscAvoid.AvoidCombat:
-                    txtMainWindow.Text += "You try to avoid the fight. \r\n";
-                    break;
-                case EscAvoid.FleeCombat:
-                    txtMainWindow.Text += "You try to flee the fight. \r\n";
-                    break;
-            }
+     
             
             txtMainWindow.Text += "You have to roll a higher number than ";
             ScrollDownText(txtMainWindow);
@@ -914,7 +900,6 @@ namespace HerosTale
         {
             return rnd.Next(0, maxDmg);
         }
-
         private void GenerateStoreOptions()
         {
             Buy1 = RandomElement(1,GeneralStore.Count) - 1;
@@ -931,7 +916,6 @@ namespace HerosTale
             }
             while (Buy3 == Buy2 || Buy3==Buy1);
         }
-
         private void GeneralStoreShop()
         {
             
@@ -940,7 +924,6 @@ namespace HerosTale
             txtMainWindow.Text += $"2- There is a {GeneralStore.ElementAt(Buy2).Details.Name} for {GeneralStore.ElementAt(Buy2).Price} \r\n";
             txtMainWindow.Text += $"3- There is a {GeneralStore.ElementAt(Buy3).Details.Name} for {GeneralStore.ElementAt(Buy3).Price} \r\n";
         }
-
         private async void CheckPlayerHealth()
         {
             if (player.CurrentHitPoints<=0)
@@ -959,7 +942,6 @@ namespace HerosTale
             }
            
         }
-
         private EventJourney GenerateEvent()
         {
             int EventProb = rnd.Next(1, 101);
@@ -977,7 +959,6 @@ namespace HerosTale
                 return EventJourney.Noise;
             }
         }
-
         private bool CheckItemInInventory(int BuyOption)
         {
             for (int i = 0; i < player.Inventory.Count; i++)
@@ -991,14 +972,11 @@ namespace HerosTale
             }
             return false;
         }
-
         private void CaravanChoices()
         {
             txtMainWindow.Text += "1- You can buy a seat on the caravan for 10,000 gold\r\n";
             txtMainWindow.Text += "2- ... or you can join as a guard (for free of course!) \r\n";
         }
-
-
         private async void PhaseCaravan(ButtonChoice button)
         {
             switch (button)
@@ -1037,8 +1015,6 @@ namespace HerosTale
                     break;
             }
         }
-
-
         private void PhaseTavern(ButtonChoice button)
         {
             switch (button)
@@ -1093,8 +1069,6 @@ namespace HerosTale
                     break;
             }
         }
-
-
         private void JourneyNothing(ButtonChoice button)
         {
             switch (button)
@@ -1141,32 +1115,329 @@ namespace HerosTale
                     }
                     break;
                 case ButtonChoice.Button2:
+                    AmbushEvent(button);                    
+                    break;
+                case ButtonChoice.Button3:
+                    UseItem();
+                    break;
+                case ButtonChoice.Button4:
+                    if (inCombat)
+                    {
+                        if (firstTimeCombat)  //----- means I haven't started the fight so I can try to avoid it
+                        {
+                            if (AmbushFleeRoll())
+                            {
+                                txtMainWindow.Text += "You avoid the fight! \r\n";
+                                txtMainWindow.Text += "\r\n";
+                                ScrollDownText(txtMainWindow);
+                                await Task.Delay(1500);
+                                inCombat = false;
+                                firstTimeCombat = true;
+                                txtMainWindow.Text = "";
+                                lblNrEnemies.Text = "";
+                                Heal(50);
+                                Journey();
+                            }
+                            else
+                            {
+                                txtMainWindow.Text += "You've failed to avoid the fight and now you're in combat! \r\n";
+                                txtMainWindow.Text += "\r\n";
+                                lblNrEnemies.Text = $"{FoesRemaining}";
+                                ScrollDownText(txtMainWindow);
+                                firstTimeCombat = false;
+                            }
+
+                        }
+                        else //--- I'm during the fight but I can try to flee
+                        {
+                            if (AmbushFleeRoll())
+                            {
+                                txtMainWindow.Text += "You escaped the fight! \r\n";
+                                txtMainWindow.Text += "\r\n";
+                                ScrollDownText(txtMainWindow);
+                                await Task.Delay(1500);
+                                inCombat = false;
+                                firstTimeCombat = true;
+                                txtMainWindow.Text = "";
+                                lblNrEnemies.Text = "";
+                                Heal(50);
+                                Journey();
+                            }
+                            else
+                            {
+                                txtMainWindow.Text += "You've failed to escape the fight! \r\n";
+                                txtMainWindow.Text += "\r\n";
+                                ScrollDownText(txtMainWindow);
+                                EnemyTurn(attackMonster.Difficulty);
+                            }
+                        }
+                    }
+                    else Journey();
+                    break;
+            }
+        }
+        private async void AmbushEvent(ButtonChoice button)
+        {
+            if (inCombat)
+            {
+                if (firstTimeCombat)
+                {
+                    if (AmbushFleeRoll())
+                    {
+                        switch (EventGenerated)
+                        {
+                            case EventJourney.Approach:
+                                string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
+                                txtMainWindow.Text += $"You succeed! You successfully ambushed {FoesNr} {text} and killed one of them\r\n";
+                                txtMainWindow.Text += "\r\n";
+                                ScrollDownText(txtMainWindow);                                                                
+                                FoesRemaining--;
+                                lblNrEnemies.Text = $"{FoesRemaining}";                                
+                                break;
+                            case EventJourney.Noise:
+                                text = (FoesNr == 1) ? attackMonster.Name + " was" : attackMonster.NamePlural + " were";
+                                txtMainWindow.Text += $"{FoesNr} {text} trying to ambush you! You avoided it and now you're in combat \r\n";
+                                txtMainWindow.Text += "\r\n";
+                                ScrollDownText(txtMainWindow);
+                                lblNrEnemies.Text = $"{FoesRemaining}";
+                                lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
+                                MyTurnAttack(1);
+                                CheckMonsterHealth();
+                                lblNrEnemies.Text = $"{FoesRemaining}";
+                                break;
+                        }
+                        
+                        await Task.Delay(1500);
+                        inCombat = true;
+                        firstTimeCombat = false;                                                
+                        CheckAllMonsterDead();
+                        if (inCombat) EnemyTurn(attackMonster.Difficulty);
+                    }
+                    else
+                    {
+                        switch (EventGenerated)
+                        {
+                            case EventJourney.Approach:
+                                string text = (FoesNr == 1) ? attackMonster.Name + " sees" : attackMonster.NamePlural + " see";
+                                txtMainWindow.Text += $"You've failed! {FoesNr} {text} you and attacks you first! \r\n";
+                                txtMainWindow.Text += "\r\n";                                                                                                
+                                break;
+                            case EventJourney.Noise:
+                                text = (FoesNr == 1) ? attackMonster.Name + " is" : attackMonster.NamePlural + " are";
+                                txtMainWindow.Text += $"You've failed! You fall into a trap! {FoesNr} {text} attacking you\r\n";
+                                txtMainWindow.Text += "\r\n";                                
+                                break;
+                        }
+
+                        lblNrEnemies.Text = $"{FoesRemaining}";
+                        lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
+                        ScrollDownText(txtMainWindow);
+                        await Task.Delay(1500);
+                        EnemyTurn(attackMonster.Difficulty);
+                        firstTimeCombat = false;
+                    }
+                }
+                else
+                {
+                    if (FoesRemaining > 0 && button == ButtonChoice.Button1)
+                    {
+                        MyTurnAttack(1);
+                        CheckMonsterHealth();
+                        lblNrEnemies.Text = $"{FoesRemaining}";
+                        CheckAllMonsterDead();
+                        if (inCombat) EnemyTurn(attackMonster.Difficulty);
+                    }
+
+                    if (FoesRemaining > 0 && button == ButtonChoice.Button2)
+                    {
+                        txtMainWindow.Text += "You are aleady in combat. You cannot ambush!\r\n";
+                        txtMainWindow.Text += "\r\n";
+                        EnemyTurn(attackMonster.Difficulty);
+                    }
+                }
+
+            }
+        }
+        private async void FleeEvent(ButtonChoice button)
+        {
+            if (inCombat)
+            {
+                if (firstTimeCombat)  //----- means I haven't started the fight so I can try to avoid it
+                {
+                    if (AmbushFleeRoll())
+                    {
+                        txtMainWindow.Text += "You avoid the fight! \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        ScrollDownText(txtMainWindow);
+                        await Task.Delay(1500);
+                        inCombat = false;
+                        firstTimeCombat = true;
+                        lblNrEnemies.Text = "";
+                        txtMainWindow.Text = "";
+                        Heal(50);
+                        Journey();
+                    }
+                    else
+                    {
+                        txtMainWindow.Text += "You've failed to avoid the fight and now you're in combat! \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        lblNrEnemies.Text = $"{FoesRemaining}";
+                        lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
+                        ScrollDownText(txtMainWindow);
+                        firstTimeCombat = false;
+                    }
+
+                }
+                else //--- I'm during the fight but I can try to flee
+                {
+                    if (AmbushFleeRoll())
+                    {
+                        txtMainWindow.Text += "You escaped the fight! \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        ScrollDownText(txtMainWindow);
+                        await Task.Delay(1500);
+                        inCombat = false;
+                        firstTimeCombat = true;
+                        txtMainWindow.Text = "";
+                        lblNrEnemies.Text = "";
+                        lblEnemyHealth.Text = "";
+                        Heal(50);
+                        Journey();
+                    }
+                    else
+                    {
+                        txtMainWindow.Text += "You've failed to escape the fight! \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        ScrollDownText(txtMainWindow);
+                        EnemyTurn(attackMonster.Difficulty);
+                    }
+                }
+
+            }
+            else Journey();
+        }
+        private void JourneyNoise(ButtonChoice button)
+        {
+            switch (button)
+            {
+                case ButtonChoice.Button1:                    
+                case ButtonChoice.Button2:
+                    AmbushEvent(button);
+                   
+                    break;
+                case ButtonChoice.Button3:
+                    UseItem();
+                    break;
+                case ButtonChoice.Button4:
+                    FleeEvent(button);                    
+                    break;
+            }
+        }
+        private async void PhaseShop(ButtonChoice button)
+        {
+            switch (button)
+            {
+                case ButtonChoice.Button1:
+                    if (GeneralStore.ElementAt(Buy1).Price > player.Gold)
+                    {
+                        txtMainWindow.Text = "You do not have enough Gold!\r\n";
+                        await Task.Delay(1500);
+                        GeneralStoreShop();
+                    }
+                    else
+                    {
+                        player.Gold -= GeneralStore.ElementAt(Buy1).Price;
+
+                        if (!CheckItemInInventory(Buy1))
+                        {
+                            player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(Buy1).Details, 1));
+
+                        }
+                        UpdateInventoryGrid();
+                        UpdateStats();
+                        UpdateConsumableListInUI();
+
+
+                    }
+                    break;
+                case ButtonChoice.Button2:
+                    if (GeneralStore.ElementAt(Buy2).Price > player.Gold)
+                    {
+                        txtMainWindow.Text = "You do not have enough Gold!\r\n";
+                        await Task.Delay(1500);
+                        GeneralStoreShop();
+                    }
+                    else
+                    {
+                        player.Gold -= GeneralStore.ElementAt(Buy2).Price;
+
+                        if (!CheckItemInInventory(Buy2))
+                        {
+                            player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(Buy2).Details, 1));
+
+                        }
+                        UpdateInventoryGrid();
+                        UpdateStats();
+                        UpdateConsumableListInUI();
+                    }
+                    break;
+                case ButtonChoice.Button3:
+                    if (GeneralStore.ElementAt(Buy3).Price > player.Gold)
+                    {
+                        txtMainWindow.Text = "You do not have enough Gold!\r\n";
+                        await Task.Delay(1500);
+                        GeneralStoreShop();
+                    }
+                    else
+                    {
+                        player.Gold -= GeneralStore.ElementAt(Buy3).Price;
+
+                        if (!CheckItemInInventory(Buy3))
+                        {
+                            player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(Buy3).Details, 1));
+
+                        }
+                        UpdateInventoryGrid();
+                        UpdateStats();
+                        UpdateConsumableListInUI();
+                    }
+                    break;
+                case ButtonChoice.Button4:
+                    Tavern();
+                    break;
+            }
+        }
+        private async void PhaseBossEncounter(ButtonChoice button)
+        {
+            switch (button)
+            {
+                case ButtonChoice.Button1:
+                    MyTurnAttack(1);
+                    CheckMonsterHealth();
+                    if (inCombat) EnemyTurn(CreatureClass.Boss);
+                    break;
+                case ButtonChoice.Button2:
                     if (firstTimeCombat)
                     {
-                        if (Ambush(EscAvoid.Ambush))
+                        if (AmbushFleeRoll())
                         {
-                            string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                            txtMainWindow.Text += $"You succeed! You successfully ambushed {FoesNr} {text} and killed one of them\r\n";
+                            txtMainWindow.Text += $"You succeed! You successfully ambushed the enemy \r\n";
                             txtMainWindow.Text += "\r\n";
+                            firstTimeCombat = false;
                             ScrollDownText(txtMainWindow);
                             await Task.Delay(1500);
-                            inCombat = true;
-                            firstTimeCombat = false;
-                            FoesRemaining--;
-                            lblNrEnemies.Text = $"{FoesRemaining}";
-                            CheckAllMonsterDead();
+                            MyTurnAttack(2);
+                            CheckMonsterHealth();
+                            EnemyTurn(CreatureClass.Boss);
                         }
                         else
                         {
-                            string text = (FoesNr == 1) ? attackMonster.Name + " sees" : attackMonster.NamePlural + " see";
-                            txtMainWindow.Text += $"You've failed! {FoesNr} {text} you and attacks you first! \r\n";
+                            txtMainWindow.Text += $"You've failed the ambush! The enemy sees you and attacks you first! \r\n";
                             txtMainWindow.Text += "\r\n";
-                            lblNrEnemies.Text = $"{FoesRemaining}";
-                            lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
                             ScrollDownText(txtMainWindow);
-                            await Task.Delay(1500);
-                            EnemyTurn(attackMonster.Difficulty);
                             firstTimeCombat = false;
+                            await Task.Delay(1500);
+                            EnemyTurn(CreatureClass.Boss);
                         }
                     }
                     else
@@ -1175,197 +1446,75 @@ namespace HerosTale
                         txtMainWindow.Text += "\r\n";
                         ScrollDownText(txtMainWindow);
                         await Task.Delay(1500);
-                        EnemyTurn(attackMonster.Difficulty);
+                        EnemyTurn(CreatureClass.Boss);
                     }
                     break;
                 case ButtonChoice.Button3:
                     UseItem();
                     break;
                 case ButtonChoice.Button4:
-                    if (inCombat)
+                    if (AmbushFleeRoll())
                     {
-                        if (firstTimeCombat)  //----- means I haven't started the fight so I can try to avoid it
-                        {
-                            if (Ambush(EscAvoid.AvoidCombat))
-                            {
-                                txtMainWindow.Text += "You avoid the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                inCombat = false;
-                                firstTimeCombat = true;
-                                txtMainWindow.Text = "";
-                                lblNrEnemies.Text = "";
-                                Heal(50);
-                                Journey();
-                            }
-                            else
-                            {
-                                txtMainWindow.Text += "You've failed to avoid the fight and now you're in combat! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                ScrollDownText(txtMainWindow);
-                                firstTimeCombat = false;
-                            }
-
-                        }
-                        else //--- I'm during the fight but I can try to flee
-                        {
-                            if (Ambush(EscAvoid.FleeCombat))
-                            {
-                                txtMainWindow.Text += "You escaped the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                inCombat = false;
-                                firstTimeCombat = true;
-                                txtMainWindow.Text = "";
-                                lblNrEnemies.Text = "";
-                                Heal(50);
-                                Journey();
-                            }
-                            else
-                            {
-                                txtMainWindow.Text += "You've failed to escape the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                EnemyTurn(attackMonster.Difficulty);
-                            }
-                        }
+                        txtMainWindow.Text += "You flee the night fight! \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        ScrollDownText(txtMainWindow);
+                        await Task.Delay(1500);
+                        txtMainWindow.Text += "You return home empty handed and fail the mission! \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        ScrollDownText(txtMainWindow);
+                        await Task.Delay(2000);
+                        inCombat = false;
+                        firstTimeCombat = true;
+                        txtMainWindow.Text = "";
+                        CountDays = 0;
+                        Heal(50 * 3);
+                        playerQuest.IsCompleted = false;
+                        Tavern();
                     }
-                    else Journey();
+                    else
+                    {
+                        txtMainWindow.Text += "You've failed to flee and now you're in combat! \r\n";
+                        txtMainWindow.Text += "\r\n";
+                        ScrollDownText(txtMainWindow);
+                    }
                     break;
             }
         }
-        private async void JourneyNoise(ButtonChoice button)
+        private async void PhaseBossEnd(ButtonChoice button)
         {
             switch (button)
             {
                 case ButtonChoice.Button1:
                 case ButtonChoice.Button2:
-
-                    if (inCombat)
-                    {
-                        if (firstTimeCombat)
-                        {
-
-                            if (Ambush(EscAvoid.AvoidAmbush))
-                            {
-                                string text = (FoesNr == 1) ? attackMonster.Name + " was" : attackMonster.NamePlural + " were";
-                                txtMainWindow.Text += $"{FoesNr} {text} trying to ambush you! You avoided it and now you're in combat \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
-                                await Task.Delay(1500);
-                                inCombat = true;
-                                firstTimeCombat = false;
-                                MyTurnAttack(1);
-                                CheckMonsterHealth();
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                CheckAllMonsterDead();
-                                if (inCombat) EnemyTurn(attackMonster.Difficulty);
-
-                            }
-                            else
-                            {
-                                string text = (FoesNr == 1) ? attackMonster.Name + " is" : attackMonster.NamePlural + " are";
-                                txtMainWindow.Text += $"You've failed! You fall into a trap! {FoesNr} {text} attacking you\r\n";
-                                txtMainWindow.Text += "\r\n";
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                EnemyTurn(attackMonster.Difficulty);
-                                firstTimeCombat = false;
-                            }
-
-                        }
-                        else
-                        {
-                            if (FoesRemaining > 0 && button == ButtonChoice.Button1)
-                            {
-                                MyTurnAttack(1);
-                                CheckMonsterHealth();
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                CheckAllMonsterDead();
-                                if (inCombat) EnemyTurn(attackMonster.Difficulty);
-                            }
-
-                            if (FoesRemaining > 0 && button == ButtonChoice.Button2)
-                            {
-                                txtMainWindow.Text += "You are aleady in combat. You cannot ambush!\r\n";
-                                txtMainWindow.Text += "\r\n";
-                                EnemyTurn(attackMonster.Difficulty);
-                            }
-                        }
-
-                    }
-                    break;
                 case ButtonChoice.Button3:
-                    UseItem();
-                    break;
                 case ButtonChoice.Button4:
-                    if (inCombat)
-                    {
-                        if (firstTimeCombat)  //----- means I haven't started the fight so I can try to avoid it
-                        {
-                            if (Ambush(EscAvoid.AvoidCombat))
-                            {
-                                txtMainWindow.Text += "You avoid the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                inCombat = false;
-                                firstTimeCombat = true;
-                                lblNrEnemies.Text = "";
-                                txtMainWindow.Text = "";
-                                Heal(50);
-                                Journey();
-                            }
-                            else
-                            {
-                                txtMainWindow.Text += "You've failed to avoid the fight and now you're in combat! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
-                                ScrollDownText(txtMainWindow);
-                                firstTimeCombat = false;
-                            }
+                    txtMainWindow.Text += $"You return home with your reward: {Quests.ElementAt((int)player.QuestOp).RewardGold} gold! \r\n";
+                    txtMainWindow.Text += "\r\n";
+                    player.Gold += Quests.ElementAt((int)player.QuestOp).RewardGold;
 
-                        }
-                        else //--- I'm during the fight but I can try to flee
-                        {
-                            if (Ambush(EscAvoid.FleeCombat))
-                            {
-                                txtMainWindow.Text += "You escaped the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                inCombat = false;
-                                firstTimeCombat = true;
-                                txtMainWindow.Text = "";
-                                lblNrEnemies.Text = "";
-                                lblEnemyHealth.Text = "";
-                                Heal(50);
-                                Journey();
-                            }
-                            else
-                            {
-                                txtMainWindow.Text += "You've failed to escape the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-
-                                ScrollDownText(txtMainWindow);
-                                EnemyTurn(attackMonster.Difficulty);
-                            }
-                        }
-
-                    }
-                    else Journey();
+                    //GetReward(mChoice);
+                    UpdateStats();
+                    ScrollDownText(txtMainWindow);
+                    await Task.Delay(2000);
+                    Tavern();
                     break;
             }
         }
-        private async void Actions(ButtonChoice button)
+        private void PhaseMarrakesh(ButtonChoice button)
+        {
+            switch (button)
+            {
+                case ButtonChoice.Button1:
+                    break;
+                case ButtonChoice.Button2:
+                    break;
+                case ButtonChoice.Button3:
+                    break;
+                case ButtonChoice.Button4:
+                    break;
+            }
+        }
+        private void Actions(ButtonChoice button)
         {
             switch (CurrentPhase)
             {
@@ -1374,8 +1523,7 @@ namespace HerosTale
                     break;
                 case GamePhase.Tavern:
                     PhaseTavern(button);
-                    break;
-
+                    break;                
                     // Journey and Journey to Marrakesh generate the same events so share the "case" option
                 case GamePhase.Journey:
                 case GamePhase.JourneyMarrakesh:
@@ -1393,183 +1541,16 @@ namespace HerosTale
                     }
                     break;
                 case GamePhase.Shop:
-                    switch (button)
-                    {
-                        case ButtonChoice.Button1:
-                            if (GeneralStore.ElementAt(Buy1).Price>player.Gold)
-                            {
-                                txtMainWindow.Text = "You do not have enough Gold!\r\n";
-                                await Task.Delay(1500);
-                                GeneralStoreShop();
-                            }
-                            else
-                            {
-                                player.Gold -= GeneralStore.ElementAt(Buy1).Price;
-
-                                if (!CheckItemInInventory(Buy1))
-                                {
-                                    player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(Buy1).Details, 1));
-
-                                }
-                                UpdateInventoryGrid();
-                                UpdateStats();
-                                UpdateConsumableListInUI();
-
-
-                            }
-                            break;
-                        case ButtonChoice.Button2:
-                            if (GeneralStore.ElementAt(Buy2).Price > player.Gold)
-                            {
-                                txtMainWindow.Text = "You do not have enough Gold!\r\n";
-                                await Task.Delay(1500);
-                                GeneralStoreShop();
-                            }
-                            else
-                            {
-                                player.Gold -= GeneralStore.ElementAt(Buy2).Price;
-
-                                if (!CheckItemInInventory(Buy2))
-                                {
-                                    player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(Buy2).Details, 1));
-
-                                }
-                                UpdateInventoryGrid();
-                                UpdateStats();
-                                UpdateConsumableListInUI();
-                            }
-                                break;
-                        case ButtonChoice.Button3:
-                            if (GeneralStore.ElementAt(Buy3).Price > player.Gold)
-                            {
-                                txtMainWindow.Text = "You do not have enough Gold!\r\n";
-                                await Task.Delay(1500);
-                                GeneralStoreShop();
-                            }
-                            else
-                            {
-                                player.Gold -= GeneralStore.ElementAt(Buy3).Price;
-
-                                if (!CheckItemInInventory(Buy3))
-                                {
-                                    player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(Buy3).Details, 1));
-
-                                }
-                                UpdateInventoryGrid();
-                                UpdateStats();
-                                UpdateConsumableListInUI();
-                            }
-                            break;
-                        case ButtonChoice.Button4:
-                            Tavern();
-                            break;
-                    }
+                    PhaseShop(button);
                     break;
                 case GamePhase.BossEnd:
-                    switch (button)
-                    {
-                        case ButtonChoice.Button1:                            
-                        case ButtonChoice.Button2:                            
-                        case ButtonChoice.Button3:                            
-                        case ButtonChoice.Button4:
-                            txtMainWindow.Text += $"You return home with your reward: {Quests.ElementAt((int)player.QuestOp).RewardGold} gold! \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            player.Gold += Quests.ElementAt((int)player.QuestOp).RewardGold;
-                                
-                                //GetReward(mChoice);
-                            UpdateStats();
-                            ScrollDownText(txtMainWindow);
-                            await Task.Delay(2000);
-                            Tavern();
-                            break;
-                    }
+                    PhaseBossEnd(button);
                     break;
                 case GamePhase.BossEncounter:
-                    switch (button)
-                    {
-                        case ButtonChoice.Button1:
-                            MyTurnAttack(1);
-                            CheckMonsterHealth();
-                            if (inCombat) EnemyTurn(CreatureClass.Boss);
-                            break;
-                        case ButtonChoice.Button2:
-                            if (firstTimeCombat)
-                            {
-                                if (Ambush(EscAvoid.Ambush))
-                                {
-
-                                    txtMainWindow.Text += $"You succeed! You successfully ambushed the enemy \r\n";
-                                    txtMainWindow.Text += "\r\n";
-                                    firstTimeCombat = false;
-                                    ScrollDownText(txtMainWindow);
-                                    await Task.Delay(1500);
-                                    MyTurnAttack(2);
-                                    CheckMonsterHealth();
-                                    EnemyTurn(CreatureClass.Boss);
-
-                                }
-                                else
-                                {
-                                    txtMainWindow.Text += $"You've failed the ambush! The enemy sees you and attacks you first! \r\n";
-                                    txtMainWindow.Text += "\r\n";
-                                    ScrollDownText(txtMainWindow);
-                                    firstTimeCombat = false;
-                                    await Task.Delay(1500);
-                                    EnemyTurn(CreatureClass.Boss);
-                                }
-                            }
-                            else
-                            {
-                                txtMainWindow.Text += "You cannot ambush your enemy, you're already in combat! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                EnemyTurn(CreatureClass.Boss);
-                            }                            
-                            break;
-                        case ButtonChoice.Button3:
-                            UseItem();
-                            break;
-                        case ButtonChoice.Button4:
-                            if (Ambush(EscAvoid.AvoidCombat))
-                            {
-                                txtMainWindow.Text += "You flee the night fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                txtMainWindow.Text += "You return home empty handed and fail the mission! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(2000);
-                                inCombat = false;
-                                firstTimeCombat = true;
-                                txtMainWindow.Text = "";
-                                CountDays = 0;
-                                Heal(50 * 3);
-                                playerQuest.IsCompleted = false;
-                                Tavern();
-                            }
-                            else
-                            {
-                                txtMainWindow.Text += "You've failed to flee and now you're in combat! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                            }
-                            break;
-                    }
+                    PhaseBossEncounter(button);
                     break;
                 case GamePhase.Marrakesh:
-                    switch (button)
-                    {
-                        case ButtonChoice.Button1:
-                            break;
-                        case ButtonChoice.Button2:
-                            break;
-                        case ButtonChoice.Button3:
-                            break;
-                        case ButtonChoice.Button4:
-                            break;
-                    }
+                    PhaseMarrakesh(button);
                     break;
             }
         }
@@ -1626,9 +1607,7 @@ namespace HerosTale
                     button3.Text = "Buy Item 3";
                     button4.Text = "Exit";
                     break;             
-            }
-            
-
+            }            
         }
 
         private void GenerateDays()
