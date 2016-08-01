@@ -32,7 +32,7 @@ namespace HeroLogic
 
         public enum QuestOption
         {
-            None, Quest1, Quest2, Quest3
+            Quest1, Quest2, Quest3, None
         }
 
         public enum GamePhase

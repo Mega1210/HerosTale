@@ -62,7 +62,7 @@ namespace HerosTale
 
             player = new Player(1, 1, 1, 1, 100, "", 0, 1,QuestOption.None, 1000, 1000,CreatureType.HumanPeaceful, CreatureClass.Player);
             player.Inventory.Add(new InventoryItem(GetItembyID(1), 1));
-            player.Inventory.Add(new InventoryItem(GetItembyID(100), 5));
+            player.Inventory.Add(new InventoryItem(GetItembyID(400), 5));
             UpdateWeaponListInUI();
             UpdateConsumableListInUI();
             UpdateInventoryGrid();
@@ -113,127 +113,11 @@ namespace HerosTale
 
         private void CheckLvlUp(int exp, int lvl)
         {
-           /* bool DolvlUp=false;
-
-            if (lvl < 20 && exp >= 70000)
-            {
-                player.Level = 20;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 19 && exp >= 62000)
-            {
-                player.Level = 19;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 18 && exp >= 55000)
-            {
-                player.Level = 18;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 17 && exp >= 48000)
-            {
-                player.Level = 17;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 16 && exp >= 43000)
-            {
-                player.Level = 16;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 15 && exp >= 38000)
-            {
-                player.Level = 15;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 14 && exp >= 33000)
-            {
-                player.Level = 14;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 13 && exp >= 28000)
-            {
-                player.Level = 13;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 12 && exp >= 23000)
-            {
-                player.Level = 12;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 11 && exp >= 18000)
-            {
-                player.Level = 11;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 10 && exp >= 13000)
-            {
-                player.Level = 10;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 9 && exp >= 11000)
-            {
-                player.Level = 9;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 8 && exp >= 9000)
-            {
-                player.Level = 8;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 7 && exp >= 7000)
-            {
-                player.Level = 7;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 6 && exp >= 5000)
-            {
-                player.Level = 6;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 5 && exp >= 3000)
-            {
-                player.Level = 5;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 4 && exp >= 2000)
-            {
-                player.Level = 4;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 3 && exp >= 1000)
-            {
-                player.Level = 3;
-                DolvlUp = true;
-
-            }
-            else if (lvl < 2 && exp >= 500)
-            {
-                player.Level = 2;
-                DolvlUp = true;
-
-            }
-            */
-            if (exp>=(250*Math.Pow(lvl,2)))
+           
+            if (exp>=(250*Math.Pow(lvl,2)) && lvl< (int)Math.Truncate(Math.Pow(exp / 250, 0.5)))
             {
                 player.Level = (int) Math.Truncate(Math.Pow(exp / 250, 0.5));                           
-                txtMainWindow.Text += $"Congratrulations you are now level {player.Level}!! \r\n";
+                txtMainWindow.Text += $"Congratulations you are now level {player.Level}!! \r\n";
                 ScrollDownText(txtMainWindow);
                 player.MaximumHitPoints += (player.Level - lvl) * HEALTH_LEVEL;
                 player.CurrentHitPoints = player.MaximumHitPoints;
@@ -408,8 +292,15 @@ namespace HerosTale
             Monster QMonster;
 
             HerosData.LocationsDataTable dtL = new HerosData.LocationsDataTable();
+            HeroLogic.HerosDataTableAdapters.LocationsTableAdapter adapterL = new HeroLogic.HerosDataTableAdapters.LocationsTableAdapter();
+            adapterL.Fill(dtL);
             HerosData.QuestGiversDataTable dtQG = new HerosData.QuestGiversDataTable();
+            HeroLogic.HerosDataTableAdapters.QuestGiversTableAdapter adapterQG = new HeroLogic.HerosDataTableAdapters.QuestGiversTableAdapter();
+            adapterQG.Fill(dtQG);
             HerosData.KidnappedDataTable dtK = new HerosData.KidnappedDataTable();
+            HeroLogic.HerosDataTableAdapters.KidnappedTableAdapter adapterK = new HeroLogic.HerosDataTableAdapters.KidnappedTableAdapter();
+            adapterK.Fill(dtK);
+
 
             do
             {
@@ -428,23 +319,41 @@ namespace HerosTale
         {
             QuestGiver QGiver;            
             WorldLocation QLocation;
+            bool done;
             Item QItem;
             Monster QMonster;
 
             HerosData.LocationsDataTable dtL = new HerosData.LocationsDataTable();
+             HeroLogic.HerosDataTableAdapters.LocationsTableAdapter adapterL = new HeroLogic.HerosDataTableAdapters.LocationsTableAdapter();
+            adapterL.Fill(dtL);
             HerosData.QuestGiversDataTable dtQG = new HerosData.QuestGiversDataTable();
+            HeroLogic.HerosDataTableAdapters.QuestGiversTableAdapter adapterQG = new HeroLogic.HerosDataTableAdapters.QuestGiversTableAdapter();
+            adapterQG.Fill(dtQG);
             do
             {
                 QLocation = GetLocation(RandomElement(1,dtL.Count));
             }
             while (QLocation.ID == 4);
 
-            QGiver = GetGiverByID(RandomElement(1,dtQG.Count()));                                   
-            QItem = GetItembyID(RandomElement(100, 199));
-
+            QGiver = GetGiverByID(RandomElement(1,dtQG.Count()));
             QMonster = GetMonsterByID(41); //MASTER THIEF BOSS
-
-            Quests.Add(new Quest(QuestOption.Quest3, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster,QItem , "",QGiver.NameGiver));
+            
+            do
+            {
+               try
+                {
+                    
+                    QItem = GetItembyID(RandomElement(100, 199));
+                    Quests.Add(new Quest(QuestOption.Quest3, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster, QItem, "", QGiver.NameGiver));
+                    done = true;
+                }
+                catch (Exception e)
+                {
+                    done = false;
+                }
+            }
+            while (!done);
+            
             //Quest3 = new Quest3Class(QLocation.ID, QLocation.LocationName, CreateGold(), QGiver.NameGiver,QItem.ID,QItem.Name);
 
         }
@@ -499,20 +408,7 @@ namespace HerosTale
                         else
                         {
                         MonsterHit = RollMonsterDamage(GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).MaximumDamage);
-                       /* switch (mChoice)
-                            {
-                                case InitialMenuChoice.Quest1:
-                                    MonsterHit = RollMonsterDamage(GetMonsterByID(Quest1.MonsterID).MaximumDamage);
-                                    break;
 
-                                case InitialMenuChoice.Quest2:
-                                    MonsterHit = RollMonsterDamage(MonsterByID(MONSTER_ID_BANDIT).MaximumDamage);
-                                    break;
-                                case InitialMenuChoice.Quest3:
-                                    MonsterHit = RollMonsterDamage(MonsterByID(MONSTER_ID_THIEF).MaximumDamage);
-                                    break;
-
-                            }*/
                         }
 
                         
@@ -550,7 +446,7 @@ namespace HerosTale
                 {
                     
                     string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                    txtMainWindow.Text = $"You run towards the {text} and start the combat! \r\n";
+                    txtMainWindow.Text = $"You run towards the {text.Trim()} and start the combat! \r\n";
                 }
                 else
                 {
@@ -691,57 +587,14 @@ namespace HerosTale
                 int HP=0;
 
                 HP = GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).CurrentHitPoints;
-                /*switch (mChoice)
-                {
-                    case InitialMenuChoice.Quest1:
-                        HP = GetMonsterByID(Quest1.MonsterID).CurrentHitPoints;
-                        break;
-                    case InitialMenuChoice.Quest2:
-                        HP = MonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints;
-                        break;
-                    case InitialMenuChoice.Quest3:
-                        HP = MonsterByID(MONSTER_ID_THIEF).CurrentHitPoints;
-                        break;
-                }*/
+   
                 if (HP<=0)
                 {
-                    txtMainWindow.Text += $"You have killed the {Quests.ElementAt((int)player.QuestOp).QMonster.Name}! \r\n";
+                    txtMainWindow.Text += $"You have killed the {Quests.ElementAt((int)player.QuestOp).QMonster.Name.Trim()}! \r\n";
                     txtMainWindow.Text += "\r\n";
                     txtMainWindow.Text += $"You gain {Quests.ElementAt((int)player.QuestOp).QMonster.RewardExperiencePoints} experience \r\n";
                     txtMainWindow.Text += "\r\n";
-                    /*
-                    switch (mChoice)
-                    {
-                        case InitialMenuChoice.Quest1:
-                            
-                            txtMainWindow.Text += $"You have killed the {Quest1.MonsterName}! \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            txtMainWindow.Text += $"You gain {GetMonsterByID(Quest1.MonsterID).RewardExperiencePoints} experience \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            player.ExperiecePoints += MonsterByID(Quest1.MonsterID).RewardExperiencePoints;
-                            MonsterByID(Quest1.MonsterID).CurrentHitPoints = MonsterByID(Quest1.MonsterID).MaximumHitPoints;
-                            break;
-                        case InitialMenuChoice.Quest2:
-                            txtMainWindow.Text += $"You have killed the Bandit! \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            txtMainWindow.Text += $"You gain {MonsterByID(MONSTER_ID_BANDIT).RewardExperiencePoints} experience \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            player.ExperiecePoints += MonsterByID(MONSTER_ID_BANDIT).RewardExperiencePoints;
-                            MonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints = MonsterByID(MONSTER_ID_BANDIT).MaximumHitPoints;
-                            
-                            
-                            break;
-                        case InitialMenuChoice.Quest3:
-                            txtMainWindow.Text += $"You have killed the Thief! \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            txtMainWindow.Text += $"You gain {MonsterByID(MONSTER_ID_THIEF).RewardExperiencePoints} experience \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            player.ExperiecePoints += MonsterByID(MONSTER_ID_THIEF).RewardExperiencePoints;
-                            MonsterByID(MONSTER_ID_THIEF).CurrentHitPoints= MonsterByID(MONSTER_ID_THIEF).MaximumHitPoints;
-                            
-                            break;
-                    }*/
-                    
+                                        
                     UpdateStats();
                     lblEnemyHealth.Text = "";
                     lblNrEnemies.Text = "";
@@ -775,7 +628,11 @@ namespace HerosTale
             
             WorldLocation JLocation;
             HerosData.LocationsDataTable dtL = new HerosData.LocationsDataTable();
+            HeroLogic.HerosDataTableAdapters.LocationsTableAdapter adapterL = new HeroLogic.HerosDataTableAdapters.LocationsTableAdapter();
+            adapterL.Fill(dtL);
             HerosData.MonsterLocationDataTable dtM = new HerosData.MonsterLocationDataTable();
+            HeroLogic.HerosDataTableAdapters.MonsterLocationTableAdapter adapterM = new HeroLogic.HerosDataTableAdapters.MonsterLocationTableAdapter();
+            adapterM.Fill(dtM);
             do
             {
                 JLocation = GetLocation(RandomElement(1,dtL.Count));
@@ -799,7 +656,7 @@ namespace HerosTale
             {
                 //journey still on
 
-                txtMainWindow.Text = $"You have {Days} days of travel. Days travelled: {CountDays} \r\n";
+                txtMainWindow.Text = $"You have {Days} days of travel. Days traveled: {CountDays} \r\n";
                 txtMainWindow.Text += "\r\n";
 
                 //generate 3 possible events during the journey
@@ -810,18 +667,18 @@ namespace HerosTale
 
                     //Nothing happens
                     
-                        txtMainWindow.Text += "Nothing has heppened today \r\n";
+                        txtMainWindow.Text += "Nothing has happened today \r\n";
                         txtMainWindow.Text += "\r\n";
                         Heal(50);
                     break;
                 case EventJourney.Approach:
 
-                        //See x creatrues
+                        //See x creatures
                         inCombat = true;
                         FoesRemaining = FoesNr = rnd.Next(1, 4);                        
                         GenerateFoesEncounter();
                         string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;                        
-                        txtMainWindow.Text += $"You see {FoesNr} {text} \r\n";
+                        txtMainWindow.Text += $"You see {FoesNr} {text.Trim()} \r\n";
                         txtMainWindow.Text += "\r\n";
                         break;
                 case EventJourney.Noise:
@@ -839,23 +696,9 @@ namespace HerosTale
                 CurrentPhase = GamePhase.BossEncounter;
                 inCombat = true;
                 lblNrEnemies.Text = "1";
-                txtMainWindow.Text = $"You arrive at the {Quests.ElementAt((int)player.QuestOp).LocationName} and see the {Quests.ElementAt((int)player.QuestOp).QMonster.Name} in the distance. \r\n";
+                txtMainWindow.Text = $"You arrive at the {Quests.ElementAt((int)player.QuestOp).LocationName.Trim()} and see the {Quests.ElementAt((int)player.QuestOp).QMonster.Name.Trim()} in the distance. \r\n";
                 txtMainWindow.Text += "\r\n";
-                /*switch (mChoice)
-                {
-                    case InitialMenuChoice.Quest1:
-                        txtMainWindow.Text = $"You arrive at the {Quest1.LocationName} and see the {Quest1.MonsterName} in the distance. \r\n";
-                        txtMainWindow.Text += "\r\n";
-                        break;
-                    case InitialMenuChoice.Quest2:
-                        txtMainWindow.Text = $"You arrive at the {Quest2.LocationName} and see the {Quest2.WhoQuestName} in chains and the Bandit Leader alone nearby. \r\n";
-                        txtMainWindow.Text += "\r\n";
-                        break;
-                    case InitialMenuChoice.Quest3:
-                        txtMainWindow.Text = $"You arrive at the {Quest3.LocationName} and see the Thief sitting at a campfire. \r\n";
-                        txtMainWindow.Text += "\r\n";
-                        break;
-                }*/
+               
             }
             else
             {
@@ -985,7 +828,7 @@ namespace HerosTale
                     if (player.Gold > 10000)
                     {
                         txtMainWindow.Text += "\r\n";
-                        txtMainWindow.Text += "You pay the hefty price and join the caravan as guest... at least the gabe you the front seat!\r\n";
+                        txtMainWindow.Text += "You pay the hefty price and join the caravan as guest... at least the gave you the front seat!\r\n";
                         await Task.Delay(2000);
                         txtMainWindow.Text += "After an uneventful journey across the desert you reach the fabled city of Marrakesh\r\n";
                         await Task.Delay(1500);
@@ -1000,7 +843,7 @@ namespace HerosTale
                     break;
                 case ButtonChoice.Button2:
                     txtMainWindow.Text += "\r\n";
-                    txtMainWindow.Text += "You decide to join as a guard. The jounery will last 6 days and will be full of perils!!\r\n";
+                    txtMainWindow.Text += "You decide to join as a guard. The journey will last 6 days and will be full of perils!!\r\n";
                     await Task.Delay(2000);
                     CurrentPhase = GamePhase.JourneyMarrakesh;
                     Days = 6;
@@ -1024,7 +867,7 @@ namespace HerosTale
                     //mChoice = InitialMenuChoice.Quest1;
                     player.QuestOp = QuestOption.Quest1;
                     //playerQuest = new PlayerQuest(QuestOption.Quest1);
-                    txtMainWindow.Text = $"You start your journey to kill the {Quests.ElementAt((int)player.QuestOp).QMonster.Name}. \r\n";
+                    txtMainWindow.Text = $"You start your journey to kill the {Quests.ElementAt((int)player.QuestOp).QMonster.Name.Trim()}. \r\n";
                     txtMainWindow.Text += "\r\n";
                     CurrentPhase = GamePhase.Journey;
                     UpdateBtn();
@@ -1037,7 +880,7 @@ namespace HerosTale
                         //mChoice = InitialMenuChoice.Quest2;
                        // playerQuest = new PlayerQuest(QuestOption.Quest2);
                         player.QuestOp = QuestOption.Quest2;
-                        txtMainWindow.Text = $"You start your journey to save the {Quests.ElementAt((int)player.QuestOp).Giver}'s {Quests.ElementAt((int)player.QuestOp).Kidnapped}. \r\n";
+                        txtMainWindow.Text = $"You start your journey to save the {Quests.ElementAt((int)player.QuestOp).Giver.Trim()}'s {Quests.ElementAt((int)player.QuestOp).Kidnapped.Trim()}. \r\n";
                         txtMainWindow.Text += "\r\n";
                     }
                     else
@@ -1045,7 +888,7 @@ namespace HerosTale
                         //mChoice = InitialMenuChoice.Quest3;
                         //playerQuest = new PlayerQuest(QuestOption.Quest3);
                         player.QuestOp = QuestOption.Quest3;
-                        txtMainWindow.Text = $"You start your journey to recover the {Quests.ElementAt((int)player.QuestOp).QItem.Name}. \r\n";
+                        txtMainWindow.Text = $"You start your journey to recover the {Quests.ElementAt((int)player.QuestOp).QItem.Name.Trim()}. \r\n";
                         txtMainWindow.Text += "\r\n";
 
                     }
@@ -1101,7 +944,7 @@ namespace HerosTale
             switch (button)
             {
                 case ButtonChoice.Button1:
-                    //we See x creatrues and we attack
+                    //we See x creatures and we attack
                     if (inCombat)
                     {
                         if (FoesRemaining > 0)
@@ -1184,57 +1027,88 @@ namespace HerosTale
                 {
                     if (AmbushFleeRoll())
                     {
-                        switch (EventGenerated)
+                        if (CurrentPhase == GamePhase.BossEncounter)
                         {
-                            case EventJourney.Approach:
-                                string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
-                                txtMainWindow.Text += $"You succeed! You successfully ambushed {FoesNr} {text} and killed one of them\r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);                                                                
-                                FoesRemaining--;
-                                lblNrEnemies.Text = $"{FoesRemaining}";                                
-                                break;
-                            case EventJourney.Noise:
-                                text = (FoesNr == 1) ? attackMonster.Name + " was" : attackMonster.NamePlural + " were";
-                                txtMainWindow.Text += $"{FoesNr} {text} trying to ambush you! You avoided it and now you're in combat \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
-                                MyTurnAttack(1);
-                                CheckMonsterHealth();
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                break;
+                            txtMainWindow.Text += $"You succeed! You successfully ambushed the enemy \r\n";
+                            txtMainWindow.Text += "\r\n";
+                            firstTimeCombat = false;
+                            ScrollDownText(txtMainWindow);
+                            await Task.Delay(1500);
+                            MyTurnAttack(4);
+                            CheckMonsterHealth();
+                            await Task.Delay(1500);
+                            //EnemyTurn(CreatureClass.Boss);
                         }
-                        
-                        await Task.Delay(1500);
-                        inCombat = true;
-                        firstTimeCombat = false;                                                
-                        CheckAllMonsterDead();
-                        if (inCombat) EnemyTurn(attackMonster.Difficulty);
+
+                        else
+                        {
+                            switch (EventGenerated)
+                            {
+                                case EventJourney.Approach:
+                                    string text = (FoesNr == 1) ? attackMonster.Name : attackMonster.NamePlural;
+                                    txtMainWindow.Text += $"You succeed! You successfully ambushed {FoesNr} {text.Trim()} and killed one of them\r\n";
+                                    txtMainWindow.Text += "\r\n";
+                                    ScrollDownText(txtMainWindow);
+                                    FoesRemaining--;
+                                    lblNrEnemies.Text = $"{FoesRemaining}";
+                                    break;
+                                case EventJourney.Noise:
+                                    text = (FoesNr == 1) ? attackMonster.Name.Trim() + " was" : attackMonster.NamePlural.Trim() + " were";
+                                    txtMainWindow.Text += $"{FoesNr} {text} trying to ambush you! You avoided it and now you're in combat \r\n";
+                                    txtMainWindow.Text += "\r\n";
+                                    ScrollDownText(txtMainWindow);
+                                    lblNrEnemies.Text = $"{FoesRemaining}";
+                                    lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
+                                    await Task.Delay(1500);
+                                    MyTurnAttack(1);
+                                    CheckMonsterHealth();
+                                    lblNrEnemies.Text = $"{FoesRemaining}";
+                                    break;
+                            }
+
+                            await Task.Delay(1500);
+                            inCombat = true;
+                            firstTimeCombat = false;
+                            CheckAllMonsterDead();
+                            if (inCombat) EnemyTurn(attackMonster.Difficulty);
+                        }
+                    
                     }
                     else
                     {
-                        switch (EventGenerated)
+                        if (CurrentPhase == GamePhase.BossEncounter)
                         {
-                            case EventJourney.Approach:
-                                string text = (FoesNr == 1) ? attackMonster.Name + " sees" : attackMonster.NamePlural + " see";
-                                txtMainWindow.Text += $"You've failed! {FoesNr} {text} you and attacks you first! \r\n";
-                                txtMainWindow.Text += "\r\n";                                                                                                
-                                break;
-                            case EventJourney.Noise:
-                                text = (FoesNr == 1) ? attackMonster.Name + " is" : attackMonster.NamePlural + " are";
-                                txtMainWindow.Text += $"You've failed! You fall into a trap! {FoesNr} {text} attacking you\r\n";
-                                txtMainWindow.Text += "\r\n";                                
-                                break;
-                        }
+                            txtMainWindow.Text += $"You've failed the ambush! The enemy sees you and attacks you first! \r\n";
+                            txtMainWindow.Text += "\r\n";
+                            ScrollDownText(txtMainWindow);
+                            firstTimeCombat = false;
+                            await Task.Delay(1500);
+                            EnemyTurn(CreatureClass.Boss);
 
-                        lblNrEnemies.Text = $"{FoesRemaining}";
-                        lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
-                        ScrollDownText(txtMainWindow);
-                        await Task.Delay(1500);
-                        EnemyTurn(attackMonster.Difficulty);
-                        firstTimeCombat = false;
+                        }
+                        else
+                        {
+                            switch (EventGenerated)
+                            {
+                                case EventJourney.Approach:
+                                    string text = (FoesNr == 1) ? attackMonster.Name.Trim() + " sees" : attackMonster.NamePlural.Trim() + " see";
+                                    txtMainWindow.Text += $"You've failed! {FoesNr} {text} you and attacks you first! \r\n";
+                                    txtMainWindow.Text += "\r\n";
+                                    break;
+                                case EventJourney.Noise:
+                                    text = (FoesNr == 1) ? attackMonster.Name.Trim() + " is" : attackMonster.NamePlural.Trim() + " are";
+                                    txtMainWindow.Text += $"You've failed! You fall into a trap! {FoesNr} {text} attacking you\r\n";
+                                    txtMainWindow.Text += "\r\n";
+                                    break;
+                            }
+
+                            lblNrEnemies.Text = $"{FoesRemaining}";
+                            lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
+                            ScrollDownText(txtMainWindow);
+                            await Task.Delay(1500);
+                            EnemyTurn(attackMonster.Difficulty);
+                            firstTimeCombat = false;
+                        }
                     }
                 }
                 else
@@ -1250,9 +1124,13 @@ namespace HerosTale
 
                     if (FoesRemaining > 0 && button == ButtonChoice.Button2)
                     {
-                        txtMainWindow.Text += "You are aleady in combat. You cannot ambush!\r\n";
+                        txtMainWindow.Text += "You are already in combat. You cannot ambush!\r\n";
                         txtMainWindow.Text += "\r\n";
-                        EnemyTurn(attackMonster.Difficulty);
+                        if (CurrentPhase == GamePhase.BossEncounter)
+                        {
+                            EnemyTurn(CreatureClass.Boss);
+                        }
+                        else EnemyTurn(attackMonster.Difficulty);
                     }
                 }
 
@@ -1417,37 +1295,7 @@ namespace HerosTale
                     if (inCombat) EnemyTurn(CreatureClass.Boss);
                     break;
                 case ButtonChoice.Button2:
-                    if (firstTimeCombat)
-                    {
-                        if (AmbushFleeRoll())
-                        {
-                            txtMainWindow.Text += $"You succeed! You successfully ambushed the enemy \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            firstTimeCombat = false;
-                            ScrollDownText(txtMainWindow);
-                            await Task.Delay(1500);
-                            MyTurnAttack(2);
-                            CheckMonsterHealth();
-                            EnemyTurn(CreatureClass.Boss);
-                        }
-                        else
-                        {
-                            txtMainWindow.Text += $"You've failed the ambush! The enemy sees you and attacks you first! \r\n";
-                            txtMainWindow.Text += "\r\n";
-                            ScrollDownText(txtMainWindow);
-                            firstTimeCombat = false;
-                            await Task.Delay(1500);
-                            EnemyTurn(CreatureClass.Boss);
-                        }
-                    }
-                    else
-                    {
-                        txtMainWindow.Text += "You cannot ambush your enemy, you're already in combat! \r\n";
-                        txtMainWindow.Text += "\r\n";
-                        ScrollDownText(txtMainWindow);
-                        await Task.Delay(1500);
-                        EnemyTurn(CreatureClass.Boss);
-                    }
+                    AmbushEvent(button);
                     break;
                 case ButtonChoice.Button3:
                     UseItem();
@@ -1467,8 +1315,7 @@ namespace HerosTale
                         firstTimeCombat = true;
                         txtMainWindow.Text = "";
                         CountDays = 0;
-                        Heal(50 * 3);
-                        playerQuest.IsCompleted = false;
+                        Heal(50 * 3);                        
                         Tavern();
                     }
                     else
@@ -1555,23 +1402,7 @@ namespace HerosTale
             }
         }
         
-                 
-        /*private int GetReward(InitialMenuChoice mC)
-        {
-            switch (mC)
-            {
-                case InitialMenuChoice.Quest1:
-                    return Quest1.RewardGold;
-                    
-                case InitialMenuChoice.Quest2:
-                    return Quest2.RewardGold;
-                    
-                case InitialMenuChoice.Quest3:
-                    return Quest3.RewardGold;
-                    
-            }
-            return 0;
-        }*/
+
 
         private void UpdateBtn()
         {
@@ -1631,22 +1462,22 @@ namespace HerosTale
             generateQuest3();
             
             txtMainWindow.Text = "These missions are available: \r\n";
-            txtMainWindow.Text += $"1- There is a dangerous {Quests.ElementAt(1).QMonster.Name} lurking in the nearby {Quests.ElementAt(1).LocationName}. {Quests.ElementAt(1).RewardGold} gold is offered to whoever kills it. \r\n";
+            txtMainWindow.Text += $"1- There is a dangerous {Quests.ElementAt(0).QMonster.Name.Trim()} lurking in the nearby {Quests.ElementAt(0).LocationName.Trim()}. {Quests.ElementAt(0).RewardGold} gold is offered to whoever kills it. \r\n";
 
             if (RandomElement(1,10) <= 5)
             {
-                txtMainWindow.Text += $"2- The {Quests.ElementAt(2).Kidnapped} of a {Quests.ElementAt(2).Giver} has been kidnapped by a bandit. It's rumored that he is hiding with his gang in the {Quests.ElementAt(2).LocationName} nearby. {Quests.ElementAt(2).RewardGold} gold is offered to whoever is going to free the kidnapped and kill the criminal and his followers. \r\n";
+                txtMainWindow.Text += $"2- The {Quests.ElementAt(1).Kidnapped.Trim()} of a {Quests.ElementAt(1).Giver.Trim()} has been kidnapped by a bandit. It's rumored that he is hiding with his gang in the {Quests.ElementAt(1).LocationName.Trim()} nearby. {Quests.ElementAt(1).RewardGold} gold is offered to whoever is going to free the kidnapped and kill the criminal and his followers. \r\n";
             }
 
             else
             {
-                txtMainWindow.Text += $"2- A thief has stolen a precious {Quests.ElementAt(3).QItem.Name} from the house of a {Quests.ElementAt(3).Giver}. He was last seen heading towards the {Quests.ElementAt(3).LocationName}. {Quests.ElementAt(3).RewardGold} gold is offered to whoever will retrive the precious heirloom. \r\n";
+                txtMainWindow.Text += $"2- A thief has stolen a precious {Quests.ElementAt(2).QItem.Name.Trim()} from the house of a {Quests.ElementAt(2).Giver.Trim()}. He was last seen heading towards the {Quests.ElementAt(2).LocationName}. {Quests.ElementAt(2).RewardGold} gold is offered to whoever will retrieve the precious heirloom. \r\n";
                 DoQ2 = false;
             }
 
 
             txtMainWindow.Text += "3- A caravan is leaving for Marrakesh, the most prosperous and wealthy city of this land. There might still be a place available, if not you can join as a guard. \r\n";
-            txtMainWindow.Text += "4- ... the jobs avaiable are boring. Maybe you would like to visit the local General Store?\r\n";
+            txtMainWindow.Text += "4- ... the jobs available are boring. Maybe you would like to visit the local General Store?\r\n";
         }
 
         private async void bOk_Click(object sender, EventArgs e)
@@ -1671,7 +1502,7 @@ namespace HerosTale
             txtMainWindow.Text += "By accomplishing the missions you can pick up at the local tavern you will slowly become the hero of this forgotten land... or die trying!\r\n";
             await Task.Delay(3000);
             txtMainWindow.Text += "\r\n";
-            txtMainWindow.Text += "The Goddes of Mercy has given you 5 attribute points to assign to your stats. Do so and your adventure can begin! \r\n";
+            txtMainWindow.Text += "The Goddess of Mercy has given you 5 attribute points to assign to your stats. Do so and your adventure can begin! \r\n";
             txtMainWindow.Text += "\r\n";
             ScrollDownText(txtMainWindow);            
             LevelUp(5);
