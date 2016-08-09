@@ -270,6 +270,23 @@ namespace HerosTale
             return rndnumber;
         }
 
+        private int ScaleMonster(int stat)
+        {
+            
+            if (player.Level<=5)
+            {
+                stat = Convert.ToInt32(stat * 0.4);
+            }
+            else if (player.Level<=10)
+            {
+                stat = Convert.ToInt32(stat * 0.7);
+            }
+            else
+            {
+                stat = Convert.ToInt32(stat * 0.85);
+            }
+            return stat;
+        }
         private void generateQuest1()
         {
             Monster QMonster;
@@ -280,6 +297,8 @@ namespace HerosTale
              
             List<int> ExtractLocations =GetMonsterLocations(QMonster.ID);
             QLocation = GetLocation(ExtractLocations.ElementAt(RandomElementList(ExtractLocations)));
+            QMonster.MaximumDamage = ScaleMonster(QMonster.MaximumDamage);
+            QMonster.MaximumHitPoints = ScaleMonster(QMonster.MaximumHitPoints);
 
             Quests.Add(new Quest(QuestOption.Quest1, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster,null ,"",""));
         }
@@ -311,6 +330,8 @@ namespace HerosTale
             QGiver = GetGiverByID(RandomElement(1,dtQG.Count()));
             QWho = GetKidnappedByID(RandomElement(1,dtK.Count()));
             QMonster = GetMonsterByID(40); // BANDIT LEADER BOSS
+            QMonster.MaximumDamage = ScaleMonster(QMonster.MaximumDamage);
+            QMonster.MaximumHitPoints = ScaleMonster(QMonster.MaximumHitPoints);
             Quests.Add(new Quest(QuestOption.Quest2, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster, null,QWho.NameWho,QGiver.NameGiver));
             //Quest2 = new Quest2Class( QLocation.ID, QLocation.LocationName, CreateGold(), QWho.NameWho, QGiver.NameGiver); 
         }
@@ -337,7 +358,9 @@ namespace HerosTale
 
             QGiver = GetGiverByID(RandomElement(1,dtQG.Count()));
             QMonster = GetMonsterByID(41); //MASTER THIEF BOSS
-            
+            QMonster.MaximumDamage = ScaleMonster(QMonster.MaximumDamage);
+            QMonster.MaximumHitPoints = ScaleMonster(QMonster.MaximumHitPoints);
+
             do
             {
                try
@@ -347,7 +370,7 @@ namespace HerosTale
                     Quests.Add(new Quest(QuestOption.Quest3, QLocation.ID, QLocation.LocationName, CreateGold(), QMonster, QItem, "", QGiver.NameGiver));
                     done = true;
                 }
-                catch (Exception e)
+                catch 
                 {
                     done = false;
                 }
@@ -491,24 +514,6 @@ namespace HerosTale
                     GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).CurrentHitPoints -= Hit;
                     HPMax = GetMonsterByID(Quests.ElementAt((int)player.QuestOp).QMonster.ID).MaximumHitPoints;
 
-                   /* switch (mChoice)
-                    {
-                        case InitialMenuChoice.Quest1:
-                            HP = GetMonsterByID(Quest1.MonsterID).CurrentHitPoints;
-                            GetMonsterByID(Quest1.MonsterID).CurrentHitPoints -= Hit;
-                            HPMax = GetMonsterByID(Quest1.MonsterID).MaximumHitPoints;
-                            break;
-                        case InitialMenuChoice.Quest2:
-                            HP = GetMonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints;
-                            GetMonsterByID(MONSTER_ID_BANDIT).CurrentHitPoints -= Hit;
-                            HPMax = GetMonsterByID(MONSTER_ID_BANDIT).MaximumHitPoints;
-                            break;
-                        case InitialMenuChoice.Quest3:
-                            HP = GetMonsterByID(MONSTER_ID_THIEF).CurrentHitPoints;
-                            GetMonsterByID(MONSTER_ID_THIEF).CurrentHitPoints -= Hit;
-                            HPMax = GetMonsterByID(MONSTER_ID_THIEF).MaximumHitPoints;
-                            break;
-                    }*/
                     HP -= Hit;
                     lblEnemyHealth.Text = $"{HP}/{HPMax}";
                     txtMainWindow.Text = $"You attack and do {Hit} of damage.\r\n";
@@ -708,12 +713,10 @@ namespace HerosTale
            
         }
      
-
         private int RollDice(int min)
         {
             return rnd.Next(min, 101);
         }
-
         private void UseItem()
         {
             Item currentItem = (Item) cboConsumable.SelectedItem;
@@ -737,15 +740,51 @@ namespace HerosTale
             }
 
         }
-
-
         private int RollMonsterDamage(int maxDmg)
         {
             return rnd.Next(0, maxDmg);
         }
         private void GenerateStoreOptions()
         {
-            Buy1 = RandomElement(1,GeneralStore.Count) - 1;
+            bool done;
+            Item QItem;
+            //ADD A WEAPON POTION
+            do
+            {
+                try
+                {
+
+                    QItem = GetItembyID(RandomElement(1, 99));
+                    GeneralStore.Add(new Item(QItem.ID,QItem.Name,QItem.NamePlural,QItem.MinDmg, QItem.MaxDmg, QItem.AmountHP, QItem.PlusStr,
+                        QItem.PlusDex, QItem.PlusInt, QItem.PlusChar,QItem.PlusGold,QItem.PlusExp, QItem.Rarity, QItem.Type,QItem.BaseValue));
+                    done = true;
+                }
+                catch
+                {
+                    done = false;
+                }
+            }
+            while (!done);
+
+            //ADD A HEALING POTION
+            do
+            {
+                try
+                {
+
+                    QItem = GetItembyID(RandomElement(100, 199));
+                    GeneralStore.Add(new Item(QItem.ID, QItem.Name, QItem.NamePlural, QItem.MinDmg, QItem.MaxDmg, QItem.AmountHP, QItem.PlusStr,
+                        QItem.PlusDex, QItem.PlusInt, QItem.PlusChar, QItem.PlusGold, QItem.PlusExp, QItem.Rarity, QItem.Type, QItem.BaseValue));
+                    done = true;
+                }
+                catch
+                {
+                    done = false;
+                }
+            }
+            while (!done);
+
+            /*Buy1 = RandomElement(1,GeneralStore.Count) - 1;
 
             do
             {
@@ -757,15 +796,14 @@ namespace HerosTale
             {
                 Buy3= RandomElement(1,GeneralStore.Count) - 1;
             }
-            while (Buy3 == Buy2 || Buy3==Buy1);
+            while (Buy3 == Buy2 || Buy3==Buy1);*/
         }
         private void GeneralStoreShop()
         {
             
 
-            txtMainWindow.Text = $"1- There is a {GeneralStore.ElementAt(Buy1).Details.Name} for {GeneralStore.ElementAt(Buy1).Price} \r\n";
-            txtMainWindow.Text += $"2- There is a {GeneralStore.ElementAt(Buy2).Details.Name} for {GeneralStore.ElementAt(Buy2).Price} \r\n";
-            txtMainWindow.Text += $"3- There is a {GeneralStore.ElementAt(Buy3).Details.Name} for {GeneralStore.ElementAt(Buy3).Price} \r\n";
+            txtMainWindow.Text = $"1- There is a {GeneralStore.ElementAt(1).Name} for {GeneralStore.ElementAt(1).BaseValue} \r\n";
+            txtMainWindow.Text += $"2- There is a {GeneralStore.ElementAt(2).Name} for {GeneralStore.ElementAt(2).BaseValue} \r\n";            
         }
         private async void CheckPlayerHealth()
         {
@@ -806,7 +844,7 @@ namespace HerosTale
         {
             for (int i = 0; i < player.Inventory.Count; i++)
             {
-                if (player.Inventory.ElementAt(i).Details.ID == GeneralStore.ElementAt(BuyOption).Details.ID)
+                if (player.Inventory.ElementAt(i).Details.ID == GeneralStore.ElementAt(BuyOption).ID)
                 {
                     player.Inventory.ElementAt(i).Quantity++;
                     return true;
@@ -939,7 +977,7 @@ namespace HerosTale
                     break;
             }
         }
-        private async void JourneyApproach(ButtonChoice button)
+        private void JourneyApproach(ButtonChoice button)
         {
             switch (button)
             {
@@ -964,58 +1002,24 @@ namespace HerosTale
                     UseItem();
                     break;
                 case ButtonChoice.Button4:
-                    if (inCombat)
-                    {
-                        if (firstTimeCombat)  //----- means I haven't started the fight so I can try to avoid it
-                        {
-                            if (AmbushFleeRoll())
-                            {
-                                txtMainWindow.Text += "You avoid the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                inCombat = false;
-                                firstTimeCombat = true;
-                                txtMainWindow.Text = "";
-                                lblNrEnemies.Text = "";
-                                Heal(50);
-                                Journey();
-                            }
-                            else
-                            {
-                                txtMainWindow.Text += "You've failed to avoid the fight and now you're in combat! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                lblNrEnemies.Text = $"{FoesRemaining}";
-                                ScrollDownText(txtMainWindow);
-                                firstTimeCombat = false;
-                            }
+                    FleeEvent(button);
+                    break;
+            }
+        }
+        private void JourneyNoise(ButtonChoice button)
+        {
+            switch (button)
+            {
+                case ButtonChoice.Button1:
+                case ButtonChoice.Button2:
+                    AmbushEvent(button);
 
-                        }
-                        else //--- I'm during the fight but I can try to flee
-                        {
-                            if (AmbushFleeRoll())
-                            {
-                                txtMainWindow.Text += "You escaped the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                await Task.Delay(1500);
-                                inCombat = false;
-                                firstTimeCombat = true;
-                                txtMainWindow.Text = "";
-                                lblNrEnemies.Text = "";
-                                Heal(50);
-                                Journey();
-                            }
-                            else
-                            {
-                                txtMainWindow.Text += "You've failed to escape the fight! \r\n";
-                                txtMainWindow.Text += "\r\n";
-                                ScrollDownText(txtMainWindow);
-                                EnemyTurn(attackMonster.Difficulty);
-                            }
-                        }
-                    }
-                    else Journey();
+                    break;
+                case ButtonChoice.Button3:
+                    UseItem();
+                    break;
+                case ButtonChoice.Button4:
+                    FleeEvent(button);
                     break;
             }
         }
@@ -1152,15 +1156,35 @@ namespace HerosTale
                         firstTimeCombat = true;
                         lblNrEnemies.Text = "";
                         txtMainWindow.Text = "";
-                        Heal(50);
-                        Journey();
+
+                        if (CurrentPhase==GamePhase.BossEncounter)
+                        {
+                            txtMainWindow.Text += "You return home empty handed and fail the mission! \r\n";
+                            txtMainWindow.Text += "\r\n";
+                            ScrollDownText(txtMainWindow);
+                            await Task.Delay(1500);                                                        
+                            CountDays = 0;
+                            Heal(50 * 3);
+                            Tavern();
+                        }
+                        else
+                        {
+                            Heal(50);
+                            Journey();
+                        }
+                        
                     }
                     else
                     {
                         txtMainWindow.Text += "You've failed to avoid the fight and now you're in combat! \r\n";
                         txtMainWindow.Text += "\r\n";
-                        lblNrEnemies.Text = $"{FoesRemaining}";
-                        lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
+
+                        if (CurrentPhase != GamePhase.BossEncounter)
+                        {
+                            lblNrEnemies.Text = $"{FoesRemaining}";
+                            lblEnemyHealth.Text = $"{attackMonster.CurrentHitPoints}/{attackMonster.MaximumHitPoints}";
+                            
+                        }
                         ScrollDownText(txtMainWindow);
                         firstTimeCombat = false;
                     }
@@ -1179,8 +1203,22 @@ namespace HerosTale
                         txtMainWindow.Text = "";
                         lblNrEnemies.Text = "";
                         lblEnemyHealth.Text = "";
-                        Heal(50);
-                        Journey();
+
+                        if (CurrentPhase == GamePhase.BossEncounter)
+                        {
+                            txtMainWindow.Text += "You return home empty handed and fail the mission! \r\n";
+                            txtMainWindow.Text += "\r\n";
+                            ScrollDownText(txtMainWindow);
+                            await Task.Delay(1500);
+                            CountDays = 0;
+                            Heal(50 * 3);
+                            Tavern();
+                        }
+                        else
+                        {
+                            Heal(50);
+                            Journey();
+                        }
                     }
                     else
                     {
@@ -1194,29 +1232,13 @@ namespace HerosTale
             }
             else Journey();
         }
-        private void JourneyNoise(ButtonChoice button)
-        {
-            switch (button)
-            {
-                case ButtonChoice.Button1:                    
-                case ButtonChoice.Button2:
-                    AmbushEvent(button);
-                   
-                    break;
-                case ButtonChoice.Button3:
-                    UseItem();
-                    break;
-                case ButtonChoice.Button4:
-                    FleeEvent(button);                    
-                    break;
-            }
-        }
+      
         private async void PhaseShop(ButtonChoice button)
         {
             switch (button)
             {
                 case ButtonChoice.Button1:
-                    if (GeneralStore.ElementAt(Buy1).Price > player.Gold)
+                    if (GeneralStore.ElementAt(1).BaseValue > player.Gold)
                     {
                         txtMainWindow.Text = "You do not have enough Gold!\r\n";
                         await Task.Delay(1500);
@@ -1224,11 +1246,11 @@ namespace HerosTale
                     }
                     else
                     {
-                        player.Gold -= GeneralStore.ElementAt(Buy1).Price;
+                        player.Gold -= GeneralStore.ElementAt(1).BaseValue;
 
-                        if (!CheckItemInInventory(Buy1))
+                        if (!CheckItemInInventory(1))
                         {
-                            player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(Buy1).Details, 1));
+                            player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(1), 1));
 
                         }
                         UpdateInventoryGrid();
@@ -1239,7 +1261,7 @@ namespace HerosTale
                     }
                     break;
                 case ButtonChoice.Button2:
-                    if (GeneralStore.ElementAt(Buy2).Price > player.Gold)
+                    if (GeneralStore.ElementAt(2).BaseValue > player.Gold)
                     {
                         txtMainWindow.Text = "You do not have enough Gold!\r\n";
                         await Task.Delay(1500);
@@ -1247,11 +1269,11 @@ namespace HerosTale
                     }
                     else
                     {
-                        player.Gold -= GeneralStore.ElementAt(Buy2).Price;
+                        player.Gold -= GeneralStore.ElementAt(2).BaseValue;
 
                         if (!CheckItemInInventory(Buy2))
                         {
-                            player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(Buy2).Details, 1));
+                            player.Inventory.Add(new InventoryItem(GeneralStore.ElementAt(2), 1));
 
                         }
                         UpdateInventoryGrid();
@@ -1260,7 +1282,7 @@ namespace HerosTale
                     }
                     break;
                 case ButtonChoice.Button3:
-                    if (GeneralStore.ElementAt(Buy3).Price > player.Gold)
+                   /* if (GeneralStore.ElementAt(Buy3).Price > player.Gold)
                     {
                         txtMainWindow.Text = "You do not have enough Gold!\r\n";
                         await Task.Delay(1500);
@@ -1278,14 +1300,14 @@ namespace HerosTale
                         UpdateInventoryGrid();
                         UpdateStats();
                         UpdateConsumableListInUI();
-                    }
+                    }*/
                     break;
                 case ButtonChoice.Button4:
                     Tavern();
                     break;
             }
         }
-        private async void PhaseBossEncounter(ButtonChoice button)
+        private void PhaseBossEncounter(ButtonChoice button)
         {
             switch (button)
             {
@@ -1301,29 +1323,7 @@ namespace HerosTale
                     UseItem();
                     break;
                 case ButtonChoice.Button4:
-                    if (AmbushFleeRoll())
-                    {
-                        txtMainWindow.Text += "You flee the night fight! \r\n";
-                        txtMainWindow.Text += "\r\n";
-                        ScrollDownText(txtMainWindow);
-                        await Task.Delay(1500);
-                        txtMainWindow.Text += "You return home empty handed and fail the mission! \r\n";
-                        txtMainWindow.Text += "\r\n";
-                        ScrollDownText(txtMainWindow);
-                        await Task.Delay(2000);
-                        inCombat = false;
-                        firstTimeCombat = true;
-                        txtMainWindow.Text = "";
-                        CountDays = 0;
-                        Heal(50 * 3);                        
-                        Tavern();
-                    }
-                    else
-                    {
-                        txtMainWindow.Text += "You've failed to flee and now you're in combat! \r\n";
-                        txtMainWindow.Text += "\r\n";
-                        ScrollDownText(txtMainWindow);
-                    }
+                    FleeEvent(button);
                     break;
             }
         }

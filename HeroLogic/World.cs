@@ -10,7 +10,7 @@ namespace HeroLogic
     public static class World
     {        
         public static readonly List<Item> Items = new List<Item>();
-        public static readonly List<Shop> GeneralStore = new List<Shop>();
+        public static readonly List<Item> GeneralStore = new List<Item>();
         public static readonly List<Monster> Monsters = new List<Monster>();
         public static readonly List<Quest> Quests = new List<Quest>();
         public static readonly List<CreatureLocations> CreatureLocations = new List<CreatureLocations>();
@@ -789,6 +789,13 @@ namespace HeroLogic
             double factor1 = Math.Pow((str * (1 + lvl / 100)), 2);           
             return Convert.ToInt32(rnd.Next(minDmg, maxDmg + 1) * (1 + factor1 / 100));
 
+        }
+
+        public static int SetPrice(int baseValue)
+        {
+
+            int gold = rnd.Next(1, 5 + 1) * 1000 + rnd.Next(0, 2) * 500;
+            return gold;
         }
 
         public static int CreateGold()
